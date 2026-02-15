@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Git files
 .git
 .gitignore
@@ -8,10 +9,13 @@
 docs/
 
 # Node modules
+=======
+>>>>>>> copilot/fix-conflict-issues
 node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 
 # Environment variables
 .env
@@ -123,3 +127,13 @@ docs
 .DS_Store
 Thumbs.db
 >>>>>>> a4f0e2ee76d23aa5eaf9d56063365761bc958a18
+=======
+.git
+.gitignore
+README.md
+.env
+.env.example
+Dockerfile
+.dockerignore
+.git
+>>>>>>> copilot/fix-conflict-issues

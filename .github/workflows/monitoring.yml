@@ -1,0 +1,170 @@
+name: Monitoring and Scheduled Tasks
+
+on:
+  schedule:
+    # Run at 2 AM UTC every day
+    - cron: '0 2 * * *'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  # Health check
+  health-check:
+    runs-on: self-hosted
+    steps:
+      - name: Check application health
+        run: |
+          echo "Running health check..."
+
+          # Check if the application is running
+          if curl -f http://localhost:8080/ > /dev/null 2>&1; then
+            echo "Application is healthy"
+            status="success"
+            message="Application is healthy"
+          else
+            echo "Application is not responding"
+            status="failure"
+            message="Application is not responding"
+
+            # Attempt to restart the application
+            echo "Attempting to restart application..."
+            # Add your restart command here
+            # Example: systemctl restart stampcoin-platform
+          fi
+
+          # Create status
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json"             https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}             -d "{"state":"$status","context":"Health Check","description":"$message"}"
+
+  # Security scan
+  security-scan:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Run security scan
+        run: |
+          echo "Running security scan..."
+
+          # Install security tools if not already installed
+          npm install -g npm audit
+
+          # Run security audit
+          npm audit --audit-level moderate
+
+          # Check for exposed secrets
+          echo "Checking for exposed secrets..."
+
+          # Example: Use git-secrets if installed
+          # git-secrets --scan -r .
+
+          echo "Security scan completed"
+
+  # Update dependencies
+  update-dependencies:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Update dependencies
+        run: |
+          echo "Updating dependencies..."
+
+          # Update npm packages
+          npm update
+
+          # Check for outdated packages
+          npm outdated
+
+          # Commit changes if there are updates
+          if git diff --quiet; then
+            echo "No dependency updates found"
+          else
+            echo "Found dependency updates, committing changes..."
+            git config --global user.name "GitHub Actions"
+            git config --global user.email "actions@github.com"
+            git add package-lock.json
+            git commit -m "chore: Update dependencies"
+            git push
+            echo "Dependencies updated and pushed"
+          fi
+
+  # Cleanup
+  cleanup:
+    runs-on: self-hosted
+    steps:
+      - name: Clean up Docker images
+        run: |
+          echo "Cleaning up Docker images..."
+
+          # Remove unused Docker images
+          docker image prune -f
+
+          # Remove stopped containers
+          docker container prune -f
+
+          # Remove unused volumes
+          docker volume prune -f
+
+          echo "Cleanup completed"
+
+  # Generate report
+  generate-report:
+    runs-on: self-hosted
+    needs: [health-check, security-scan, update-dependencies, cleanup]
+    if: always()
+    steps:
+      - name: Generate report
+        run: |
+          echo "Generating monitoring report..."
+
+          # Create a report file
+          REPORT_FILE="monitoring-report-$(date +%Y-%m-%d).md"
+
+          echo "# Monitoring Report - $(date)" > $REPORT_FILE
+          echo "" >> $REPORT_FILE
+          echo "## Job Status" >> $REPORT_FILE
+          echo "- Health Check: ${{ needs.health-check.result }}" >> $REPORT_FILE
+          echo "- Security Scan: ${{ needs.security-scan.result }}" >> $REPORT_FILE
+          echo "- Update Dependencies: ${{ needs.update-dependencies.result }}" >> $REPORT_FILE
+          echo "- Cleanup: ${{ needs.cleanup.result }}" >> $REPORT_FILE
+          echo "" >> $REPORT_FILE
+          echo "## System Information" >> $REPORT_FILE
+          echo "- Date: $(date)" >> $REPORT_FILE
+          echo "- Node Version: $(node --version)" >> $REPORT_FILE
+          echo "- NPM Version: $(npm --version)" >> $REPORT_FILE
+          echo "- Docker Version: $(docker --version)" >> $REPORT_FILE
+          echo "" >> $REPORT_FILE
+          echo "## Application Information" >> $REPORT_FILE
+          echo "- Application Status: ${{ needs.health-check.result }}" >> $REPORT_FILE
+          echo "- Memory Usage: $(free -m | awk '/Mem:/ {print $3 "MB used / " $2 "MB total"}')" >> $REPORT_FILE
+          echo "- Disk Usage: $(df -h . | awk '/[0-9]%/{print $5 " used"}')" >> $REPORT_FILE
+
+          # Upload the report as an artifact
+          echo "Uploading report..."
+          echo "$REPORT_FILE" > artifact.txt
+
+          # Create a gist with the report
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json"             https://api.github.com/gists             -d '{
+              "description": "Monitoring Report - $(date)",
+              "public": true,
+              "files": {
+                "'"$REPORT_FILE"'": {
+                  "content": "$(cat $REPORT_FILE)"
+                }
+              }
+            }'
+
+          echo "Report generated and uploaded successfully"

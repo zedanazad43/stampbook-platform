@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🏛️ Stampcoin Platform | منصة ستامب كوين
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -7,9 +8,15 @@
 An innovative blockchain-based digital stamps platform with wallet and marketplace features.
 
 🌐 **[Live Demo](https://zedanazad43.github.io/stp/)** | 📖 **[Documentation](docs/)** | 🛣️ **[Roadmap](docs/roadmap.html)**
+=======
+# Stampcoin Platform
 
----
+منصة ستامكوين للطوابع الرقمية | Digital Platform for Stamps | Digitale Plattform für Briefmarken
+>>>>>>> copilot/fix-conflict-issues
 
+An innovative blockchain-based platform for digital stamps, rewards, and loyalty tokens.
+
+<<<<<<< HEAD
 ## 🌍 Languages | اللغات
 
 - **العربية** 🇸🇦 | **English** 🇬🇧 | **Deutsch** 🇩🇪 | **中文** 🇨🇳 | **Français** 🇫🇷 | **Español** 🇪🇸
@@ -31,9 +38,25 @@ An innovative blockchain-based digital stamps platform with wallet and marketpla
 
 ### Prerequisites
 - Node.js >= 16.x
+=======
+## Features
+
+- 💳 **Digital Wallet**: Secure storage for your digital stamps and tokens
+- 🔒 **Secure Transfers**: Blockchain-powered peer-to-peer transactions
+- 🛍️ **Marketplace**: Buy, sell, and trade digital collectibles
+- 👤 **User Profiles**: Verified accounts with complete profile management
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- MongoDB
+>>>>>>> copilot/fix-conflict-issues
 - Git
 - Docker (optional, recommended)
 
+<<<<<<< HEAD
 ### Using Docker (Recommended)
 
 ```bash
@@ -250,3 +273,52 @@ See **[CHANGELOG.md](CHANGELOG.md)** for version history and updates.
 - إذا لم يبدأ الـ Runner، تحقق من وجود رسائل خطأ في نافذة PowerShell
 - تأكد من أن عنوان URL ورمز Runner صحيحان وغير منتهي الصلاحية
 - تأكد من أن الـ Runner لديه الأذونات الكافية للوصول إلى ملفات المشروع
+=======
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/zedanazad43/stp.git
+   cd stp
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+4. Start the application:
+   ```bash
+   npm start
+   ```
+
+## Scripts
+
+- `npm start`: Start the production server
+- `npm run dev`: Start the development server with nodemon
+- `npm test`: Run tests
+- `npm run build`: Build the application for production
+- `npm run deploy`: Deploy to production
+
+## Documentation
+
+For detailed documentation, please visit our [docs](https://github.com/zedanazad43/stp/docs) directory.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## Support
+
+For support, please open an issue in the GitHub repository.
+>>>>>>> copilot/fix-conflict-issues

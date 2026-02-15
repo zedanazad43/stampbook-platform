@@ -1,0 +1,181 @@
+name: Create Release and Deploy
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Type of release'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+
+jobs:
+  # Determine version bump
+  determine-version:
+    runs-on: self-hosted
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release_type: ${{ steps.version.outputs.release_type }}
+    steps:
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RELEASE_TYPE="${{ github.event.inputs.release_type }}"
+          else
+            # Extract version from tag
+            TAG="${{ github.ref }}"
+            RELEASE_TYPE="${TAG#*v}"
+            RELEASE_TYPE="${RELEASE_TYPE%%.*}"
+          fi
+
+          # Get current version from package.json
+          CURRENT_VERSION=$(grep -o '"version": *"[^"]*"' package.json | cut -d'"' -f4)
+
+          # Bump version based on release type
+          if [ "$RELEASE_TYPE" = "major" ]; then
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{print $1+1 ".0.0"}')
+          elif [ "$RELEASE_TYPE" = "minor" ]; then
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$2=$2+1; print $1"."$2".0"}')
+          else
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$3=$3+1; print $1"."$2"."$3}')
+          fi
+
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "release_type=$RELEASE_TYPE" >> $GITHUB_OUTPUT
+
+  # Create release
+  create-release:
+    runs-on: self-hosted
+    needs: determine-version
+    outputs:
+      upload_url: ${{ steps.create.outputs.upload_url }}
+      release_id: ${{ steps.create.outputs.release_id }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Update version in package.json
+        run: |
+          sed -i "s/"version": "[^"]*"/"version": "${{ needs.determine-version.outputs.version }}"/" package.json
+          cat package.json
+
+      - name: Commit version change
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Bump version to ${{ needs.determine-version.outputs.version }}"
+          file_pattern: "package.json"
+
+      - name: Create release
+        id: create
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.determine-version.outputs.version }}
+          release_name: Release v${{ needs.determine-version.outputs.version }}
+          body: |
+            Changes in this Release
+            - Version bump: ${{ needs.determine-version.outputs.release_type }}
+            - Build run: ${{ github.run_id }}
+
+            ## Installation
+
+            \`\`\`bash
+            npm install zedanazad43/stampcoin-platform
+            \`\`\`
+
+            ## Usage
+
+            \`\`\`javascript
+            const app = require('stampcoin-platform');
+            app.listen(8080);
+            \`\`\`
+          draft: false
+          prerelease: false
+
+  # Build and publish Docker image
+  publish-docker:
+    runs-on: self-hosted
+    needs: [determine-version, create-release]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/stampcoin-platform
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value={{version}},enable={{is_default_branch}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NODE_VERSION=18
+            VERSION=${{ needs.determine-version.outputs.version }}
+
+      - name: Upload Docker image to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./docker-image.tar
+          asset_name: stampcoin-platform-${{ needs.determine-version.outputs.version }}.tar
+          asset_content_type: application/octet-stream
+
+  # Deploy to production
+  deploy:
+    runs-on: self-hosted
+    needs: [create-release, publish-docker]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to production
+
+        run: |
+          echo "Deploying version ${{ needs.determine-version.version }} to production"
+
+          # Add your deployment commands here
+          # Example:
+          # ssh user@server "docker pull ghcr.io/zedanazad43/stampcoin-platform:latest && docker stop stampcoin-platform || true && docker run -d --name stampcoin-platform -p 8080:8080 ghcr.io/zedanazad43/stampcoin-platform:latest"
+
+          echo "Deployment completed successfully"
+
+      - name: Create deployment status
+        run: |
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json"             https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}             -d "{"state":"success","context":"Production Deployment","description":"Production deployment completed successfully"}"

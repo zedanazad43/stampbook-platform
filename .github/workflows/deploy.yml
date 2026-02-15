@@ -1,9 +1,10 @@
-name: Deploy to GitHub Pages
+name: Deploy Stampcoin Platform
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:  # Allow manual triggering
 
 permissions:
   contents: read
@@ -17,6 +18,7 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     permissions:
       contents: read
       pages: write
@@ -25,12 +27,18 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+=======
+>>>>>>> copilot/fix-conflict-issues
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+<<<<<<< HEAD
     - name: Configure Node.js environment
+=======
+    - name: Setup Node.js
+>>>>>>> copilot/fix-conflict-issues
       uses: actions/setup-node@v4
       with:
         node-version: '18'
@@ -39,6 +47,7 @@ jobs:
     - name: Install project dependencies
       run: npm ci
 
+<<<<<<< HEAD
     - name: Build static site
       run: npm run build
 
@@ -51,3 +60,10 @@ jobs:
       id: deployment
       uses: actions/deploy-pages@v4
     
+=======
+    - name: Build application
+      run: npm run build
+
+    - name: Deploy to production
+      run: npm run deploy --env=production
+>>>>>>> copilot/fix-conflict-issues

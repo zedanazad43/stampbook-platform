@@ -1,0 +1,95 @@
+name: Stampcoin Platform Deployment
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Connect to GitHub account
+      run: |
+        echo "Connecting GitHub account to Manu platform"
+        # أمر للربط بين حسابك على manu والحالي على github
+        npm run connect-manu --email=azadzedan13@gmail.com
+
+    - name: Process stamp images to NFTs
+      run: |
+        echo "Processing stamp images to NFTs"
+        # أمر لرفع صور الطوابع من الانترنت وتحويلها إلى NFTs
+        npm run process-stamps --input=./stamps --output=./nfts
+
+    - name: Categorize and archive stamps
+      run: |
+        echo "Categorizing and archiving stamps"
+        # أمر لفرز الطوابع وارشفتها حسب النوع والقيمة
+        npm run categorize-stamps --currency=stp
+
+    - name: Create smart contracts
+      run: |
+        echo "Creating smart contracts for exchange platforms"
+        # أمر لإنشاء العقود الذكية المرتبطة بحساباتك على منصات التداول
+        npm run create-contracts           --metamask=YOUR_METAMASK_WALLET_ADDRESS           --cexio=YOUR_CEXIO_WALLET_ADDRESS           --mexc=YOUR_MEXC_WALLET_ADDRESS           --kukoin=YOUR_KUKOIN_WALLET_ADDRESS
+
+    - name: Generate project token
+      run: |
+        echo "Generating project token with initial offering"
+        # أمر لتوليد عملة الموقع بطرح أولي
+        npm run generate-token           --total-supply=19000000           --initial-price=0.15           --currency=eur
+
+    - name: Publish smart contracts
+      run: |
+        echo "Publishing smart contracts for payment processing"
+        # أمر لنشر العقود الذكية لاستلام المدفوعات
+        npm run publish-contracts
+
+    - name: Setup user interface
+      run: |
+        echo "Setting up professional user interface"
+        # أتفعيل الاشعارات ووضع واجهة احترافية
+        npm run setup-ui           --enable-notifications=true           --show-balance=true           --show-transfer-methods=true
+
+    - name: Create investment plan
+      run: |
+        echo "Creating investment plan for mining and generation"
+        # أمر لإنشاء خطة استثمار
+        npm run create-investment-plan           --mining-reward=0.5           --generation-rate=0.2           --investment-options="short-term,medium-term,long-term"
+
+    - name: Create famous stamps section
+      run: |
+        echo "Creating section for famous stamps and their prices"
+        # أمر لإنشاء قسم للطوابع المشهورة وأسعارها
+        npm run create-famous-stamps-section --database=./stamps-database
+
+    - name: Setup trading system
+      run: |
+        echo "Setting up internal trading system"
+        # أمر لإنشاء نظام التداول الداخلي بالعملة stp
+        npm run setup-trading-system           --currency=stp           --fees=0.02           --min-trade-amount=10
+
+    - name: Setup physical stamps trading
+      run: |
+        echo "Setting up physical stamps trading with guarantees"
+        # أمر لإنشاء نظام تداول الطوابع المادية
+        npm run setup-physical-trading           --escrow-duration=7           --dispute-resolution=true
+
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production"
+        # أمر لنشر المنصة على الخادم
+        npm run deploy --env=production

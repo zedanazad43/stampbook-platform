@@ -1,0 +1,125 @@
+name: Documentation and Testing
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  # Test documentation links
+  test-docs:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check documentation links
+        run: |
+          # Install link checker
+          npm install -g markdown-link-check
+
+          # Check links in markdown files
+          find . -name "*.md" -not -path "./node_modules/*" | xargs -I {} markdown-link-check -c .markdown-link-check.json {}
+
+          # Check if index.html exists
+          if [ ! -f "docs/index.html" ]; then
+            echo "Error: docs/index.html not found"
+            exit 1
+          fi
+
+          echo "Documentation checks passed"
+
+  # Build and validate documentation
+  build-docs:
+    runs-on: self-hosted
+    needs: test-docs
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: |
+          # Create a copy of docs for building
+          mkdir -p build/docs
+          cp -r docs/* build/docs/
+
+          # Add timestamp to the documentation
+          echo "<!-- Built at: $(date) -->" >> build/docs/index.html
+
+          echo "Documentation built successfully"
+
+      - name: Validate built documentation
+        run: |
+          # Check if built files exist
+          if [ ! -f "build/docs/index.html" ]; then
+            echo "Error: build/docs/index.html not found"
+            exit 1
+          fi
+
+          # Check if the HTML is valid
+          if grep -q "<!DOCTYPE html>" build/docs/index.html; then
+            echo "HTML validation passed"
+          else
+            echo "Error: Invalid HTML in documentation"
+            exit 1
+          fi
+
+          echo "Documentation validation passed"
+
+  # Upload documentation as artifact
+  upload-docs:
+    runs-on: self-hosted
+    needs: build-docs
+    steps:
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: documentation
+          path: build/docs/
+          retention-days: 30
+
+  # Create documentation status
+  create-docs-status:
+    runs-on: self-hosted
+    needs: [test-docs, build-docs, upload-docs]
+    if: always()
+    steps:
+      - name: Create status
+        run: |
+          if [[ "${{ needs.test-docs.result }}" == "success" &&                "${{ needs.build-docs.result }}" == "success" &&                "${{ needs.upload-docs.result }}" == "success" ]]; then
+            status="success"
+            description="Documentation built and validated successfully"
+          else
+            status="failure"
+            description="Documentation build failed"
+          fi
+
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json"             https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}             -d "{"state":"$status","context":"Documentation","description":"$description"}"
