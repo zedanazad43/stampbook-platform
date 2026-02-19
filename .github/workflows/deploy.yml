@@ -1,53 +1,133 @@
-name: Deploy to GitHub Pages
+name: نشر شامل Multi-language Deployment
 
 on:
   push:
-    branches:
-      - main
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      # استنساخ مستودع المشروع - Checkout the repository
+      - name: استنساخ المستودع
+        uses: actions/checkout@v3
 
-    - name: Configure Node.js environment
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
+      ### Node.js ###
+      # إعداد Node.js
+      - name: إعداد Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      # تثبيت اعتمادات Node.js
+      - name: تثبيت الاعتماديات (Node.js)
+        if: ${{ env.USE_NODE || exists('package.json') }}
+        run: npm install
+      # بناء مشروع Node.js
+      - name: بناء تطبيق Node.js
+        if: ${{ env.USE_NODE || exists('package.json') }}
+        run: npm run build
 
-    - name: Install project dependencies
-      run: npm ci
+      ### Python ###
+      # إعداد Python
+      - name: إعداد Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      # تثبيت اعتمادات Python
+      - name: تثبيت الاعتماديات (Python)
+        if: ${{ env.USE_PYTHON || exists('requirements.txt') }}
+        run: pip install -r requirements.txt
+      # بناء مشروع Python (حذف أو عدل حسب استخدامك)
+      - name: بناء مشروع Python
+        if: ${{ env.USE_PYTHON || exists('requirements.txt') }}
+        run: python setup.py build || echo "no build step"
 
-    - name: Build static site
-      run: npm run build
+      ### Java ###
+      # إعداد جافا Java
+      - name: إعداد جافا JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      # بناء مشروع Java باستخدام Maven
+      - name: بناء مشروع Java
+        if: ${{ env.USE_JAVA || exists('pom.xml') }}
+        run: mvn install || echo "no build step"
 
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v4
-      with:
-        path: ./public
+      ### PHP ###
+      # إعداد PHP
+      - name: إعداد PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      # تثبيت اعتمادات PHP باستخدام Composer
+      - name: تثبيت الاعتماديات (PHP)
+        if: ${{ env.USE_PHP || exists('composer.json') }}
+        run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
-    
+      ### Ruby ###
+      # إعداد Ruby
+      - name: إعداد روبي Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+      # تثبيت اعتمادات Ruby
+      - name: تثبيت الاعتماديات (Ruby)
+        if: ${{ env.USE_RUBY || exists('Gemfile') }}
+        run: bundle install
+      # بناء تطبيق Ruby ريلز أو غيره
+      - name: بناء تطبيق Ruby
+        if: ${{ env.USE_RUBY || exists('Gemfile') }}
+        run: bundle exec rake build || echo "no build step"
+
+      ### Go ###
+      # إعداد Go
+      - name: إعداد Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      # تثبيت اعتمادات Go
+      - name: تثبيت الاعتماديات (Go)
+        if: ${{ env.USE_GO || exists('go.mod') }}
+        run: go mod download
+      # بناء مشروع Go
+      - name: بناء مشروع Go
+        if: ${{ env.USE_GO || exists('go.mod') }}
+        run: go build ./...
+
+      ### Cloudflare Wrangler ###
+      # إعداد Wrangler (لنشر Cloudflare)
+      - name: إعداد Wrangler
+        uses: cloudflare/wrangler-action@1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # نشر إلى Cloudflare Pages (عدل مجلد النشر حسب الحاجة)
+      - name: نشر إلى Cloudflare Pages
+        run: npx wrangler pages deploy public --project-name stampcoin-platform
+      # نشر إلى Cloudflare Workers
+      - name: نشر إلى Cloudflare Workers
+        run: npx wrangler deploy --env production
+
+      ### رفع الملفات الناتجة (Artifact) ###
+      - name: رفع ملف البناء (Artifact)
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: |
+            public
+            dist
+            build
+            target
+            vendor
+            .next
+            .output
+            ./bin
+          if-no-files-found: warn
+          retention-days: 7
+          compression-level: 6
+          overwrite: false
+          include-hidden-files: false
