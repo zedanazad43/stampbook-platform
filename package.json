@@ -1,1 +1,1 @@
-{"name":"stampcoin-platform","version":"1.0.0","description":"منصة طوابع رقمية تدعم JavaScript وTypeScript.","main":"index.js","scripts":{"start":"node index.js","build":"echo 'بناء التطبيق'"},"dependencies":{},"devDependencies":{},"engines":{"node": ">=16.0.0"}}
+{ "name": "stp", "version": "1.0.0", "scripts": { "build": "echo 'Define your build command here - such as tsc, next build, react-scripts build, etc.'", "start": "node server.js" } }
