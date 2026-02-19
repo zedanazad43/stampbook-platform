@@ -25,17 +25,4 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-  build-and-push:
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
- 
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-     - name: Deploy to Render
-  uses: render-examples/deploy-to-render-action@v1
-  with:
-    service-id: ${{ secrets.RENDER_SERVICE_ID }}
-    api-key: ${{ secrets.RENDER_API_KEY }}
+
