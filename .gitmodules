@@ -1,3 +1,6 @@
 [submodule "git"]
     path = git
-    url = https://github.com/zedanazad43/stp.git
+    url = https://github.com/zedanazad43/stp
+[submodule "git"]
+    path = git
+    url = <repository-url>
