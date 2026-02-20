@@ -84,7 +84,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Deploy to Render
-        uses: appleboy/render-action@v0.6.0
+        uses: renderinc/render-deploy-action@v1
         with:
           service-id: ${{ secrets.RENDER_SERVICE_ID }}
           api-key: ${{ secrets.RENDER_API_KEY }}
