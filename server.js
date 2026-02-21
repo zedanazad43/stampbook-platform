@@ -1,109 +1,65 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const compression = require('compression');
-const rateLimit = require('express-rate-limit');
-const fs = require("fs");
+const express = require("express");
+const fs = require("fs").promises;
 const path = require("path");
-require('dotenv').config();
+const cors = require("cors");
 
 const app = express();
-
-// Security middleware
-app.use(helmet());
 app.use(cors());
+app.use(express.json());
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use(limiter);
+const DATA_FILE = path.join(__dirname, "data.json");
+const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
 
-// General middleware
-app.use(compression());
-app.use(morgan('combined'));
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
-
-// Import AI Agent Expert
-const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
-if (fs.existsSync(aiAgentPath)) {
-  // Dynamically import the AI Agent Expert to avoid issues if it doesn't exist
-  const aiAgent = require(aiAgentPath);
-
-  // Mount AI Agent Expert routes directly
-  app.use("/agent", aiAgent);
-  console.log("AI Agent Expert mounted successfully");
-} else {
-  console.warn("AI Agent Expert not found at:", aiAgentPath);
+async function readData() {
+  try {
+    const raw = await fs.readFile(DATA_FILE, "utf8");
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error("Error reading data file:", e.message);
+    return [];
+  }
+}
+async function writeData(todos) {
+  try {
+    await fs.writeFile(DATA_FILE, JSON.stringify(todos, null, 2), "utf8");
+    return true;
+  } catch (e) {
+    console.error("Write error:", e);
+    return false;
+  }
 }
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/stampcoin-platform', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err));
-
-// Basic route
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to Stampcoin Platform API',
-    version: '1.0.0',
-    documentation: 'https://github.com/zedanazad43/stp'
-  });
-});
-
-// AI Agent Expert integration endpoint
-app.get("/ai-agent-status", async (req, res) => {
-  try {
-    const agentStatus = await fetch(`${process.env.BASE_URL || "http://localhost:" + process.env.PORT}/agent/status`);
-    const statusData = await agentStatus.json();
-    res.json({
-      agentIntegrated: true,
-      status: statusData
-    });
-  } catch (error) {
-    res.json({
-      agentIntegrated: false,
-      error: "AI Agent Expert not available",
-      message: error.message
-    });
+function requireToken(req, res, next) {
+  const auth = req.get("Authorization") || "";
+  const token = auth.replace(/^Bearer\s+/i, "");
+  // Allow unauthenticated access in development when SYNC_TOKEN is not set
+  // In production, always set SYNC_TOKEN environment variable
+  if (!SYNC_TOKEN) {
+    console.warn("SYNC_TOKEN not configured - authentication disabled (development mode)");
+    return next();
   }
+  if (token !== SYNC_TOKEN) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  next();
+}
+
+app.get("/sync", requireToken, async (req, res) => {
+  const todos = await readData();
+  res.json({ todos });
 });
 
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({
-    status: "ok",
-    timestamp: new Date().toISOString(),
-    service: "Stampcoin Platform",
-    version: "1.0.0"
-  });
+app.post("/sync", requireToken, async (req, res) => {
+  const payload = req.body;
+  if (!payload || !Array.isArray(payload.todos)) {
+    return res.status(400).json({ error: "Invalid payload, expected { todos: [...] }" });
+  }
+  const ok = await writeData(payload.todos);
+  if (!ok) return res.status(500).json({ error: "Failed to store data" });
+  res.json({ ok: true });
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined
-  });
-});
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    message: 'Route not found'
-  });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Stampcoin Platform server listening on port ${PORT}`);
-  console.log(`AI Agent Expert available at: http://localhost:${PORT}/agent`);
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Stampcoin Platform server listening on port ${port}`);
 });

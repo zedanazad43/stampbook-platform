@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-<<<<<<< HEAD
   stampcoin-app:
     build:
       context: .
@@ -25,27 +24,3 @@ services:
 volumes:
   logs:
     driver: local
-=======
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongodb:27017/stampcoin-platform
-    depends_on:
-      - mongodb
-
-  mongodb:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=password
-
-volumes:
-  mongodb_data:
->>>>>>> copilot/fix-conflict-issues

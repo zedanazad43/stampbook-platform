@@ -1,25 +1,19 @@
-# Render configuration for Stampcoin Platform
-# This file defines the service configuration for Render
-
-services:
-  - type: web
-    name: stampcoin-platform
-    env: node
-    buildCommand: npm ci
-    startCommand: node server.js
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 10000
-      # Add any additional environment variables required by your app
-      # - key: SYNC_TOKEN
-      #   value: your-sync-token-here
-      # - key: BASE_URL
-      #   value: https://your-service-name.onrender.com
-    healthCheck:
-      path: /health
-      interval: 30s
+# Exported from Render on 2026-02-21T03:28:35Z
+version: "1"
+projects:
+- name: ecostamp.net
+  environments:
+  - name: Production
+    services:
+    - type: web
+      name: git
+      runtime: node
+      repo: https://github.com/zedanazad43/git
+      plan: free
+      region: oregon
+      buildCommand: cargo build --release
+      startCommand: cargo run --release
+      autoDeployTrigger: commit
       timeout: 3s
       method: GET
       retries: 3
@@ -29,7 +23,3 @@ services:
     # persistentDisk:
     #   sizeGB: 1
     #   mountPath: /data
-    # Mount the AI Agent Expert directory
-    # persistentDisk:
-    #   sizeGB: 1
-    #   mountPath: /src
