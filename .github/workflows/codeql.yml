@@ -25,9 +25,9 @@ jobs:
           - language: actions
             build-mode: none
           - language: javascript-typescript
-            build-mode: auto
+            build-mode: autobuild
           - language: python
-            build-mode: auto
+            build-mode: autobuild
 
     steps:
       - name: Checkout repository
