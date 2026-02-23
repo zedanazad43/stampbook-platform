@@ -1,4 +1,4 @@
-# DNS Configuration Guide for stampcoin.com
+# DNS Configuration Guide for ecostamp.net
 
 Complete reference for setting up DNS with your domain registrar.
 
@@ -9,7 +9,7 @@ Complete reference for setting up DNS with your domain registrar.
 DNS (Domain Name System) translates domain names into IP addresses and routes traffic:
 
 ```
-User types: stampcoin.com
+User types: ecostamp.net
     ↓
 DNS lookup
     ↓
@@ -22,11 +22,11 @@ Website loads
 
 For API subdomain:
 ```
-User code calls: api.stampcoin.com
+User code calls: api.ecostamp.net
     ↓
 DNS lookup
     ↓
-Found: stampcoin-api.onrender.com
+Found: ecostamp.net-api.onrender.com
     ↓
 Render resolves to: 45.XX.XX.XX (Render server)
     ↓
@@ -39,12 +39,12 @@ API responds
 
 ### A Record (Address Record)
 - Points domain name to IPv4 address
-- Used for: `stampcoin.com` → GitHub Pages
+- Used for: `ecostamp.net` → GitHub Pages
 - Need 4 records (for redundancy)
 
 ### CNAME Record (Canonical Name)
 - Points domain to another domain
-- Used for: `api.stampcoin.com` → `stampcoin-api.onrender.com`
+- Used for: `api.ecostamp.net` → `ecostamp.net-api.onrender.com`
 - Cannot be used for root domain (@)
 
 ### TTL (Time To Live)
@@ -77,7 +77,7 @@ These 4 IP addresses route traffic to GitHub's servers:
 This points API subdomain to Render:
 
 ```
-stampcoin-api.onrender.com
+ecostamp.net-api.onrender.com
 ```
 
 Render automatically routes to their servers.
@@ -95,7 +95,7 @@ Render automatically routes to their servers.
 4. Click "Dashboard" once logged in
 
 **Step 2: Access Domain Settings**
-1. Find `stampcoin.com` in your domains list
+1. Find `ecostamp.net` in your domains list
 2. Click the **Manage** button
 
 **Step 3: Go to DNS Settings**
@@ -142,8 +142,8 @@ Currently you might see some default records. Add these:
 
 1. Click **Add New Record**
 2. Type: **CNAME Record**
-3. Host: **api** (this creates api.stampcoin.com)
-4. Value: **stampcoin-api.onrender.com**
+3. Host: **api** (this creates api.ecostamp.net)
+4. Value: **ecostamp.net-api.onrender.com**
 5. TTL: **3600**
 6. Click **checkmark** (✓)
 
@@ -158,7 +158,7 @@ A      @    185.199.108.153     3600
 A      @    185.199.109.153     3600
 A      @    185.199.110.153     3600
 A      @    185.199.111.153     3600
-CNAME  api  stampcoin-api.onrender.com  3600
+CNAME  api  ecostamp.net-api.onrender.com  3600
 ```
 
 ---
@@ -171,7 +171,7 @@ CNAME  api  stampcoin-api.onrender.com  3600
 3. Go to "My domains"
 
 **Step 2: Select Your Domain**
-1. Find `stampcoin.com`
+1. Find `ecostamp.net`
 2. Click on it
 
 **Step 3: Go to DNS Settings**
@@ -212,7 +212,7 @@ Click "Create new record" for each:
 1. Click "Create new record"
 2. DNS record type: **CNAME**
 3. Name: **api**
-4. Canonical name: **stampcoin-api.onrender.com**
+4. Canonical name: **ecostamp.net-api.onrender.com**
 5. TTL: Leave as default
 6. Click **Create**
 
@@ -222,7 +222,7 @@ A      (empty)  185.199.108.153                3600
 A      (empty)  185.199.109.153                3600
 A      (empty)  185.199.110.153                3600
 A      (empty)  185.199.111.153                3600
-CNAME  api      stampcoin-api.onrender.com     3600
+CNAME  api      ecostamp.net-api.onrender.com     3600
 ```
 
 ---
@@ -235,7 +235,7 @@ CNAME  api      stampcoin-api.onrender.com     3600
 3. Go to "My Products"
 
 **Step 2: Manage DNS**
-1. Find `stampcoin.com`
+1. Find `ecostamp.net`
 2. Click the **>** arrow to expand
 3. Click **DNS**
 
@@ -264,7 +264,7 @@ Repeat for each IP:
 1. Click "Add"
 2. Name: **api**
 3. Type: **CNAME**
-4. Value (Points to): **stampcoin-api.onrender.com**
+4. Value (Points to): **ecostamp.net-api.onrender.com**
 5. TTL: 3600
 6. Click **Save**
 
@@ -285,7 +285,7 @@ Repeat for each IP:
 
 1. Click **Add record**
 2. Type: **A**
-3. Name: **@** (represents stampcoin.com)
+3. Name: **@** (represents ecostamp.net )
 4. IPv4 address: **185.199.108.153**
 5. TTL: **3600**
 6. Click **Save**
@@ -300,7 +300,7 @@ Repeat for:
 1. Click **Add record**
 2. Type: **CNAME**
 3. Name: **api** (creates api.stampcoin.com)
-4. Target: **stampcoin-api.onrender.com**
+4. Target: **ecostamp.net-api.onrender.com**
 5. TTL: **3600**
 6. Click **Save**
 
@@ -318,7 +318,7 @@ Use command line to verify records are set correctly:
 
 **Check A records (website):**
 ```bash
-nslookup stampcoin.com
+nslookup ecostamp.net
 
 # Expected output:
 # Server: 8.8.8.8
@@ -330,25 +330,25 @@ nslookup stampcoin.com
 
 **Check CNAME record (API):**
 ```bash
-nslookup api.stampcoin.com
+nslookup api.ecostamp.net
 
 # Expected output:
 # Server: 8.8.8.8
 # Address: 8.8.8.8#53
 # Non-authoritative answer:
-# api.stampcoin.com canonical name = stampcoin-api.onrender.com
+# api.ecostamp.net canonical name = ecostamp.net-api.onrender.com
 ```
 
 **Windows users:**
 ```powershell
-nslookup stampcoin.com
-nslookup api.stampcoin.com
+nslookup ecostamp.net
+nslookup api.ecostamp.net
 ```
 
 **macOS/Linux users:**
 ```bash
-dig stampcoin.com
-dig api.stampcoin.com
+dig ecostamp.net
+dig api.ecostamp.net
 ```
 
 ### Online Verification Tools
@@ -356,7 +356,7 @@ dig api.stampcoin.com
 Use these websites to check DNS:
 
 1. **MXToolbox**: https://mxtoolbox.com/nslookup.aspx
-   - Search: `stampcoin.com`
+   - Search: `ecostamp.net`
    - Shows all A records
    - Shows CNAME records
    - Indicates if propagation is complete
@@ -372,7 +372,7 @@ Use these websites to check DNS:
 
 ### Visual Verification in Browser
 
-1. Open `https://stampcoin.com`
+1. Open `https://ecostamp.net`
 2. Look for:
    - Green padlock (HTTPS)
    - No "Connection not private" warning
@@ -414,7 +414,7 @@ DNS changes don't apply instantly. Propagation timeline:
 ### Issue: "Cannot reach server" / "Connection refused"
 
 **Check:**
-1. DNS records exist: `nslookup stampcoin.com`
+1. DNS records exist: `nslookup ecostamp.net`
 2. A records point to GitHub IPs
 3. CNAME points to Render URL
 4. Wait for DNS propagation (up to 24 hours)
@@ -452,13 +452,13 @@ DNS changes don't apply instantly. Propagation timeline:
 
 **Check:**
 ```bash
-nslookup api.stampcoin.com
-# Should show: stampcoin-api.onrender.com
+nslookup api.ecostamp.net
+# Should show: ecostamp.net-api.onrender.com
 ```
 
 **Fix:**
 1. Verify CNAME in registrar settings
-2. Check exact spelling: `stampcoin-api.onrender.com`
+2. Check exact spelling: `ecostamp.net-api.onrender.com`
 3. No trailing dots
 4. Wait for propagation
 
@@ -468,12 +468,12 @@ nslookup api.stampcoin.com
 1. GitHub Actions workflow passed
 2. CNAME file in repository
 3. GitHub Pages is enabled in settings
-4. Custom domain field shows `stampcoin.com`
+4. Custom domain field shows `ecostamp.net`
 
 **Fix:**
 1. Re-add custom domain:
    - Settings → Pages → Custom domain
-   - Type: `stampcoin.com`
+   - Type: `ecostamp.net`
    - Click Save
 2. Trigger rebuild:
    - Go to Actions
@@ -488,30 +488,30 @@ nslookup api.stampcoin.com
 
 ```bash
 # Show all DNS records
-dig stampcoin.com ANY
+dig ecostamp.net ANY
 
 # Show specific A records
-dig stampcoin.com A
+dig ecostamp.net A
 
 # Show CNAME record
-dig api.stampcoin.com
+dig api.ecostamp.net
 
 # Test DNS server
-dig @8.8.8.8 stampcoin.com
+dig @8.8.8.8 ecostamp.net
 
 # Trace DNS path
-dig +trace stampcoin.com
+dig +trace ecostamp.net
 ```
 
 ### Windows PowerShell:
 
 ```powershell
 # Test DNS resolution
-Resolve-DnsName stampcoin.com
+Resolve-DnsName ecostamp.net
 
 # Test specific record type
-Resolve-DnsName stampcoin.com -Type A
-Resolve-DnsName api.stampcoin.com -Type CNAME
+Resolve-DnsName ecostamp.net -Type A
+Resolve-DnsName api.ecostamp.net-Type CNAME
 
 # Flush local DNS cache
 Clear-DnsClientCache
@@ -530,11 +530,11 @@ Clear-DnsClientCache
 | @ | A | 185.199.110.153 | 3600 |
 | @ | A | 185.199.111.153 | 3600 |
 
-### For api.stampcoin.com (Backend):
+### For api.ecostamp.net (Backend):
 
 | Host | Type | Value | TTL |
 |------|------|-------|-----|
-| api | CNAME | stampcoin-api.onrender.com | 3600 |
+| api | CNAME |ecostamp.net-api.onrender.com | 3600 |
 
 ---
 
@@ -549,8 +549,8 @@ Clear-DnsClientCache
 - [ ] Saved all changes
 - [ ] Waited 15 minutes
 - [ ] Tested with nslookup/dig
-- [ ] Website loads at stampcoin.com
-- [ ] API responds at api.stampcoin.com
+- [ ] Website loads at ecostamp.net
+- [ ] API responds at api.ecostamp.net
 
 ---
 
