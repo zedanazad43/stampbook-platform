@@ -46,10 +46,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
-          # Alternatively, upload only the production-ready build artifacts
-          # path: './dist'
+          # Upload only the production-ready build artifacts
+          path: './dist'
           
   # Deployment job
   deploy:
