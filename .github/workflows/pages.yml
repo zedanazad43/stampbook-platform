@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload only the production-ready build artifacts
-          path: './dist'
+          path: './public'
 
   # Deployment job
   deploy:
