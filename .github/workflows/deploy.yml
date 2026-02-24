@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: github-latest
 
     steps:
       # Checkout the repository
@@ -105,18 +105,18 @@ jobs:
 
       ### Cloudflare Wrangler ###
       - name: Setup Wrangler
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != 'cf48cfb41422fa4ff25991f72a536da38c490' }}
         uses: cloudflare/wrangler-action@1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
       - name: Deploy to Cloudflare Pages
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != 'cf48cfb41422fa4ff25991f72a536da38c490' }}
         run: npx wrangler pages deploy public --project-name stampcoin-platform
         continue-on-error: true
 
       - name: Deploy to Cloudflare Workers
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != 'cf48cfb41422fa4ff25991f72a536da38c490' }}
         run: npx wrangler deploy --env production
         continue-on-error: true
 
