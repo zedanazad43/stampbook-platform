@@ -27,11 +27,10 @@ jobs:
     strategy:
       matrix:
         build:
-          - parcel
-          - react
-          - vue
-          - tsc
-    steps:
+         
+          
+  
+steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -44,13 +43,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
-        run: |
-          if [ "${{ matrix.build }}" == "parcel" ]; then npm run build:parcel; fi
-          if [ "${{ matrix.build }}" == "react" ]; then npm run build:react; fi
-          if [ "${{ matrix.build }}" == "vue" ]; then npm run build:vue; fi
-          if [ "${{ matrix.build }}" == "tsc" ]; then npm run build:tsc; fi
-
+     
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
