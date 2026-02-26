@@ -1,4 +1,4 @@
-# Name of the workflow
+
 name: Deploy to GitHub Pages
 
 # Trigger the workflow on push to the main branch
