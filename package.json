@@ -8,5 +8,5 @@
     "build:vue": "vue-cli-service build",
     "build:tsc": "tsc",
     "start": "node server.js"
-  }
+  }"build": "echo 'No build needed'"
 }
