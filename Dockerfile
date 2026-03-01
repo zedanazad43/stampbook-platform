@@ -1,18 +1,15 @@
 # Multi-stage build for Stampcoin Platform
 
 # Stage 1: Build
-FROM node:18-alpine AS builder
+FROM node:18 AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json ./
-
-# Install all dependencies
-RUN npm ci
-
 # Copy application files
 COPY . .
+
+# Install all dependencies
+RUN npm install
 
 # Build application
 RUN npm run build
