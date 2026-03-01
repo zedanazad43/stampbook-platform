@@ -7,6 +7,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve frontend static files from /public
+app.use(express.static(path.join(__dirname, "public")));
+
+// Health check endpoint (used by Docker and docker-compose healthchecks)
+app.get("/health", (req, res) => res.json({ status: "ok" }));
+
 const DATA_FILE = path.join(__dirname, "data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
 

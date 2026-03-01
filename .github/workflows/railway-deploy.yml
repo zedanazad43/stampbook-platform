@@ -39,11 +39,24 @@ jobs:
       # تأكد من إضافة RAILWAY_TOKEN كسر في:
       #   GitHub → Settings → Secrets → RAILWAY_TOKEN
       # كذلك أضف SYNC_TOKEN و PORT في لوحة Railway
+      - name: Check Railway token
+        id: check-railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -n "$RAILWAY_TOKEN" ]; then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy=false" >> $GITHUB_OUTPUT
+            echo "RAILWAY_TOKEN is not configured, skipping deployment."
+          fi
+
       - name: نشر على Railway
+        if: steps.check-railway.outputs.deploy == 'true'
         run: |
           # تثبيت Railway CLI
           npm install -g @railway/cli
-          # نشر المشروع والانتظار حتى اكتمال النشر (يفشل عند حدوث خطأ)
-          railway up
+          # نشر المشروع في الخلفية دون انتظار اكتمال النشر
+          railway up --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

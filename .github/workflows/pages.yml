@@ -53,6 +53,7 @@ jobs:
           directory: public
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           wranglerVersion: '3'
+          skipCaching: true
 
       - name: Notify n8n webhook
         if: always()
