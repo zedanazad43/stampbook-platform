@@ -22,5 +22,13 @@
     "stamps": [],
     "createdAt": "2026-03-01T23:34:42.131Z",
     "updatedAt": "2026-03-01T23:34:42.145Z"
+  },
+  "user_alice": {
+    "userId": "user_alice",
+    "userName": "Alice",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-01T23:38:33.702Z",
+    "updatedAt": "2026-03-01T23:38:33.702Z"
   }
 }

@@ -95,9 +95,29 @@ textarea{resize:vertical;min-height:70px}
 .tab-btn{padding:10px 20px;border:none;background:none;cursor:pointer;font-size:.95rem;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:600;transition:all .2s}
 .tab-btn.active{color:var(--purple);border-bottom-color:var(--purple)}
 @media(max-width:600px){nav{padding:0 12px}.nav-links{gap:0}.nav-link{padding:8px 10px;font-size:.85rem}section{padding:20px 12px}.hero h1{font-size:1.6rem}#exch-grid{grid-template-columns:1fr}}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center}
+.modal-overlay[hidden]{display:none}
+.modal-box{background:#fff;border-radius:var(--radius);padding:28px;max-width:400px;width:90%;box-shadow:var(--shadow)}
+.modal-box h3{margin-bottom:8px;color:var(--purple)}
+.modal-box p{margin-bottom:16px;color:var(--muted);font-size:.95rem}
+.modal-box input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;margin-bottom:16px}
+.modal-box input:focus{outline:none;border-color:var(--purple)}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
 </style>
 </head>
 <body>
+<div id="buy-modal" class="modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="buy-modal-title">
+  <div class="modal-box">
+    <h3 id="buy-modal-title"></h3>
+    <p id="buy-modal-desc"></p>
+    <label for="buy-modal-input" id="buy-modal-label" style="display:block;font-size:.9rem;font-weight:600;margin-bottom:6px;color:var(--text)"></label>
+    <input id="buy-modal-input" type="text" autocomplete="off"/>
+    <div class="modal-actions">
+      <button class="btn btn-purple" id="buy-modal-cancel" style="padding:9px 20px"></button>
+      <button class="btn btn-gold" id="buy-modal-confirm" style="padding:9px 20px"></button>
+    </div>
+  </div>
+</div>
 
 <nav>
   <button class="nav-logo" onclick="navigate('home')">
@@ -512,22 +532,57 @@ function renderMarket() {
   }).join('');
 }
 
-// Use event delegation for buy buttons to avoid inline onclick with string escaping
-document.getElementById('market-grid').addEventListener('click', function(e) {
-  var btn = e.target.closest('.buy-btn');
-  if(!btn) return;
-  doBuyItem(btn.getAttribute('data-id'));
-});
+// Use event delegation for buy buttons — registered once at startup
+if (!document.getElementById('market-grid')._buyDelegated) {
+  document.getElementById('market-grid').addEventListener('click', function(e) {
+    var btn = e.target.closest('.buy-btn');
+    if(!btn) return;
+    doBuyItem(btn.getAttribute('data-id'));
+  });
+  document.getElementById('market-grid')._buyDelegated = true;
+}
+
+function showModal(title, desc, labelText, placeholder, confirmLabel, cancelLabel, onConfirm) {
+  var modal = document.getElementById('buy-modal');
+  document.getElementById('buy-modal-title').textContent = title;
+  document.getElementById('buy-modal-desc').textContent = desc;
+  document.getElementById('buy-modal-label').textContent = labelText;
+  var input = document.getElementById('buy-modal-input');
+  input.placeholder = placeholder;
+  input.value = '';
+  document.getElementById('buy-modal-confirm').textContent = confirmLabel;
+  document.getElementById('buy-modal-cancel').textContent = cancelLabel;
+  modal.hidden = false;
+  input.focus();
+  function cleanup() { modal.hidden = true; modal.removeEventListener('keydown', onKey); }
+  function onKey(e) { if(e.key==='Escape') cleanup(); }
+  modal.addEventListener('keydown', onKey);
+  document.getElementById('buy-modal-cancel').onclick = cleanup;
+  document.getElementById('buy-modal-confirm').onclick = function() {
+    var val = input.value.trim();
+    if(!val) { input.focus(); return; }
+    cleanup();
+    onConfirm(val);
+  };
+}
 
 function doBuyItem(itemId) {
   var item = allMarketItems.find(function(i){ return i.id===itemId; });
   if(!item) return;
-  var buyerId = prompt(lang==='ar'?('أدخل معرف محفظتك لشراء "'+item.name+'" مقابل '+item.price+' STP:'):('Enter your wallet User ID to buy "'+item.name+'" for '+item.price+' STP:'));
-  if(!buyerId) return;
-  api('POST','/api/market/items/'+itemId+'/buy',{buyerId:buyerId}).then(function(){
-    toast(lang==='ar'?('تم شراء "'+item.name+'" بنجاح'):('Purchased "'+item.name+'" successfully'),'success');
-    loadMarketItems();
-  }).catch(function(e){ toast(e.message,'error'); });
+  showModal(
+    lang==='ar'?'شراء طابع':'Buy Stamp',
+    lang==='ar'?('سعر: '+item.price+' STP — "'+item.name+'"'):('Price: '+item.price+' STP — "'+item.name+'"'),
+    lang==='ar'?'معرف محفظتك':'Your Wallet User ID',
+    lang==='ar'?'أدخل معرف المستخدم':'Enter your user ID',
+    lang==='ar'?'تأكيد الشراء':'Confirm Purchase',
+    lang==='ar'?'إلغاء':'Cancel',
+    function(buyerId) {
+      api('POST','/api/market/items/'+itemId+'/buy',{buyerId:buyerId}).then(function(){
+        toast(lang==='ar'?('تم شراء "'+item.name+'" بنجاح'):('Purchased "'+item.name+'" successfully'),'success');
+        loadMarketItems();
+      }).catch(function(e){ toast(e.message,'error'); });
+    }
+  );
 }
 
 function toggleListForm() {
