@@ -1,0 +1,49 @@
+# ======================================================
+# سير عمل: نشر الخلفية تلقائياً على Railway
+# يُشغَّل عند كل Push على الفرع الرئيسي (main)
+# المتطلبات: أضف السر RAILWAY_TOKEN في إعدادات GitHub
+# ======================================================
+name: نشر الخلفية على Railway
+
+on:
+  push:
+    branches:
+      - main
+  # يتيح تشغيل سير العمل يدوياً من تبويب Actions
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: نشر تلقائي على Railway
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # الخطوة 1: استنساخ الكود من المستودع
+      - name: استنساخ الكود
+        uses: actions/checkout@v4
+
+      # الخطوة 2: إعداد بيئة Node.js (الإصدار 18)
+      - name: إعداد Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # الخطوة 3: تثبيت حزم المشروع
+      - name: تثبيت الحزم
+        run: npm ci
+
+      # الخطوة 4: تثبيت أداة Railway CLI ونشر المشروع
+      # تأكد من إضافة RAILWAY_TOKEN كسر في:
+      #   GitHub → Settings → Secrets → RAILWAY_TOKEN
+      # كذلك أضف SYNC_TOKEN و PORT في لوحة Railway
+      - name: نشر على Railway
+        run: |
+          # تثبيت Railway CLI
+          npm install -g @railway/cli
+          # نشر المشروع والانتظار حتى اكتمال النشر (يفشل عند حدوث خطأ)
+          railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
