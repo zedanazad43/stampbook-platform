@@ -29,8 +29,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Check Cloudflare secrets
+        id: check-cloudflare
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CF_TOKEN" ] && [ -n "$CF_ACCOUNT" ]; then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy=false" >> $GITHUB_OUTPUT
+            echo "Cloudflare secrets not configured, skipping deployment."
+          fi
+
       - name: Deploy to Cloudflare Pages
         id: deployment
+        if: steps.check-cloudflare.outputs.deploy == 'true'
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -39,6 +53,7 @@ jobs:
           directory: public
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           wranglerVersion: '3'
+          skipCaching: true
 
       - name: Notify n8n webhook
         if: always()
