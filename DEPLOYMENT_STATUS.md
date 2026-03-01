@@ -5,6 +5,39 @@
 
 ---
 
+## 🤖 CI/CD Automation | أتمتة النشر
+
+| Workflow | Platform | Trigger | File |
+|----------|----------|---------|------|
+| **نشر الخلفية على Railway** | Railway (Backend) | Push → `main` | `.github/workflows/railway-deploy.yml` |
+| **Deploy to GitHub Pages** | GitHub Pages (Frontend) | Push → `main` | `.github/workflows/pages.yml` |
+
+### ⚙️ Required Secrets | المتغيرات المطلوبة
+
+Add these in **GitHub → Settings → Secrets and variables → Actions**:
+
+| Secret | Description | Platform |
+|--------|-------------|----------|
+| `RAILWAY_TOKEN` | Railway API token (from Railway dashboard) | Railway |
+
+Add these in the **Railway service dashboard**:
+
+| Variable | Description | Value |
+|----------|-------------|-------|
+| `SYNC_TOKEN` | Secret token for API authentication | Generate with `openssl rand -base64 32` |
+| `PORT` | Server port (auto-set by Railway) | `8080` |
+
+### 🗑️ كيفية حذف Workflow مستقبلاً
+
+To delete a workflow from the repo:
+```bash
+git rm .github/workflows/<filename>.yml
+git commit -m "حذف workflow قديم"
+git push
+```
+
+---
+
 ## 🌐 Website Status
 
 ### ✅ GitHub Pages (Live)
@@ -13,7 +46,7 @@
 
 **Status**: 
 - ✅ Automatically deployed from `main` branch
-- ✅ GitHub Actions workflow configured
+- ✅ GitHub Actions workflow configured (`.github/workflows/pages.yml`)
 - ✅ HTTPS enabled by default
 - ✅ Custom domain ready
 
@@ -31,7 +64,7 @@
 
 Your backend is ready for deployment on **5 different platforms**. Choose one:
 
-### ⭐ Recommended: Railway
+### ⭐ Recommended: Railway (CI/CD Automated)
 
 **Why Railway?**
 - ✅ Easiest setup (3 commands)
@@ -39,8 +72,16 @@ Your backend is ready for deployment on **5 different platforms**. Choose one:
 - ✅ Automatic HTTPS
 - ✅ Persistent storage included
 - ✅ Perfect for small to medium apps
+- ✅ **Auto-deploy via GitHub Actions on every push to `main`**
 
-**Quick Start**:
+**CI/CD Setup** (one-time):
+1. Create account at https://railway.app
+2. Create a new project and copy your `RAILWAY_TOKEN`
+3. Add `RAILWAY_TOKEN` to GitHub Secrets
+4. Set `SYNC_TOKEN` and `PORT=8080` in Railway dashboard
+5. Every subsequent push to `main` deploys automatically!
+
+**Manual Quick Start** (if needed):
 ```bash
 npm install -g @railway/cli
 railway login
@@ -296,9 +337,10 @@ All platforms support auto-deploy on push to main branch. Every commit triggers:
 | Component | Status | Live URL |
 |-----------|--------|----------|
 | **Website** | ✅ Live | https://zedanazad43.github.io/stp/ |
-| **GitHub Actions** | ✅ Ready | Auto-deploys on push |
+| **GitHub Actions (Pages)** | ✅ Active | Auto-deploys on push to `main` |
+| **GitHub Actions (Railway)** | ✅ Active | Auto-deploys backend on push to `main` |
 | **Docker** | ✅ Ready | Multi-stage build configured |
-| **Backend API** | ⏳ Ready | Choose platform above |
+| **Backend API** | ⏳ Ready | Add `RAILWAY_TOKEN` secret to activate |
 | **Configuration** | ✅ Complete | All platforms configured |
 | **Documentation** | ✅ Complete | Full guides included |
 
