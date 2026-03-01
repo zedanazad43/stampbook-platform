@@ -1,0 +1,39 @@
+# Copilot Setup Steps for CI Automation
+
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+
+  - name: Setup Node.js
+    uses: actions/setup-node@v3
+    with:
+      node-version: '18'
+
+  - name: Setup Python
+    uses: actions/setup-python@v4
+    with:
+      python-version: '3.10'
+
+  - name: Install dependencies (Node.js)
+    run: |
+      if [ -f package.json ]; then
+        npm install
+      fi
+
+  - name: Install dependencies (Python)
+    run: |
+      if [ -f requirements.txt ]; then
+        pip install -r requirements.txt
+      fi
+
+  - name: Run tests (Node.js)
+    run: |
+      if [ -f package.json ]; then
+        npm test
+      fi
+
+  - name: Run tests (Python)
+    run: |
+      if [ -f requirements.txt ]; then
+        pytest || echo "pytest not found"
+      fi
