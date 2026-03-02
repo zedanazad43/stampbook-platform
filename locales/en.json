@@ -1,7 +1,7 @@
 {
   "language": "English",
   "languageCode": "en",
-  "flag": "🇬🇧",
+  "flag": "GB",
   "platform": {
     "title": "Stampcoin Platform",
     "subtitle": "Digital Platform",
@@ -49,7 +49,7 @@
     "multilingual": "Multilingual Support",
     "contact": "Contact",
     "founder": "Azad Zedan - Founder of Stampcoin",
-    "copyright": "Stampcoin Platform. Built with ❤️ for collectors worldwide."
+    "copyright": "Stampcoin Platform. Built for collectors worldwide."
   },
   "readme": {
     "description": "Stampcoin is an innovative platform for digital currency based on blockchain tech, focused on digital stamps, rewards, and loyalty tokens.",

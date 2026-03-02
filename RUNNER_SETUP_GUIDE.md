@@ -1,104 +1,104 @@
-# دليل إعداد العداد المخصص (Self-Hosted Runner)
+#     (Self-Hosted Runner)
 
-## مقدمة
-هذا الدليل سيساعدك على إعداد العداد المخصص لمشروعك خطوة بخطوة. العداد المخصص سيسمح لك بتشغيل سير العمل الخاص بك على خادم خاص بك بدلاً من استخدام العداد الافتراضي من GitHub.
+## 
+         .                    GitHub.
 
-## المتطلبات الأساسية
-- خادم Linux (Ubuntu 20.04 أو أحدث موصى به)
-- اتصال بالإنترنت
-- صلاحيات المستخدم المسؤول (sudo) على الخادم
+##  
+-  Linux (Ubuntu 20.04    )
+-  
+-    (sudo)  
 
-## الخطوات التفصيلية
+##  
 
-### 1. الدخول إلى إعدادات المستودع على GitHub
-1. افتح المتصفح وانتقل إلى مستودعك: https://github.com/zedanazad43/stp
-2. انقر على علامة التبويب **Settings** في القائمة العلوية
-3. من القائمة الجانبية، اختر **Actions** ثم **Runners**
-4. انقر على زر **New self-hosted runner**
+### 1.      GitHub
+1.     : https://github.com/zedanazad43/stp
+2.     **Settings**   
+3.     **Actions**  **Runners**
+4.    **New self-hosted runner**
 
-### 2. اختيار نظام التشغيل والبنية
-1. اختر نظام التشغيل: **Linux**
-2. اختر البنية: **x64** (أو البنية المناسبة لخادمك)
+### 2.    
+1.   : **Linux**
+2.  : **x64** (   )
 
-### 3. تنزيل العداد
-1. على خادمك، أنشئ مجلدًا للعداد:
+### 3.  
+1.     :
    ```bash
    mkdir actions-runner && cd actions-runner
    ```
-2. قم بتنزيل أحدث إصدار من العداد:
+2.      :
    ```bash
    curl -o actions-runner-linux-x64-2.311.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linux-x64-2.311.0.tar.gz
    ```
-3. قم باستخراج الملفات:
+3.   :
    ```bash
    tar xzf ./actions-runner-linux-x64-2.311.0.tar.gz
    ```
 
-### 4. تكوين العداد
-1. قم بتشغيل أمر التكوين باستخدام الرمز الذي قدمه GitHub:
+### 4.  
+1.         GitHub:
    ```bash
    ./config.sh --url https://github.com/zedanazad43/stp --token YOUR_TOKEN
    ```
-   - استبدل `YOUR_TOKEN` بالرمز الفعلي الذي قدمه GitHub
-   - عند المطالبة بالتسميات (labels)، أدخل: `self-hosted,linux`
+   -  `YOUR_TOKEN`     GitHub
+   -    (labels) : `self-hosted,linux`
 
-### 5. تشغيل العداد كخدمة
-1. قم بتثبيت الخدمة:
+### 5.   
+1.   :
    ```bash
    sudo ./svc.sh install
    ```
-2. ابدأ الخدمة:
+2.  :
    ```bash
    sudo ./svc.sh start
    ```
-3. تحقق من حالة الخدمة:
+3.    :
    ```bash
    sudo ./svc.sh status
    ```
 
-### 6. التحقق من نجاح الإعداد
-1. ارجع إلى صفحة GitHub (Settings > Actions > Runners)
-2. يجب أن يظهر العداد الجديد في قائمة "Self-hosted runners" مع الحالة "online"
+### 6.    
+1.    GitHub (Settings > Actions > Runners)
+2.        "Self-hosted runners"   "online"
 
-## استكشاف الأخطاء وإصلاحها
+##   
 
-### 1. العداد لا يظهر في GitHub
-- تأكد من أن الرمز (token) صحيح وغير منتهي الصلاحية
-- تحقق من اتصال الخادم بالإنترنت
-- تأكد من أنك تستخدم الإصدار الصحيح من العداد
+### 1.     GitHub
+-     (token)    
+-     
+-        
 
-### 2. العداد غير متصل
-- تحقق من حالة الخدمة: `sudo ./svc.sh status`
-- أعد تشغيل الخدمة: `sudo ./svc.sh restart`
-- تحقق من سجلات الخدمة: `sudo journalctl -u actions-runner.service`
+### 2.   
+-    : `sudo ./svc.sh status`
+-   : `sudo ./svc.sh restart`
+-    : `sudo journalctl -u actions-runner.service`
 
-### 3. مشاكل في تنفيذ سير العمل
-- تأكد من أن التسميات (labels) صحيحة: `self-hosted,linux`
-- تحقق من أن جميع المتطلبات المذكورة في سير العمل مثبتة على الخادم
-- راقب سجلات العداد: `sudo journalctl -u actions-runner.service -f`
+### 3.     
+-     (labels) : `self-hosted,linux`
+-            
+-   : `sudo journalctl -u actions-runner.service -f`
 
-## نصائح إضافية
+##  
 
-### أمان العداد
-1. قم بتغيير ملكية مجلد العداد:
+###  
+1.     :
    ```bash
    sudo chown -R root:root /actions-runner
    ```
-2. قم بتقييد الوصول إلى مجلد العداد
-3. قم بتحديث العداد بانتظام:
+2.      
+3.    :
    ```bash
    cd actions-runner
    sudo ./svc.sh stop
    sudo ./svc.sh uninstall
    sudo ./config.sh remove --token YOUR_TOKEN
-   # ثم كرر الخطوات 3-5
+   #    3-5
    ```
 
-### تحسينات الأداء
-1. تأكد من أن الخادم لديه موارد كافية (CPU, RAM)
-2. استخدم خادمًا قريبًا من موقع المستخدمين
-3. قم بتعديل إعدادات النظام حسب احتياجات سير العمل
+###  
+1.        (CPU, RAM)
+2.      
+3.        
 
-## المراجع
+## 
 - [GitHub Self-Hosted Runner Documentation](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners)
 - [GitHub Self-Hosted Runner Installation Guide](https://docs.github.com/en/actions/hosting-your-own-runners/adding-self-hosted-runners)

@@ -1,67 +1,67 @@
-# Self-Hosted Runner Setup | إعداد العداء المستضاف ذاتيًا
+# Self-Hosted Runner Setup |    
 
-## العربية 🇸🇦
+##  
 
-### نظرة عامة
-هذا المستند يشرح كيفية إعداد عداء GitHub Actions مستضاف ذاتيًا لهذا المستودع.
+###  
+      GitHub Actions    .
 
-### المتطلبات الأساسية
-- خادم Linux (Ubuntu 20.04 أو أحدث موصى به)
-- Node.js 18.x أو أحدث (مطلوب لبناء التطبيق)
-- لا يقل عن 2GB RAM
-- مساحة قرص 10GB على الأقل
-- اتصال إنترنت مستقر
+###  
+-  Linux (Ubuntu 20.04    )
+- Node.js 18.x   (  )
+-    2GB RAM
+-   10GB  
+-   
 
-### خطوات التثبيت
+###  
 
-1. **انتقل إلى إعدادات المستودع**
-   - افتح https://github.com/zedanazad43/stp/settings/actions/runners
-   - انقر على "New self-hosted runner"
+1. **   **
+   -  https://github.com/zedanazad43/stp/settings/actions/runners
+   -   "New self-hosted runner"
 
-2. **اختر نظام التشغيل والبنية**
-   - نظام التشغيل: Linux
-   - البنية: x64 (أو حسب خادمك)
+2. **   **
+   -  : Linux
+   - : x64 (  )
 
-3. **قم بتنزيل وتكوين العداء**
+3. **   **
    ```bash
-   # إنشاء مجلد للعداء
+   #   
    mkdir actions-runner && cd actions-runner
    
-   # تنزيل أحدث إصدار من العداء
+   #     
    curl -o actions-runner-linux-x64-2.311.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linux-x64-2.311.0.tar.gz
    
-   # استخراج الملفات
+   #  
    tar xzf ./actions-runner-linux-x64-2.311.0.tar.gz
    ```
 
-4. **قم بتكوين العداء**
+4. **  **
    ```bash
-   # استخدم الأمر المقدم من GitHub (سيحتوي على رمز التسجيل الخاص بك)
+   #     GitHub (     )
    ./config.sh --url https://github.com/zedanazad43/stp --token YOUR_TOKEN
    
-   # أضف التسميات المطلوبة
-   # عند المطالبة بالتسميات، أدخل: self-hosted,linux
+   #   
+   #    : self-hosted,linux
    ```
 
-5. **قم بتشغيل العداء كخدمة**
+5. **   **
    ```bash
-   # تثبيت الخدمة
+   #  
    sudo ./svc.sh install
    
-   # بدء الخدمة
+   #  
    sudo ./svc.sh start
    
-   # التحقق من الحالة
+   #   
    sudo ./svc.sh status
    ```
 
-### التحقق
-بعد التثبيت، تحقق من أن العداء يظهر كـ "Idle" في:
+### 
+        "Idle" :
 https://github.com/zedanazad43/stp/settings/actions/runners
 
 ---
 
-## English 🇬🇧
+## English 
 
 ### Overview
 This document explains how to set up a self-hosted GitHub Actions runner for this repository.
@@ -122,14 +122,14 @@ https://github.com/zedanazad43/stp/settings/actions/runners
 
 ---
 
-## Deutsch 🇩🇪
+## Deutsch 
 
-### Übersicht
-Dieses Dokument erklärt, wie man einen selbst gehosteten GitHub Actions Runner für dieses Repository einrichtet.
+### Ubersicht
+Dieses Dokument erklart, wie man einen selbst gehosteten GitHub Actions Runner fur dieses Repository einrichtet.
 
 ### Voraussetzungen
 - Linux-Server (Ubuntu 20.04 oder neuer empfohlen)
-- Node.js 18.x oder neuer (erforderlich für den Anwendungsbau)
+- Node.js 18.x oder neuer (erforderlich fur den Anwendungsbau)
 - Mindestens 2GB RAM
 - Mindestens 10GB Speicherplatz
 - Stabile Internetverbindung
@@ -137,16 +137,16 @@ Dieses Dokument erklärt, wie man einen selbst gehosteten GitHub Actions Runner 
 ### Installationsschritte
 
 1. **Zu den Repository-Einstellungen navigieren**
-   - Öffnen Sie https://github.com/zedanazad43/stp/settings/actions/runners
+   - Offnen Sie https://github.com/zedanazad43/stp/settings/actions/runners
    - Klicken Sie auf "New self-hosted runner"
 
-2. **Betriebssystem und Architektur wählen**
+2. **Betriebssystem und Architektur wahlen**
    - Betriebssystem: Linux
    - Architektur: x64 (oder passend zu Ihrem Server)
 
 3. **Runner herunterladen und konfigurieren**
    ```bash
-   # Ordner für den Runner erstellen
+   # Ordner fur den Runner erstellen
    mkdir actions-runner && cd actions-runner
    
    # Neueste Runner-Version herunterladen
@@ -158,14 +158,14 @@ Dieses Dokument erklärt, wie man einen selbst gehosteten GitHub Actions Runner 
 
 4. **Runner konfigurieren**
    ```bash
-   # Verwenden Sie den von GitHub bereitgestellten Befehl (enthält Ihr Registrierungs-Token)
+   # Verwenden Sie den von GitHub bereitgestellten Befehl (enthalt Ihr Registrierungs-Token)
    ./config.sh --url https://github.com/zedanazad43/stp --token YOUR_TOKEN
    
-   # Erforderliche Labels hinzufügen
+   # Erforderliche Labels hinzufugen
    # Bei der Aufforderung nach Labels eingeben: self-hosted,linux
    ```
 
-5. **Runner als Dienst ausführen**
+5. **Runner als Dienst ausfuhren**
    ```bash
    # Dienst installieren
    sudo ./svc.sh install
@@ -173,39 +173,39 @@ Dieses Dokument erklärt, wie man einen selbst gehosteten GitHub Actions Runner 
    # Dienst starten
    sudo ./svc.sh start
    
-   # Status überprüfen
+   # Status uberprufen
    sudo ./svc.sh status
    ```
 
-### Überprüfung
-Nach der Installation überprüfen Sie, ob der Runner als "Idle" angezeigt wird unter:
+### Uberprufung
+Nach der Installation uberprufen Sie, ob der Runner als "Idle" angezeigt wird unter:
 https://github.com/zedanazad43/stp/settings/actions/runners
 
 ---
 
-## Additional Notes | ملاحظات إضافية | Zusätzliche Hinweise
+## Additional Notes |   | Zusatzliche Hinweise
 
-### Security Considerations | اعتبارات الأمان | Sicherheitsüberlegungen
+### Security Considerations |   | Sicherheitsuberlegungen
 
-**العربية**: من المهم تأمين العداء المستضاف ذاتيًا:
-- استخدم حسابات مستخدم محدودة الصلاحيات
-- قم بتحديث نظام التشغيل والعداء بانتظام
-- استخدم جدار حماية لحماية الخادم
+****:      :
+-     
+-      
+-     
 
 **English**: Important security considerations for self-hosted runners:
 - Use limited permission user accounts
 - Keep the OS and runner updated regularly
 - Use a firewall to protect the server
 
-**Deutsch**: Wichtige Sicherheitsaspekte für selbst gehostete Runner:
-- Verwenden Sie Benutzerkonten mit eingeschränkten Berechtigungen
-- Halten Sie das Betriebssystem und den Runner regelmäßig aktuell
+**Deutsch**: Wichtige Sicherheitsaspekte fur selbst gehostete Runner:
+- Verwenden Sie Benutzerkonten mit eingeschrankten Berechtigungen
+- Halten Sie das Betriebssystem und den Runner regelmaig aktuell
 - Verwenden Sie eine Firewall zum Schutz des Servers
 
-### Workflow Usage | استخدام سير العمل | Workflow-Nutzung
+### Workflow Usage |    | Workflow-Nutzung
 
 The self-hosted runner is configured with the label `[self-hosted, linux]` and will automatically pick up jobs from the `self-hosted-ci.yml` workflow.
 
-العداء المستضاف ذاتيًا مكون بالتسمية `[self-hosted, linux]` وسيلتقط تلقائيًا المهام من سير العمل `self-hosted-ci.yml`.
+     `[self-hosted, linux]`       `self-hosted-ci.yml`.
 
-Der selbst gehostete Runner ist mit dem Label `[self-hosted, linux]` konfiguriert und übernimmt automatisch Jobs aus dem `self-hosted-ci.yml` Workflow.
+Der selbst gehostete Runner ist mit dem Label `[self-hosted, linux]` konfiguriert und ubernimmt automatisch Jobs aus dem `self-hosted-ci.yml` Workflow.

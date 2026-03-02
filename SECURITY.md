@@ -1,34 +1,34 @@
-# الأمان / Security / Sicherheit
+#  / Security / Sicherheit
 
-## العربية 🇸🇦
+##  
 
-### تحذيرات أمنية مهمة
-1. **لا تشارك المفاتيح والبيانات الحساسة**
-   - لا تضع مفاتيح API أو كلمات المرور في المستودع
-   - استخدم متغيرات البيئة (.env) دائماً
-   - أضف .env إلى .gitignore
+###   
+1. **    **
+   -    API     
+   -    (.env) 
+   -  .env  .gitignore
 
-2. **أمان البيانات**
-   - استخدم HTTPS لجميع الاتصالات
-   - قم بتشفير البيانات الحساسة في قاعدة البيانات
-   - تجنب تخزين كلمات المرور نصاً عادياً
+2. ** **
+   -  HTTPS  
+   -       
+   -      
 
-3. **الملفات المشبوهة**
-   - تم حذف الملفات ذات الإصدارات المتعددة (Version2, Version3)
-   - تم إزالة الملفات الفارغة والمخلفة
-   - تحقق من أي ملفات جديدة قبل الدفع للمستودع
+3. ** **
+   -       (Version2, Version3)
+   -     
+   -        
 
-4. **مراجعات الأمان**
-   - استخدم GitHub Security advisories
-   - قم بتحديث المكتبات بانتظام
-   - فعّل Dependabot للتنبيهات التلقائية
+4. ** **
+   -  GitHub Security advisories
+   -    
+   -  Dependabot  
 
-### الإبلاغ عن المشاكل الأمنية
-إذا وجدت ثغرة أمنية، أرسل بريد إلى: security@stampcoin-platform.dev
+###    
+      : security@stampcoin-platform.dev
 
 ---
 
-## English 🇬🇧
+## English 
 
 ### Security Warnings
 1. **Never Share Sensitive Data**
@@ -56,28 +56,28 @@ If you find a security vulnerability, email: security@stampcoin-platform.dev
 
 ---
 
-## Deutsch 🇩🇪
+## Deutsch 
 
 ### Sicherheitswarnungen
 1. **Teile Keine Vertraulichen Daten**
-   - Committe API-Schlüssel oder Passwörter nicht ins Repository
+   - Committe API-Schlussel oder Passworter nicht ins Repository
    - Verwende immer Umgebungsvariablen (.env)
-   - Füge .env zu .gitignore hinzu
+   - Fuge .env zu .gitignore hinzu
 
 2. **Datensicherheit**
-   - Verwende HTTPS für alle Kommunikation
-   - Verschlüssele sensible Daten in der Datenbank
-   - Speichere Passwörter niemals im Klartext
+   - Verwende HTTPS fur alle Kommunikation
+   - Verschlussele sensible Daten in der Datenbank
+   - Speichere Passworter niemals im Klartext
 
-3. **Verdächtige Dateien**
+3. **Verdachtige Dateien**
    - Dateien mit mehreren Versionen (Version2, Version3) wurden entfernt
    - Leere und verwaiste Dateien wurden bereinigt
-   - Überprüfe neue Dateien vor dem Pushen ins Repository
+   - Uberprufe neue Dateien vor dem Pushen ins Repository
 
-4. **Sicherheitsüberprüfungen**
+4. **Sicherheitsuberprufungen**
    - Nutze GitHub Security advisories
-   - Update Bibliotheken regelmäßig
-   - Aktiviere Dependabot für automatische Benachrichtigungen
+   - Update Bibliotheken regelmaig
+   - Aktiviere Dependabot fur automatische Benachrichtigungen
 
 ### Sicherheitsprobleme Melden
-Wenn du eine Sicherheitslücke findest, sende eine E-Mail an: security@stampcoin-platform.dev
+Wenn du eine Sicherheitslucke findest, sende eine E-Mail an: security@stampcoin-platform.dev

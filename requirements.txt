@@ -1,2 +1,2 @@
-# اعتماديات Python لمشروع Stampcoin
-# أضف مكتباتك المطلوبة هنا
+#  Python  Stampcoin
+#    

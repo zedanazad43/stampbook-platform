@@ -312,7 +312,7 @@ def process_extra_prompt(
         # extra_prompt = LANGUAGE_TAG[language] + "\n"
         prompt = prompt.strip()
         if generation_mode == "instruction":
-            return "问：" + extra_prompt + prompt + "\n答："
+            return "Q:" + extra_prompt + prompt + "\nA:"
         return extra_prompt + prompt
     elif dataset_type == "mbpp":
         extra_prompt = ""

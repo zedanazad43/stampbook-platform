@@ -1,16 +1,16 @@
-# ⚡ QUICK START: Render + GitHub Pages + Domain | البدء السريع
+#  QUICK START: Render + GitHub Pages + Domain |  
 
-## 🚀 30-Second Overview
+##  30-Second Overview
 
 ```
-✅ Website:  GitHub Pages (LIVE NOW)
-🔌 Backend:  Render.com (ready in 5 minutes)
-🌐 Domain:   Optional (~$10/year for .com)
+ Website:  GitHub Pages (LIVE NOW)
+ Backend:  Render.com (ready in 5 minutes)
+ Domain:   Optional (~$10/year for .com)
 ```
 
 ---
 
-## 🟢 IMMEDIATE (5-10 Minutes)
+##  IMMEDIATE (5-10 Minutes)
 
 ### Step 1: Enable GitHub Pages (1 min)
 
@@ -20,23 +20,23 @@
 3. Click Save
 ```
 
-✅ Website Live at: `https://zedanazad43.github.io/stp/`
+ Website Live at: `https://zedanazad43.github.io/stp/`
 
 ### Step 2: Deploy to Render (5-10 min)
 
 ```
 1. Go: https://render.com
 2. Sign up with GitHub
-3. New → Web Service
+3. New  Web Service
 4. Connect repo: zedanazad43/stp
 5. Name: stampcoin-api
 6. Build: npm install
 7. Start: npm start
 8. Add SYNC_TOKEN environment variable
-9. Click Create → Wait 5-10 min
+9. Click Create  Wait 5-10 min
 ```
 
-✅ API Live at: `https://stampcoin-api.onrender.com/sync`
+ API Live at: `https://stampcoin-api.onrender.com/sync`
 
 ### Test It:
 
@@ -47,7 +47,7 @@ curl -X GET https://stampcoin-api.onrender.com/sync \
 
 ---
 
-## 🌐 OPTIONAL (If You Want Custom Domain)
+##  OPTIONAL (If You Want Custom Domain)
 
 ### Step 3: Buy Domain (5 min, ~$10/year)
 
@@ -93,7 +93,7 @@ API:     https://api.stampcoin.com/sync
 
 ---
 
-## 📊 Your URLs
+##  Your URLs
 
 ### Without Domain:
 ```
@@ -109,19 +109,19 @@ API:      https://api.stampcoin.com/sync
 
 ---
 
-## 💰 Cost
+##  Cost
 
 ```
 GitHub Pages : FREE
 Render API   : FREE (or $7/month for always-on)
 Domain       : $8.88/year (Namecheap)
-─────────────────
+
 Total        : $0 - $10/year
 ```
 
 ---
 
-## 📚 Full Documentation
+##  Full Documentation
 
 - **Complete Checklist**: [COMPLETE_DEPLOYMENT_CHECKLIST.md](COMPLETE_DEPLOYMENT_CHECKLIST.md)
 - **Render Setup**: [RENDER_AND_DOMAIN_SETUP.md](RENDER_AND_DOMAIN_SETUP.md)
@@ -130,16 +130,16 @@ Total        : $0 - $10/year
 
 ---
 
-## 🎯 Status
+##  Status
 
 | Component | Status | URL |
 |-----------|--------|-----|
-| Website | ✅ LIVE | https://zedanazad43.github.io/stp/ |
-| API | ✅ READY | Deploy to Render now |
-| Domain | ⏳ OPTIONAL | Buy if you want |
+| Website |  LIVE | https://zedanazad43.github.io/stp/ |
+| API |  READY | Deploy to Render now |
+| Domain |  OPTIONAL | Buy if you want |
 
 ---
 
-**Start now - you'll be live in 10 minutes!** 🚀
+**Start now - you'll be live in 10 minutes!** 
 
 Next: Follow [COMPLETE_DEPLOYMENT_CHECKLIST.md](COMPLETE_DEPLOYMENT_CHECKLIST.md)

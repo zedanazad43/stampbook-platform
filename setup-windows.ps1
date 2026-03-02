@@ -43,24 +43,24 @@ function Test-CommandExists {
 Write-Host "[1/5] Checking Chocolatey installation..." -ForegroundColor Yellow
 
 if (Test-CommandExists choco) {
-    Write-Host "✓ Chocolatey is already installed" -ForegroundColor Green
+    Write-Host "[OK] Chocolatey is already installed" -ForegroundColor Green
     $chocoVersion = & choco --version
-    Write-Host "  Current version: $chocoVersion" -ForegroundColor Gray
+    Write-Host "[OK] Current version: $chocoVersion" -ForegroundColor Gray
     
-    Write-Host "  Upgrading Chocolatey to latest version..." -ForegroundColor Gray
+    Write-Host "[OK] Upgrading Chocolatey to latest version..." -ForegroundColor Gray
     try {
         & choco upgrade chocolatey -y
-        Write-Host "✓ Chocolatey upgraded successfully" -ForegroundColor Green
+        Write-Host "[OK] Chocolatey upgraded successfully" -ForegroundColor Green
     } catch {
         Write-Warning "Chocolatey upgrade failed, but continuing with existing installation"
     }
 } else {
-    Write-Host "  Installing Chocolatey..." -ForegroundColor Gray
+    Write-Host "[OK] Installing Chocolatey..." -ForegroundColor Gray
     Set-ExecutionPolicy Bypass -Scope Process -Force
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
     try {
         Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-        Write-Host "✓ Chocolatey installed successfully" -ForegroundColor Green
+        Write-Host "[OK] Chocolatey installed successfully" -ForegroundColor Green
     } catch {
         Write-Error "Failed to install Chocolatey. Please install it manually from https://chocolatey.org/install"
         exit 1
@@ -74,27 +74,27 @@ Write-Host "[2/5] Checking Python installation..." -ForegroundColor Yellow
 
 if (Test-CommandExists python) {
     $pythonVersion = & python --version 2>&1
-    Write-Host "✓ Python is already installed: $pythonVersion" -ForegroundColor Green
+    Write-Host "[OK] Python is already installed: $pythonVersion" -ForegroundColor Green
     
     # Check if upgrade is needed
     if ($pythonVersion -notmatch "3\.14\.3") {
-        Write-Host "  Upgrading Python to 3.14.3..." -ForegroundColor Gray
+        Write-Host "[OK] Upgrading Python to 3.14.3..." -ForegroundColor Gray
         try {
             & choco upgrade python -y --version=3.14.3
-            Write-Host "✓ Python upgraded successfully" -ForegroundColor Green
-            Write-Host "  Note: You may need to restart your terminal to use the new version" -ForegroundColor Yellow
+            Write-Host "[OK] Python upgraded successfully" -ForegroundColor Green
+            Write-Host "[OK] Note: You may need to restart your terminal to use the new version" -ForegroundColor Yellow
         } catch {
             Write-Warning "Python upgrade failed, but continuing with existing installation"
         }
     } else {
-        Write-Host "  Python 3.14.3 is already installed" -ForegroundColor Gray
+        Write-Host "[OK] Python 3.14.3 is already installed" -ForegroundColor Gray
     }
 } else {
-    Write-Host "  Installing Python 3.14.3..." -ForegroundColor Gray
+    Write-Host "[OK] Installing Python 3.14.3..." -ForegroundColor Gray
     try {
         & choco install python -y --version=3.14.3
-        Write-Host "✓ Python installed successfully" -ForegroundColor Green
-        Write-Host "  Note: You may need to restart your terminal to use Python" -ForegroundColor Yellow
+        Write-Host "[OK] Python installed successfully" -ForegroundColor Green
+        Write-Host "[OK] Note: You may need to restart your terminal to use Python" -ForegroundColor Yellow
     } catch {
         Write-Error "Failed to install Python. Please install it manually from https://www.python.org/"
         exit 1
@@ -108,13 +108,13 @@ Write-Host "[3/5] Checking Visual Studio Build Tools..." -ForegroundColor Yellow
 
 $vsBuildTools = Get-Command "cl.exe" -ErrorAction SilentlyContinue
 if ($null -ne $vsBuildTools) {
-    Write-Host "✓ Visual Studio Build Tools are already installed" -ForegroundColor Green
+    Write-Host "[OK] Visual Studio Build Tools are already installed" -ForegroundColor Green
 } else {
-    Write-Host "  Installing Visual Studio 2022 Build Tools (VCTools workload)..." -ForegroundColor Gray
-    Write-Host "  This may take several minutes..." -ForegroundColor Gray
+    Write-Host "[OK] Installing Visual Studio 2022 Build Tools (VCTools workload)..." -ForegroundColor Gray
+    Write-Host "[OK] This may take several minutes..." -ForegroundColor Gray
     try {
         & choco install visualstudio2022-workload-vctools -y
-        Write-Host "✓ Visual Studio Build Tools installed successfully" -ForegroundColor Green
+        Write-Host "[OK] Visual Studio Build Tools installed successfully" -ForegroundColor Green
     } catch {
         Write-Warning "Visual Studio Build Tools installation failed. You may need to install manually if you need C++ compilation."
     }
@@ -127,7 +127,7 @@ Write-Host "[4/5] Checking Node.js installation..." -ForegroundColor Yellow
 
 if (Test-CommandExists node) {
     $nodeVersion = & node --version
-    Write-Host "✓ Node.js is already installed: $nodeVersion" -ForegroundColor Green
+    Write-Host "[OK] Node.js is already installed: $nodeVersion" -ForegroundColor Green
     
     $nodeMajor = [int]($nodeVersion -replace 'v(\d+)\..*', '$1')
     if ($nodeMajor -lt 16) {
@@ -138,10 +138,10 @@ if (Test-CommandExists node) {
         }
     }
 } else {
-    Write-Host "  Installing Node.js LTS..." -ForegroundColor Gray
+    Write-Host "[OK] Installing Node.js LTS..." -ForegroundColor Gray
     try {
         & choco install nodejs-lts -y
-        Write-Host "✓ Node.js installed successfully" -ForegroundColor Green
+        Write-Host "[OK] Node.js installed successfully" -ForegroundColor Green
     } catch {
         Write-Error "Failed to install Node.js. Please install it manually from https://nodejs.org/"
         exit 1
@@ -155,12 +155,12 @@ Write-Host "[5/5] Checking Git installation..." -ForegroundColor Yellow
 
 if (Test-CommandExists git) {
     $gitVersion = & git --version
-    Write-Host "✓ Git is already installed: $gitVersion" -ForegroundColor Green
+    Write-Host "[OK] Git is already installed: $gitVersion" -ForegroundColor Green
 } else {
-    Write-Host "  Installing Git..." -ForegroundColor Gray
+    Write-Host "[OK] Installing Git..." -ForegroundColor Gray
     try {
         & choco install git -y
-        Write-Host "✓ Git installed successfully" -ForegroundColor Green
+        Write-Host "[OK] Git installed successfully" -ForegroundColor Green
     } catch {
         Write-Error "Failed to install Git. Please install it manually from https://git-scm.com/"
         exit 1
@@ -191,7 +191,7 @@ Write-Host ""
 # Refresh environment variables
 Write-Host "Refreshing environment variables..." -ForegroundColor Gray
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-Write-Host "✓ Environment variables refreshed" -ForegroundColor Green
+Write-Host "[OK] Environment variables refreshed" -ForegroundColor Green
 Write-Host ""
 Write-Host "Press any key to exit..." -ForegroundColor Gray
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")

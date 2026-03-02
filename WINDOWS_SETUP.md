@@ -6,7 +6,7 @@ This guide explains how to set up the Stampcoin Platform development environment
 
 ### Automated Setup (Recommended)
 
-1. Open PowerShell as Administrator (Right-click PowerShell → Run as Administrator)
+1. Open PowerShell as Administrator (Right-click PowerShell  Run as Administrator)
 2. Navigate to the project directory
 3. Run the setup script:
 ```powershell
@@ -232,11 +232,11 @@ If you prefer not to use Chocolatey, you can download installers directly:
 
 After completing the setup:
 
-1. ✅ Verify all tools are installed correctly
-2. ✅ Clone the repository (if not done already)
-3. ✅ Install project dependencies (`npm install`)
-4. ✅ Read the [README.md](README.md) for project overview
-5. ✅ Check [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines
+1.  Verify all tools are installed correctly
+2.  Clone the repository (if not done already)
+3.  Install project dependencies (`npm install`)
+4.  Read the [README.md](README.md) for project overview
+5.  Check [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines
 
 ## Getting Help
 

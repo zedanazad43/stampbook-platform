@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository with submodules
         uses: actions/checkout@v4
         with:
-          submodules: recursive  # ← أضف هذا السطر فقط
+          submodules: recursive  #     
 
       - name: Deploy all Workers
         uses: cloudflare/wrangler-action@v3
