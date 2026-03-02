@@ -1,1 +1,85 @@
-# ======================================================\n# سير عمل: نشر الخلفية تلقائياً على Railway\n# يُشغَّل عند كل Push على الفرع الرئيسي (main)\n# المتطلبات: أضف السر RAILWAY_TOKEN في إعدادات GitHub\n# ======================================================\nname: نشر الخلفية على Railway\n\non:\n  push:\n    branches:\n      - main\n  # يتيح تشغيل سير العمل يدوياً من تبويب Actions\n  workflow_dispatch:\n\njobs:\n  deploy:\n    name: نشر تلقائي على Railway\n    runs-on: ubuntu-latest\n    permissions:\n      contents: read\n\n    steps:\n      # الخطوة 1: استنساخ الكود من المستودع\n      - name: استنساخ الكود\n        uses: actions/checkout@v4\n\n      # الخطوة 2: إعداد بيئة Node.js (الإصدار 18)\n      - name: إعداد Node.js\n        uses: actions/setup-node@v4\n        with:\n          node-version: '18'\n          cache: 'npm'\n\n      # الخطوة 3: تثبيت حزم المشروع\n      - name: تثبيت الحزم\n        run: npm ci\n\n      # الخطوة 4: تثبيت أداة Railway CLI ونشر المشروع\n      # تأكد من إضافة RAILWAY_TOKEN كسر في:\n      #   GitHub → Settings → Secrets → RAILWAY_TOKEN\n      # كذلك أضف SYNC_TOKEN و PORT في لوحة Railway\n      - name: Check Railway token\n        id: check-railway\n        env:\n          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}\n        run: |\n          if [ -n "$RAILWAY_TOKEN" ]; then\n            echo "deploy=true" >> $GITHUB_OUTPUT\n          else\n            echo "deploy=false" >> $GITHUB_OUTPUT\n            echo "RAILWAY_TOKEN is not configured, skipping deployment."\n          fi\n\n      - name: نشر على Railway\n        if: steps.check-railway.outputs.deploy == 'true'\n        run: |\n          npm install -g @railway/cli\n          railway up --service stpclauderailway --detach\n        env:\n          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+# ======================================================
+# سير عمل: نشر الخلفية تلقائياً على Railway
+# يُشغَّل عند كل Push على الفرع الرئيسي (main)
+# الأسرار المطلوبة في GitHub → Settings → Secrets:
+#   RAILWAY_TOKEN      - رمز المصادقة الخاص بـ Railway (مطلوب)
+#   RAILWAY_SERVICE_ID - معرّف الخدمة في Railway (يُوصى به لتجنب خطأ "Multiple services")
+#   RAILWAY_PROJECT_ID - معرّف المشروع في Railway (اختياري)
+# كذلك أضف SYNC_TOKEN و PORT في لوحة Railway
+# ======================================================
+name: نشر الخلفية على Railway
+
+on:
+  push:
+    branches:
+      - main
+  # يتيح تشغيل سير العمل يدوياً من تبويب Actions
+  workflow_dispatch:
+
+# منع تشغيل نشرَين في نفس الوقت؛ يُلغي النشر القديم إن وُجد
+concurrency:
+  group: railway-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: نشر تلقائي على Railway
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      # الخطوة 1: استنساخ الكود من المستودع (بدون وحدات فرعية)
+      - name: استنساخ الكود
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      # الخطوة 2: إعداد بيئة Node.js (الإصدار 18)
+      - name: إعداد Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # الخطوة 3: تثبيت حزم المشروع
+      - name: تثبيت الحزم
+        run: npm ci
+
+      # الخطوة 4: التحقق من وجود رمز Railway
+      # تأكد من إضافة RAILWAY_TOKEN كسر في:
+      #   GitHub → Settings → Secrets → RAILWAY_TOKEN
+      - name: Check Railway token
+        id: check-railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -n "$RAILWAY_TOKEN" ]; then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy=false" >> $GITHUB_OUTPUT
+            echo "RAILWAY_TOKEN is not configured, skipping deployment."
+          fi
+
+      # الخطوة 5: تثبيت Railway CLI ونشر المشروع
+      # يستخدم RAILWAY_SERVICE_ID لتحديد الخدمة بدقة (يتجنب خطأ "Multiple services found")
+      # يستخدم RAILWAY_PROJECT_ID لتحديد المشروع إن توفّر
+      - name: نشر على Railway
+        if: steps.check-railway.outputs.deploy == 'true'
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+        run: |
+          npm install -g @railway/cli
+
+          # بناء الوسيطات الاختيارية
+          EXTRA_ARGS=()
+          if [ -n "$RAILWAY_SERVICE_ID" ]; then
+            EXTRA_ARGS+=(--service "$RAILWAY_SERVICE_ID")
+          fi
+          if [ -n "$RAILWAY_PROJECT_ID" ]; then
+            EXTRA_ARGS+=(--project "$RAILWAY_PROJECT_ID")
+          fi
+
+          railway up "${EXTRA_ARGS[@]}" --detach
