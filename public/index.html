@@ -327,32 +327,32 @@ textarea{resize:vertical;min-height:70px}
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">
       <div style="background:linear-gradient(135deg,#6C3082,#9b59b6);border-radius:12px;padding:18px;color:#fff;text-align:center">
         <div style="font-size:1.8rem;font-weight:900">20%</div>
-        <div style="font-size:.85rem;opacity:.9;margin-top:4px">Public ICO Sale</div>
+        <div id="tok-dist-1" style="font-size:.85rem;opacity:.9;margin-top:4px">Public ICO Sale</div>
         <div style="font-size:.8rem;opacity:.7">84.2M STP</div>
       </div>
       <div style="background:linear-gradient(135deg,#b8860b,#FFD700);border-radius:12px;padding:18px;color:#333;text-align:center">
         <div style="font-size:1.8rem;font-weight:900">20%</div>
-        <div style="font-size:.85rem;opacity:.9;margin-top:4px">Ecosystem &amp; Partners</div>
+        <div id="tok-dist-2" style="font-size:.85rem;opacity:.9;margin-top:4px">Ecosystem &amp; Partners</div>
         <div style="font-size:.8rem;opacity:.7">84.2M STP</div>
       </div>
       <div style="background:linear-gradient(135deg,#1a237e,#3949ab);border-radius:12px;padding:18px;color:#fff;text-align:center">
         <div style="font-size:1.8rem;font-weight:900">20%</div>
-        <div style="font-size:.85rem;opacity:.9;margin-top:4px">Community &amp; Rewards</div>
+        <div id="tok-dist-3" style="font-size:.85rem;opacity:.9;margin-top:4px">Community &amp; Rewards</div>
         <div style="font-size:.8rem;opacity:.7">84.2M STP</div>
       </div>
       <div style="background:linear-gradient(135deg,#1b5e20,#43a047);border-radius:12px;padding:18px;color:#fff;text-align:center">
         <div style="font-size:1.8rem;font-weight:900">15%</div>
-        <div style="font-size:.85rem;opacity:.9;margin-top:4px">Liquidity Pool</div>
+        <div id="tok-dist-4" style="font-size:.85rem;opacity:.9;margin-top:4px">Liquidity Pool</div>
         <div style="font-size:.8rem;opacity:.7">63.15M STP</div>
       </div>
       <div style="background:linear-gradient(135deg,#880e4f,#e91e63);border-radius:12px;padding:18px;color:#fff;text-align:center">
         <div style="font-size:1.8rem;font-weight:900">15%</div>
-        <div style="font-size:.85rem;opacity:.9;margin-top:4px">Team &amp; Founders</div>
+        <div id="tok-dist-5" style="font-size:.85rem;opacity:.9;margin-top:4px">Team &amp; Founders</div>
         <div style="font-size:.8rem;opacity:.7">63.15M STP · 2yr vest</div>
       </div>
       <div style="background:linear-gradient(135deg,#37474f,#607d8b);border-radius:12px;padding:18px;color:#fff;text-align:center">
         <div style="font-size:1.8rem;font-weight:900">10%</div>
-        <div style="font-size:.85rem;opacity:.9;margin-top:4px">Reserve</div>
+        <div id="tok-dist-6" style="font-size:.85rem;opacity:.9;margin-top:4px">Reserve</div>
         <div style="font-size:.8rem;opacity:.7">42.1M STP</div>
       </div>
     </div>
@@ -363,17 +363,17 @@ textarea{resize:vertical;min-height:70px}
     <div class="card">
       <h2 id="tok-contract" style="margin-bottom:12px;font-size:1.1rem">Contract Address</h2>
       <div style="background:var(--bg);border-radius:8px;padding:12px;font-family:monospace;font-size:.85rem;word-break:break-all;border:1px solid var(--border);color:var(--purple)">
-        0x53544d50636f696e2d737470000000000000 <span style="font-size:.7rem;color:var(--muted)">(Pending mainnet deploy)</span>
+        0x0000000000000000000000000000000000000000 <span style="font-size:.7rem;color:var(--muted)" id="tok-contract-pending">(TBD — pending mainnet deployment)</span>
       </div>
       <p style="margin-top:10px;font-size:.85rem;color:var(--muted)">Network: EVM-compatible · Symbol: STP · Decimals: 18</p>
     </div>
     <div class="card">
       <h2 id="tok-how" style="margin-bottom:12px;font-size:1.1rem">How to Participate</h2>
       <ol style="padding-left:18px;font-size:.9rem;line-height:2">
-        <li>Create a wallet on this platform</li>
-        <li>Contact us at <a href="mailto:stampcoin.contact@gmail.com" style="color:var(--purple)">stampcoin.contact@gmail.com</a></li>
-        <li>Send payment &amp; receive STP tokens</li>
-        <li>Trade stamps on the marketplace</li>
+        <li id="tok-step-1">Create a wallet on this platform</li>
+        <li id="tok-step-2">Contact us at <a href="mailto:stampcoin.contact@gmail.com" style="color:var(--purple)">stampcoin.contact@gmail.com</a></li>
+        <li id="tok-step-3">Send payment &amp; receive STP tokens</li>
+        <li id="tok-step-4">Trade stamps on the marketplace</li>
       </ol>
     </div>
   </div>
@@ -454,7 +454,14 @@ var T = {
     "lang-toggle":"\u0639\u0631\u0628\u064a",
     "tok-title":"STP Token","tok-supply":"Total Supply","tok-price":"ICO Price",
     "tok-contract":"Contract Address","tok-how":"How to Participate",
-    "tok-contact-title":"Contact","tok-dist-title":"Token Distribution"
+    "tok-contact-title":"Contact","tok-dist-title":"Token Distribution",
+    "tok-dist-1":"Public ICO Sale","tok-dist-2":"Ecosystem &amp; Partners","tok-dist-3":"Community &amp; Rewards",
+    "tok-dist-4":"Liquidity Pool","tok-dist-5":"Team &amp; Founders","tok-dist-6":"Reserve",
+    "tok-contract-pending":"(TBD — pending mainnet deployment)",
+    "tok-step-1":"Create a wallet on this platform",
+    "tok-step-2":"Contact us at stampcoin.contact@gmail.com",
+    "tok-step-3":"Send payment &amp; receive STP tokens",
+    "tok-step-4":"Trade stamps on the marketplace"
   },
   ar: {
     home:"\u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629",wallet:"\u0627\u0644\u0645\u062d\u0641\u0638\u0629",market:"\u0627\u0644\u0633\u0648\u0642",exchange:"\u0627\u0644\u062a\u062d\u0648\u064a\u0644",
@@ -488,7 +495,14 @@ var T = {
     token:"\u0627\u0644\u062a\u0648\u0643\u0646",
     "tok-title":"\u0639\u0645\u0644\u0629 STP","tok-supply":"\u0625\u062c\u0645\u0627\u0644\u064a \u0627\u0644\u0645\u0639\u0631\u0648\u0636","tok-price":"\u0633\u0639\u0631 \u0627\u0644\u0637\u0631\u062d \u0627\u0644\u0623\u0648\u0644\u064a",
     "tok-contract":"\u0639\u0646\u0648\u0627\u0646 \u0627\u0644\u0639\u0642\u062f","tok-how":"\u0643\u064a\u0641\u064a\u0629 \u0627\u0644\u0645\u0634\u0627\u0631\u0643\u0629",
-    "tok-contact-title":"\u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627","tok-dist-title":"\u062a\u0648\u0632\u064a\u0639 \u0627\u0644\u0639\u0645\u0644\u0629"
+    "tok-contact-title":"\u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627","tok-dist-title":"\u062a\u0648\u0632\u064a\u0639 \u0627\u0644\u0639\u0645\u0644\u0629",
+    "tok-dist-1":"\u0628\u064a\u0639 ICO \u0627\u0644\u0639\u0627\u0645","tok-dist-2":"\u0627\u0644\u0646\u0638\u0627\u0645 \u0627\u0644\u0628\u064a\u0626\u064a &amp; \u0627\u0644\u0634\u0631\u0643\u0627\u0621","tok-dist-3":"\u0627\u0644\u0645\u062c\u062a\u0645\u0639 &amp; \u0627\u0644\u0645\u0643\u0627\u0641\u0622\u062a",
+    "tok-dist-4":"\u0645\u062c\u0645\u0639 \u0627\u0644\u0633\u064a\u0648\u0644\u0629","tok-dist-5":"\u0627\u0644\u0641\u0631\u064a\u0642 &amp; \u0627\u0644\u0645\u0624\u0633\u0633\u0648\u0646","tok-dist-6":"\u0627\u0644\u0627\u062d\u062a\u064a\u0627\u0637\u064a",
+    "tok-contract-pending":"(\u0645\u0639\u0644\u0642 \u2014 \u0628\u0627\u0646\u062a\u0638\u0627\u0631 \u0627\u0644\u0646\u0634\u0631 \u0639\u0644\u0649 \u0627\u0644\u0634\u0628\u0643\u0629 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629)",
+    "tok-step-1":"\u0623\u0646\u0634\u0626 \u0645\u062d\u0641\u0638\u0629 \u0639\u0644\u0649 \u0647\u0630\u0647 \u0627\u0644\u0645\u0646\u0635\u0629",
+    "tok-step-2":"\u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627 \u0639\u0628\u0631 stampcoin.contact@gmail.com",
+    "tok-step-3":"\u0623\u0631\u0633\u0644 \u0627\u0644\u062f\u0641\u0639\u0629 \u0648\u0627\u062d\u0635\u0644 \u0639\u0644\u0649 \u0639\u0645\u0644\u0627\u062a STP",
+    "tok-step-4":"\u062a\u062f\u0627\u0648\u0644 \u0627\u0644\u0637\u0648\u0627\u0628\u0639 \u0641\u064a \u0627\u0644\u0633\u0648\u0642"
   },
   de: {
     home:"Startseite",wallet:"Wallet",market:"Marktplatz",exchange:"Tausch",token:"Token",
@@ -521,7 +535,14 @@ var T = {
     "lang-toggle":"Sprache",
     "tok-title":"STP Token","tok-supply":"Gesamtangebot","tok-price":"ICO-Preis",
     "tok-contract":"Vertragsadresse","tok-how":"Wie man teilnimmt",
-    "tok-contact-title":"Kontakt","tok-dist-title":"Token-Verteilung"
+    "tok-contact-title":"Kontakt","tok-dist-title":"Token-Verteilung",
+    "tok-dist-1":"Öffentlicher ICO-Verkauf","tok-dist-2":"Ökosystem &amp; Partner","tok-dist-3":"Community &amp; Prämien",
+    "tok-dist-4":"Liquiditätspool","tok-dist-5":"Team &amp; Gründer","tok-dist-6":"Reserve",
+    "tok-contract-pending":"(TBD — ausstehende Mainnet-Bereitstellung)",
+    "tok-step-1":"Erstellen Sie eine Wallet auf dieser Plattform",
+    "tok-step-2":"Kontaktieren Sie uns unter stampcoin.contact@gmail.com",
+    "tok-step-3":"Zahlung senden &amp; STP-Token erhalten",
+    "tok-step-4":"Briefmarken auf dem Marktplatz handeln"
   },
   es: {
     home:"Inicio",wallet:"Cartera",market:"Mercado",exchange:"Intercambio",token:"Token",
@@ -554,7 +575,14 @@ var T = {
     "lang-toggle":"Idioma",
     "tok-title":"Token STP","tok-supply":"Suministro total","tok-price":"Precio ICO",
     "tok-contract":"Direcci\u00f3n del contrato","tok-how":"C\u00f3mo participar",
-    "tok-contact-title":"Contacto","tok-dist-title":"Distribuci\u00f3n del token"
+    "tok-contact-title":"Contacto","tok-dist-title":"Distribución del token",
+    "tok-dist-1":"Venta pública ICO","tok-dist-2":"Ecosistema &amp; Socios","tok-dist-3":"Comunidad &amp; Recompensas",
+    "tok-dist-4":"Fondo de liquidez","tok-dist-5":"Equipo &amp; Fundadores","tok-dist-6":"Reserva",
+    "tok-contract-pending":"(Por definir — pendiente de implementación en mainnet)",
+    "tok-step-1":"Crea una cartera en esta plataforma",
+    "tok-step-2":"Contáctenos en stampcoin.contact@gmail.com",
+    "tok-step-3":"Envía el pago &amp; recibe tokens STP",
+    "tok-step-4":"Intercambia sellos en el mercado"
   },
   zh: {
     home:"\u9996\u9875",wallet:"\u9322\u5305",market:"\u5e02\u573a",exchange:"\u5151\u6362",token:"\u4ee3\u5e01",
@@ -587,7 +615,14 @@ var T = {
     "lang-toggle":"\u8bed\u8a00",
     "tok-title":"STP \u4ee3\u5e01","tok-supply":"\u603b\u4f9b\u5e94\u91cf","tok-price":"ICO \u4ef7\u683c",
     "tok-contract":"\u5408\u7ea6\u5730\u5740","tok-how":"\u5982\u4f55\u53c2\u4e0e",
-    "tok-contact-title":"\u8054\u7cfb\u65b9\u5f0f","tok-dist-title":"\u4ee3\u5e01\u5206\u914d"
+    "tok-contact-title":"\u8054\u7cfb\u65b9\u5f0f","tok-dist-title":"\u4ee3\u5e01\u5206\u914d",
+    "tok-dist-1":"\u516c\u5f00 ICO \u552e\u5356","tok-dist-2":"\u751f\u6001\u7cfb\u7edf &amp; \u5408\u4f5c\u4f19\u4f34","tok-dist-3":"\u793e\u533a &amp; \u5956\u52b1",
+    "tok-dist-4":"\u6d41\u52a8\u6027\u6c60","tok-dist-5":"\u56e2\u961f &amp; \u521b\u59cb\u4eba","tok-dist-6":"\u50a8\u5907\u91d1",
+    "tok-contract-pending":"(\u5f85\u786e\u5b9a \u2014 \u7b49\u5f85\u4e3b\u7f51\u90e8\u7f72)",
+    "tok-step-1":"\u5728\u6b64\u5e73\u53f0\u521b\u5efa\u9322\u5305",
+    "tok-step-2":"\u8054\u7cfb\u6211\u4eec stampcoin.contact@gmail.com",
+    "tok-step-3":"\u53d1\u9001\u4ed8\u6b3e &amp; \u83b7\u5f97 STP \u4ee3\u5e01",
+    "tok-step-4":"\u5728\u5e02\u573a\u4ea4\u6613\u90ae\u7968"
   }
 };
 var lang = 'en';
@@ -612,8 +647,13 @@ function applyLang() {
     'exch-send-title','exch-stats-title','lbl-ef','lbl-et','lbl-ea','btn-ex-send',
     'lbl-check-uid','btn-load-stats','es-bal-lbl','es-sent-lbl','es-recv-lbl',
     'exch-ledger-title','no-ledger-msg',
-    'tok-title','tok-supply','tok-price','tok-contract','tok-how','tok-contact-title','tok-dist-title'];
+    'tok-title','tok-supply','tok-price','tok-contract','tok-how','tok-contact-title','tok-dist-title',
+    'tok-dist-1','tok-dist-2','tok-dist-3','tok-dist-4','tok-dist-5','tok-dist-6',
+    'tok-contract-pending','tok-step-1','tok-step-3','tok-step-4'];
   ids.forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=t(id); });
+  // tok-step-2 has an inline link — use innerHTML so it renders correctly
+  var s2 = document.getElementById('tok-step-2');
+  if(s2) s2.innerHTML = t('tok-step-2').replace('stampcoin.contact@gmail.com','<a href="mailto:stampcoin.contact@gmail.com" style="color:var(--purple)">stampcoin.contact@gmail.com</a>');
 }
 function setLang(l) {
   lang = l;
