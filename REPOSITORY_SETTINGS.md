@@ -18,19 +18,19 @@ This document provides recommended settings and configurations for the Stampcoin
 - **Recommendation**: Keep public for open-source collaboration
 
 ### Features
-Enable the following features in Settings → General:
-- ✅ **Issues** - For bug tracking and feature requests
-- ✅ **Projects** - For project management
-- ✅ **Wiki** - For extended documentation
-- ✅ **Discussions** - For community engagement
-- ✅ **Sponsorships** - For funding support (optional)
+Enable the following features in Settings  General:
+-  **Issues** - For bug tracking and feature requests
+-  **Projects** - For project management
+-  **Wiki** - For extended documentation
+-  **Discussions** - For community engagement
+-  **Sponsorships** - For funding support (optional)
 
 ### Merge Options
-Configure in Settings → General → Pull Requests:
-- ✅ **Allow merge commits** - Traditional merge strategy
-- ✅ **Allow squash merging** - Clean history (recommended for feature branches)
-- ✅ **Allow rebase merging** - Linear history
-- ✅ **Automatically delete head branches** - Keeps repository clean
+Configure in Settings  General  Pull Requests:
+-  **Allow merge commits** - Traditional merge strategy
+-  **Allow squash merging** - Clean history (recommended for feature branches)
+-  **Allow rebase merging** - Linear history
+-  **Automatically delete head branches** - Keeps repository clean
 
 ---
 
@@ -38,71 +38,71 @@ Configure in Settings → General → Pull Requests:
 
 ### Main Branch Protection
 
-Configure in Settings → Branches → Add rule for `main`:
+Configure in Settings  Branches  Add rule for `main`:
 
 #### Required Settings
 1. **Require a pull request before merging**
-   - ✅ Enable this option
+   -  Enable this option
    - Require approvals: `1` (minimum)
-   - ✅ Dismiss stale pull request approvals when new commits are pushed
-   - ✅ Require review from Code Owners (if CODEOWNERS file exists)
+   -  Dismiss stale pull request approvals when new commits are pushed
+   -  Require review from Code Owners (if CODEOWNERS file exists)
 
 2. **Require status checks to pass before merging**
-   - ✅ Enable this option
-   - ✅ Require branches to be up to date before merging
+   -  Enable this option
+   -  Require branches to be up to date before merging
    - Required status checks:
      - `build-and-push / build-and-push` (Docker build)
      - `deploy / deploy` (Deployment check)
      - `build / build` (Pages build)
 
 3. **Require conversation resolution before merging**
-   - ✅ Enable to ensure all PR comments are addressed
+   -  Enable to ensure all PR comments are addressed
 
 4. **Require signed commits** (Optional but recommended)
-   - ✅ Enable for enhanced security
+   -  Enable for enhanced security
 
 5. **Require linear history** (Optional)
-   - ✅ Enable if you want to prevent merge commits on main
+   -  Enable if you want to prevent merge commits on main
 
 6. **Include administrators**
-   - ✅ Apply rules to administrators as well
+   -  Apply rules to administrators as well
 
 #### Additional Protection
-- ✅ **Allow force pushes**: ❌ Disabled
-- ✅ **Allow deletions**: ❌ Disabled
+-  **Allow force pushes**:  Disabled
+-  **Allow deletions**:  Disabled
 
 ### Development Branch Protection
 
 If you create a `develop` or `staging` branch:
 - Same rules as main but with slightly relaxed requirements
 - Require approvals: `1` (can be same as main)
-- Allow force pushes: ❌ Disabled
+- Allow force pushes:  Disabled
 
 ---
 
 ## Webhook & Integration Settings
 
 ### GitHub Actions
-- **Location**: Settings → Actions → General
+- **Location**: Settings  Actions  General
 - **Actions permissions**: 
-  - ✅ Allow all actions and reusable workflows
-  - Or: ✅ Allow [organization]/*, and select non-[organization], actions and reusable workflows
+  -  Allow all actions and reusable workflows
+  - Or:  Allow [organization]/*, and select non-[organization], actions and reusable workflows
 - **Workflow permissions**:
-  - ✅ Read and write permissions
-  - ✅ Allow GitHub Actions to create and approve pull requests (if needed for automation)
+  -  Read and write permissions
+  -  Allow GitHub Actions to create and approve pull requests (if needed for automation)
 
 ### GitHub Pages
-- **Location**: Settings → Pages
+- **Location**: Settings  Pages
 - **Source**: GitHub Actions
 - **Custom domain**: (Optional) Configure if you have one
-- **Enforce HTTPS**: ✅ Enabled
+- **Enforce HTTPS**:  Enabled
 
 ---
 
 ## GitHub Actions Settings
 
 ### Workflow Permissions
-Configure in Settings → Actions → General → Workflow permissions:
+Configure in Settings  Actions  General  Workflow permissions:
 
 ```yaml
 permissions:
@@ -114,7 +114,7 @@ permissions:
 
 ### Secrets Configuration
 
-Required secrets for workflows (Settings → Secrets and variables → Actions):
+Required secrets for workflows (Settings  Secrets and variables  Actions):
 
 1. **GITHUB_TOKEN** (automatically provided)
    - Used for authentication in workflows
@@ -127,7 +127,7 @@ Required secrets for workflows (Settings → Secrets and variables → Actions):
 
 ### Environment Variables
 
-Set repository variables in Settings → Secrets and variables → Actions → Variables:
+Set repository variables in Settings  Secrets and variables  Actions  Variables:
 - `NODE_VERSION`: `18`
 - `DOCKER_REGISTRY`: `ghcr.io`
 
@@ -136,18 +136,18 @@ Set repository variables in Settings → Secrets and variables → Actions → V
 ## Security Settings
 
 ### Dependency Graph
-- **Location**: Settings → Code security and analysis
-- ✅ **Dependency graph**: Enabled
-- ✅ **Dependabot alerts**: Enabled
-- ✅ **Dependabot security updates**: Enabled
+- **Location**: Settings  Code security and analysis
+-  **Dependency graph**: Enabled
+-  **Dependabot alerts**: Enabled
+-  **Dependabot security updates**: Enabled
 
 ### Code Scanning
-- ✅ **CodeQL analysis**: Enabled (see `.github/workflows/codeql.yml`)
-- ✅ **Secret scanning**: Enabled
-- ✅ **Push protection**: Enabled (prevents committing secrets)
+-  **CodeQL analysis**: Enabled (see `.github/workflows/codeql.yml`)
+-  **Secret scanning**: Enabled
+-  **Push protection**: Enabled (prevents committing secrets)
 
 ### Private Vulnerability Reporting
-- ✅ Enable to allow security researchers to privately report vulnerabilities
+-  Enable to allow security researchers to privately report vulnerabilities
 
 ---
 
@@ -244,11 +244,11 @@ Create `.github/ISSUE_TEMPLATE/bug_report.md` and `feature_request.md`
 
 After configuring these settings:
 
-1. ✅ Try to push directly to main (should be blocked)
-2. ✅ Create a test PR and verify status checks run
-3. ✅ Verify workflows trigger on push events
-4. ✅ Check that GitHub Pages deploys successfully
-5. ✅ Verify Docker image builds and pushes to registry
+1.  Try to push directly to main (should be blocked)
+2.  Create a test PR and verify status checks run
+3.  Verify workflows trigger on push events
+4.  Check that GitHub Pages deploys successfully
+5.  Verify Docker image builds and pushes to registry
 
 ---
 
@@ -264,9 +264,9 @@ on:
 ```
 
 This means:
-- ✅ Changes must go through PR process
-- ✅ No direct pushes to main (with branch protection)
-- ✅ Automated deployments on merge
+-  Changes must go through PR process
+-  No direct pushes to main (with branch protection)
+-  Automated deployments on merge
 
 ---
 

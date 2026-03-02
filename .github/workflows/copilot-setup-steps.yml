@@ -1,114 +1,106 @@
-- الاسم: إغلاق الملفات القديمة
-  يستخدم: actions/stale@v10.2.0
-  مع:
-    # رمز مميز للمستودع. يمكن تمريره باستخدام `{{ secrets.GITHUB_TOKEN }}`.
-    رمز المستودع: # اختياري، القيمة الافتراضية هي ${{ github.token }}
-    # الرسالة التي يجب نشرها عند إضافة الوسم للمشكلة. في حال عدم وجود رسالة، لن يتم اعتبار المشكلة قديمة.
-    رسالة المشكلة القديمة: # اختياري
-    # الرسالة التي ستُنشر مع طلب السحب عند إضافة الوسم. في حال عدم وجود رسالة، لن يتم اعتبار طلبات السحب قديمة.
-    رسالة طلب قديمة: اختياري
-    # الرسالة التي ستُنشر عند إغلاق المشكلة. في حال عدم وجود رسالة، لن يتم التعليق عند إغلاق المشكلة.
-    رسالة إغلاق المشكلة: # اختياري
-    # الرسالة التي ستُنشر على طلب السحب عند إغلاقه. في حال عدم وجود رسالة، لن يتم التعليق عند إغلاق طلب السحب.
-    رسالة إغلاق الطلب: # اختياري
-    # عدد الأيام التي يمكن أن يمر عليها تاريخ المشكلة أو طلب السحب قبل اعتبارها قديمة. اضبط القيمة على -1 لعدم اعتبار المشكلات أو طلبات السحب قديمة تلقائيًا.
-    days-before-slate: # اختياري، القيمة الافتراضية هي 60
-    # عدد الأيام التي يمكن أن تبقى فيها المشكلة قبل اعتبارها قديمة. اضبط القيمة على -1 لعدم اعتبار المشكلات قديمة تلقائيًا. يمكنك تجاوز خيار "days-before-stale" فيما يتعلق بالمشكلات فقط.
-    أيام قبل تاريخ الإصدار: # اختياري
-    # عدد الأيام التي يمكن أن يمر عليها طلب السحب قبل اعتباره قديمًا. اضبطه على -1 لعدم اعتبار طلبات السحب قديمة تلقائيًا. يمكنك تجاوز خيار "days-before-stale" فيما يتعلق بطلبات السحب فقط.
-    أيام قبل انتهاء صلاحية طلب السحب: اختياري
-    # عدد الأيام التي يجب انتظارها قبل إغلاق مشكلة أو طلب سحب بعد وضع علامة "قديم" عليه. اضبطه على -1 لعدم إغلاق المشكلات أو طلبات السحب القديمة مطلقًا.
-    أيام قبل الإغلاق: # اختياري، القيمة الافتراضية هي 7
-    # عدد الأيام التي يجب انتظارها قبل إغلاق المشكلة بعد تصنيفها على أنها قديمة. اضبط القيمة على -1 لعدم إغلاق المشكلات القديمة مطلقًا. يمكنك تجاوز خيار "days-before-close" فيما يتعلق بالمشكلات فقط.
-    أيام قبل إغلاق الإصدار: # اختياري
-    # عدد الأيام التي يجب انتظارها قبل إغلاق طلب السحب بعد تصنيفه على أنه قديم. اضبطه على -1 لعدم إغلاق طلبات السحب القديمة مطلقًا. يمكنك تجاوز خيار "days-before-close" فيما يتعلق بطلبات السحب فقط.
-    أيام قبل إغلاق طلب السحب: # اختياري
-    # التصنيف الذي يُطبق عندما تصبح المشكلة قديمة.
-    stale-issue-label: # اختياري، القيمة الافتراضية هي Stale
-    # التصنيف الذي يتم تطبيقه عند إغلاق المشكلة.
-    close-issue-label: # اختياري
-    # التصنيفات التي تعني أن المشكلة مستثناة من وضع علامة "قديمة". افصل بين التصنيفات المتعددة بفواصل (مثال: "التصنيف 1، التصنيف 2").
-    إعفاء تصنيفات المشكلات: # اختياري، القيمة الافتراضية هي
-    السبب الذي يُستخدم عند إغلاق مشكلة.
-    سبب إغلاق المشكلة: # اختياري، القيمة الافتراضية هي غير مخطط لها
-    # التصنيف الذي يتم تطبيقه عندما يكون طلب السحب قديمًا.
-    stale-pr-label: # اختياري، القيمة الافتراضية هي Stale
-    # التسمية التي يتم تطبيقها عند إغلاق طلب السحب.
-    close-pr-label: # اختياري
-    # التصنيفات التي تعني أن طلب السحب مستثنى من أن يُصنّف على أنه قديم. افصل بين التصنيفات المتعددة بفواصل (مثال: "label1,label2").
-    إعفاء-تصنيفات-العلاقات-التجارية: # اختياري، القيمة الافتراضية هي
-    # المعالم التي تعني أن المشكلة أو طلب السحب مستثنى من وضع علامة "قديم". افصل بين المعالم المتعددة بفواصل (مثال: "المعلم1، المعلم2").
-    المعالم المعفاة: # اختياري، القيمة الافتراضية هي
-    # المعالم التي تُعفي المشكلة من تصنيفها على أنها قديمة. افصل بين المعالم المتعددة بفواصل (مثال: "المعلم 1، المعلم 2"). تجاوز خيار "المعالم المعفاة" فيما يتعلق بالمشكلات فقط.
-    إعفاء مراحل إصدار المشكلات: # اختياري، القيمة الافتراضية هي
-    # المراحل التي تجعل طلب السحب غير مُعلَّم بأنه قديم. افصل بين المراحل المتعددة بفواصل (مثال: "المرحلة 1، المرحلة 2"). تجاوز خيار "المراحل المعفاة" فيما يتعلق بطلبات السحب فقط.
-    إعفاء مراحل التقدم الوظيفي: # اختياري، القيمة الافتراضية هي
-    # إعفاء جميع المشكلات وطلبات السحب التي تحتوي على مراحل من أن يتم وضع علامة "قديمة" عليها. القيمة الافتراضية هي "خطأ".
-    إعفاء جميع المراحل: # اختياري، القيمة الافتراضية هي خطأ
-    # استثناء جميع المشكلات التي تتضمن مراحل رئيسية من وضع علامة "قديمة". تجاوز خيار "استثناء جميع المراحل الرئيسية" فيما يتعلق بالمشكلات فقط.
-    إعفاء جميع مراحل إصدار المشكلات: # اختياري، القيمة الافتراضية هي
-    # استثناء جميع طلبات السحب التي تتضمن مراحل رئيسية من أن تُصنّف على أنها قديمة. تجاوز خيار "exempt-all-milestones" فيما يتعلق بطلبات السحب فقط.
-    إعفاء جميع مراحل طلب الشراء: # اختياري، القيمة الافتراضية هي
-    # يتم فحص المشكلات أو طلبات السحب التي تحتوي على جميع هذه التصنيفات فقط في حال كانت قديمة. القيمة الافتراضية هي `` (معطلة) ويمكن أن تكون قائمة تصنيفات مفصولة بفواصل.
-    التسميات فقط: # اختياري، القيمة الافتراضية هي
-    # يتم التحقق فقط من المشكلات أو طلبات السحب التي تحتوي على واحد على الأقل من هذه التصنيفات إذا كانت قديمة. القيمة الافتراضية هي `` (معطل) ويمكن أن تكون قائمة تصنيفات مفصولة بفواصل.
-    أي من التصنيفات: # اختياري، القيمة الافتراضية هي
-    # يتم فحص المشكلات التي تحمل أحد هذه التصنيفات على الأقل فقط في حال كانت قديمة. القيمة الافتراضية هي `` (معطلة)، ويمكن أن تكون قائمة تصنيفات مفصولة بفواصل. يمكن تجاوز خيار "أي من التصنيفات" فيما يتعلق بالمشكلات فقط.
-    أي من تصنيفات المشكلة: # اختياري، القيمة الافتراضية هي
-    # يتم فحص طلبات السحب التي تحتوي على واحد على الأقل من هذه التصنيفات فقط في حال كانت قديمة. القيمة الافتراضية هي `` (معطلة) ويمكن أن تكون قائمة تصنيفات مفصولة بفواصل. تجاوز خيار "أي من التصنيفات" فيما يتعلق بطلبات السحب فقط.
-    أي من تصنيفات العلاقات العامة: # اختياري، القيمة الافتراضية هي
-    # يتم فحص المشكلات التي تحمل جميع هذه التصنيفات فقط في حال كانت قديمة. القيمة الافتراضية هي `[]` (معطلة)، ويمكن أن تكون قائمة تصنيفات مفصولة بفواصل. يمكن تجاوز خيار "only-labels" لعرض المشكلات فقط.
-    only-issue-labels: # اختياري، القيمة الافتراضية هي
-    # يتم فحص طلبات السحب التي تحتوي على جميع هذه التصنيفات فقط في حال كانت قديمة. القيمة الافتراضية هي `[]` (معطلة)، ويمكن أن تكون قائمة تصنيفات مفصولة بفواصل. يمكن تجاوز خيار "only-labels" فيما يتعلق بطلبات السحب فقط.
-    only-pr-labels: # اختياري، القيمة الافتراضية هي
-    # الحد الأقصى لعدد العمليات لكل تشغيل، ويستخدم للتحكم في تحديد المعدل (متعلق بـ GitHub API CRUD).
-    عدد العمليات لكل تشغيل: # اختياري، القيمة الافتراضية هي 30
-    # إزالة التصنيفات القديمة من المشكلات وطلبات السحب عند تحديثها أو التعليق عليها.
-    إزالة البيانات القديمة عند التحديث: # اختياري، القيمة الافتراضية هي صحيح
-    # إزالة التصنيفات القديمة من المشكلات عند تحديثها أو التعليق عليها. تجاوز خيار "remove-stale-when-updated" فيما يتعلق بالمشكلات فقط.
-    remove-issue-stale-when-updated: # اختياري، القيمة الافتراضية هي
-    # إزالة التصنيفات القديمة من طلبات السحب عند تحديثها أو التعليق عليها. تجاوز خيار "remove-stale-when-updated" فيما يتعلق بطلبات السحب فقط.
-    remove-pr-stale-when-updated: # اختياري، القيمة الافتراضية هي
-    # قم بتشغيل المعالج في وضع التصحيح دون إجراء أي عمليات على المشكلات الحية.
-    وضع التصحيح فقط: # اختياري، القيمة الافتراضية هي خطأ
-    # ترتيب الحصول على المشكلات أو طلبات السحب. القيمة الافتراضية هي خطأ، أي تنازلي.
-    تصاعدي: # اختياري، القيمة الافتراضية هي خطأ
-    # ما الذي يتم فرز النتائج بناءً عليه. الخيارات المتاحة هي `created` و `updated` و `comments`. القيمة الافتراضية هي `created`.
-    ترتيب حسب: # اختياري، يتم إنشاء الإعداد الافتراضي
-    # احذف فرع git بعد إغلاق طلب سحب قديم.
-    حذف الفرع: # اختياري، القيمة الافتراضية هي خطأ
-    # التاريخ المستخدم لتجاوز الإجراء القديم على المشكلة / طلب السحب الذي تم إنشاؤه قبله (ISO 8601 أو RFC 2822).
-    تاريخ البدء: # اختياري، القيمة الافتراضية هي
-    # المُسند إليهم الذين يستثنون مشكلة أو طلب سحب من أن يتم وضع علامة "قديم" عليه. افصل بين المُسند إليهم المتعددين بفواصل (مثال: "user1,user2").
-    المُعفون من التعيين: # اختياري، القيمة الافتراضية هي
-    # المُسند إليهم الذين يُعفون المسألة من أن تُصنّف على أنها قديمة. افصل بين المُسند إليهم المتعددين بفواصل (مثال: "user1,user2"). تجاوز خيار "exempt-assignees" فيما يتعلق بالمسائل فقط.
-    إعفاء المُسند إليهم الإصدار: # اختياري، القيمة الافتراضية هي
-    # المُسند إليهم الذين يُستثنون طلب السحب من أن يُصنّف على أنه قديم. افصل بين المُسند إليهم المتعددين بفواصل (مثال: "user1,user2"). تجاوز خيار "exempt-assignees" فيما يتعلق بطلبات السحب فقط.
-    المُعفى من التعيينات: # اختياري، القيمة الافتراضية هي
-    # إعفاء جميع المشكلات وطلبات السحب التي تم تعيينها من أن يتم وضع علامة "قديمة" عليها. القيمة الافتراضية هي "خطأ".
-    إعفاء جميع المُسند إليهم: # اختياري، القيمة الافتراضية هي خطأ
-    # استبعاد جميع المشكلات التي تم إسنادها إلى أشخاص معينين من أن تُصنّف على أنها قديمة. تجاوز خيار "استبعاد جميع الأشخاص المعينين" فيما يتعلق بالمشكلات فقط.
-    إعفاء جميع مُسندي الإصدارات: # اختياري، القيمة الافتراضية هي
-    # استثناء جميع طلبات السحب التي تم تعيين مُعينين لها من أن تُصنف على أنها قديمة. تجاوز خيار "exempt-all-assignees" فيما يتعلق بطلبات السحب فقط.
-    إعفاء جميع المُعينين: # اختياري، القيمة الافتراضية هي
-    # إعفاء طلبات سحب المسودة من أن تُصنّف على أنها قديمة. القيمة الافتراضية هي خطأ.
-    إعفاء-مسودة-طلب-الموافقة: # اختياري، القيمة الافتراضية هي خطأ
-    # عرض بعض الإحصائيات في النهاية فيما يتعلق بسير العمل القديم (فقط عند تمكين السجلات).
-    تفعيل الإحصائيات: # اختياري، القيمة الافتراضية هي صحيح
-    # قائمة مفصولة بفواصل للعلامات التي يجب إضافتها عندما تصبح مشكلة أو طلب سحب غير قديم.
-    labels-to-add-when-unstale: # اختياري، القيمة الافتراضية هي
-    # قائمة مفصولة بفواصل للعلامات التي يجب إزالتها عندما تصبح مشكلة أو طلب سحب قديمًا.
-    labels-to-remove-when-stale: # اختياري، القيمة الافتراضية هي
-    # قائمة مفصولة بفواصل للعلامات التي يجب إزالتها عندما تصبح مشكلة أو طلب سحب غير قديم.
-    labels-to-remove-when-unstale: # اختياري، القيمة الافتراضية هي
-    # يمكن لأي تحديث (تحديث/تعليق) إعادة ضبط وقت الخمول القديم على المشكلات وطلبات السحب.
-    تجاهل التحديثات: # اختياري، القيمة الافتراضية هي خطأ
-    # يمكن لأي تحديث (تحديث/تعليق) إعادة ضبط وقت الخمول القديم للمشكلات. تجاوز خيار "تجاهل التحديثات" فيما يتعلق بالمشكلات فقط.
-    تجاهل تحديثات المشكلات: # اختياري، القيمة الافتراضية هي
-    # يمكن لأي تحديث (تحديث/تعليق) إعادة ضبط وقت الخمول القديم لطلبات السحب. قم بتجاوز خيار "تجاهل التحديثات" فيما يتعلق بطلبات السحب فقط.
-    تجاهل تحديثات العلاقات العامة: # اختياري، القيمة الافتراضية هي
-    # سيتم وضع علامة "قديم" تلقائيًا على المشكلات أو طلبات السحب التي تم تعيين شخص لها فقط.
-    include-only-assigned: # اختياري، القيمة الافتراضية هي خطأ
-    # تُعالج المشكلات التي تتطابق مع النوع فقط على أنها قديمة/مغلقة. القيمة الافتراضية هي `[]` (معطلة) ويمكن أن تكون قائمة مفصولة بفواصل لأنواع المشكلات.
-    only-issue-types: # اختياري، القيمة الافتراضية هي
-          
+# Close stale issues and pull requests
+- name: Close stale issues
+  uses: actions/stale@v10.2.0
+  with:
+    # Token for the repository. Can be passed using `${{ secrets.GITHUB_TOKEN }}`.
+    repo-token: # optional, defaults to ${{ github.token }}
+    # Message to post when marking an issue as stale. If none, no issues will be marked stale.
+    stale-issue-message: # optional
+    # Message to post when marking a pull request as stale. If none, no pull requests will be marked stale.
+    stale-pr-message: # optional
+    # Message to post when closing an issue. If none, no comment will be posted when closing an issue.
+    close-issue-message: # optional
+    # Message to post when closing a pull request. If none, no comment will be posted when closing a pull request.
+    close-pr-message: # optional
+    # Number of days of inactivity before an issue or pull request becomes stale. Set to -1 to never mark as stale.
+    days-before-stale: # optional, default is 60
+    # Number of days of inactivity before an issue becomes stale. Overrides days-before-stale for issues.
+    days-before-issue-stale: # optional
+    # Number of days of inactivity before a pull request becomes stale. Overrides days-before-stale for PRs.
+    days-before-pr-stale: # optional
+    # Number of days to wait before closing a stale issue or pull request. Set to -1 to never close.
+    days-before-close: # optional, default is 7
+    # Number of days to wait before closing a stale issue. Overrides days-before-close for issues.
+    days-before-issue-close: # optional
+    # Number of days to wait before closing a stale pull request. Overrides days-before-close for PRs.
+    days-before-pr-close: # optional
+    # Label to apply when an issue is stale.
+    stale-issue-label: # optional, default is Stale
+    # Label to apply when closing an issue.
+    close-issue-label: # optional
+    # Labels that exempt an issue from being marked stale. Separate with commas (e.g., "label1,label2").
+    exempt-issue-labels: # optional
+    # Reason to use when closing an issue.
+    close-issue-reason: # optional, default is not planned
+    # Label to apply when a pull request is stale.
+    stale-pr-label: # optional, default is Stale
+    # Label to apply when closing a pull request.
+    close-pr-label: # optional
+    # Labels that exempt a pull request from being marked stale. Separate with commas (e.g., "label1,label2").
+    exempt-pr-labels: # optional
+    # Milestones that exempt an issue or pull request from being marked stale. Separate with commas.
+    exempt-milestones: # optional
+    # Milestones that exempt an issue from being marked stale. Overrides exempt-milestones for issues.
+    exempt-issue-milestones: # optional
+    # Milestones that exempt a pull request from being marked stale. Overrides exempt-milestones for PRs.
+    exempt-pr-milestones: # optional
+    # Exempt all issues and pull requests with milestones from being marked stale. Default is false.
+    exempt-all-milestones: # optional, default is false
+    # Exempt all issues with milestones from being marked stale. Overrides exempt-all-milestones for issues.
+    exempt-all-issue-milestones: # optional
+    # Exempt all pull requests with milestones from being marked stale. Overrides exempt-all-milestones for PRs.
+    exempt-all-pr-milestones: # optional
+    # Only issues or pull requests with all of these labels will be checked. Omit to check all.
+    only-labels: # optional
+    # Only issues with all of these labels will be checked. Overrides only-labels for issues.
+    only-issue-labels: # optional
+    # Only pull requests with all of these labels will be checked. Overrides only-labels for PRs.
+    only-pr-labels: # optional
+    # Maximum number of operations per run. Default is 30.
+    operations-per-run: # optional, default is 30
+    # Remove stale labels from issues and pull requests when they get new activity.
+    remove-stale-when-updated: # optional, default is true
+    # Remove the stale label from issues when they get new activity. Overrides remove-stale-when-updated for issues.
+    remove-issue-stale-when-updated: # optional
+    # Remove the stale label from pull requests when they get new activity. Overrides remove-stale-when-updated for PRs.
+    remove-pr-stale-when-updated: # optional
+    # Log output to debug.
+    debug-only: # optional, default is false
+    # Order to get issues/pull requests. Ascending or descending.
+    ascending: # optional, default is false
+    # Delete branch after closing a stale pull request.
+    delete-branch: # optional, default is false
+    # Start date for processing issues and pull requests.
+    start-date: # optional
+    # Labels on issues exempted from stale.
+    exempt-draft-pr: # optional, default is false
+    # Enable the stale action to process issues.
+    enable-statistics: # optional, default is true
+    # List of labels to add to an issue when it receives a new comment.
+    labels-to-add-when-unstale: # optional
+    # List of labels to remove from an issue when it receives a new comment.
+    labels-to-remove-when-stale: # optional
+    # List of labels to remove from an issue when it is marked as stale.
+    labels-to-remove-when-unstale: # optional
+    # Any time an issue or a PR has one of these assignees, it will be exempt.
+    exempt-assignees: # optional
+    # Any time an issue has one of these assignees, it will be exempt. Overrides exempt-assignees for issues.
+    exempt-issue-assignees: # optional
+    # Any time a pull request has one of these assignees, it will be exempt. Overrides exempt-assignees for PRs.
+    exempt-pr-assignees: # optional
+    # Exempt all issues and pull requests with assignees from being marked as stale.
+    exempt-all-assignees: # optional, default is false
+    # Exempt all issues with assignees from being marked as stale. Overrides exempt-all-assignees for issues.
+    exempt-all-issue-assignees: # optional
+    # Exempt all pull requests with assignees from being marked as stale. Overrides exempt-all-assignees for PRs.
+    exempt-all-pr-assignees: # optional
+    # Exempt all issues and pull requests with projects from being marked as stale.
+    exempt-all-projects: # optional, default is false
+    # Display some statistics at the end regarding the number of processed issues and pull requests.
+    ignore-updates: # optional, default is false
+    # Any time an issue or pull request is updated, reset the stale timer. Default is true.
+    ignore-issue-updates: # optional
+    # Any time a pull request is updated, reset the stale timer. Default is true.
+    ignore-pr-updates: # optional
+    # Include all the pull requests and ignore the issues in the stale workflow.
+    include-only-assigned: # optional, default is false

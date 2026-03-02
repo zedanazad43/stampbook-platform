@@ -1,15 +1,15 @@
-# Deployment Guide | دليل النشر | Bereitstellungshandbuch
+# Deployment Guide |   | Bereitstellungshandbuch
 
 This document provides comprehensive deployment instructions for the Stampcoin Platform, covering GitHub Pages (static frontend) and various cloud platforms for the Node.js backend API.
 
 ## Table of Contents
 
 <<<<<<< HEAD
-يغطي هذا الدليل جميع خيارات النشر لمنصة Stampcoin بما في ذلك Docker و GitHub Pages والمنصات السحابية.
+       Stampcoin    Docker  GitHub Pages  .
 
 ---
 
-## Table of Contents / جدول المحتويات
+## Table of Contents /  
 
 1. [Local Development](#local-development)
 2. [Docker Deployment](#docker-deployment)
@@ -22,13 +22,13 @@ This document provides comprehensive deployment instructions for the Stampcoin P
 
 ## Local Development
 
-### Prerequisites / المتطلبات الأساسية
+### Prerequisites /  
 
 - Node.js >= 16.x
 - npm or yarn
 - Git
 
-### Installation / التثبيت
+### Installation / 
 
 ```bash
 # Clone the repository
@@ -48,7 +48,7 @@ The server will start on `http://localhost:8080`
 
 ## Docker Deployment
 
-### Build Docker Image / بناء صورة Docker
+### Build Docker Image /   Docker
 
 ```bash
 # Build the Docker image
@@ -58,7 +58,7 @@ docker build -t stampcoin-platform .
 npm run docker:build
 ```
 
-### Run Docker Container / تشغيل حاوية Docker
+### Run Docker Container /   Docker
 
 ```bash
 # Run the container on port 8080
@@ -93,7 +93,7 @@ Run with:
 docker-compose up -d
 ```
 
-### Verify Docker Deployment / التحقق من نشر Docker
+### Verify Docker Deployment /    Docker
 
 ```bash
 # Check container status
@@ -203,7 +203,7 @@ The static landing page is automatically deployed to GitHub Pages when you push 
    
    Navigate to your repository on GitHub:
    ```
-   Settings → Pages → Source
+   Settings  Pages  Source
    ```
    - **Source**: GitHub Actions
    - The site will be available at: `https://zedanazad43.github.io/stp/`
@@ -218,7 +218,7 @@ The static landing page is automatically deployed to GitHub Pages when you push 
 
 3. **Manual Trigger** (if needed)
    
-   Go to `Actions` tab → Select `Deploy to GitHub Pages` → `Run workflow`
+   Go to `Actions` tab  Select `Deploy to GitHub Pages`  `Run workflow`
 
 ### Custom Domain Configuration
 
@@ -236,7 +236,7 @@ To use a custom domain:
    Value: zedanazad43.github.io
    ```
 
-3. In GitHub Settings → Pages, enter your custom domain
+3. In GitHub Settings  Pages, enter your custom domain
 
 ### Verification
 
@@ -302,7 +302,7 @@ Alternatively, you can use the `render.yaml` file for automated configuration:
 2. Select "Configure with render.yaml"
 3. The service will automatically use the configuration in the repository
 =======
-In Railway dashboard → Variables tab, add:
+In Railway dashboard  Variables tab, add:
 
 ```
 SYNC_TOKEN=your-secret-token-here
@@ -311,7 +311,7 @@ PORT=8080
 
 #### Monitoring
 
-- View logs: Railway dashboard → Deployments → Logs
+- View logs: Railway dashboard  Deployments  Logs
 - Metrics: Dashboard shows CPU, memory, and network usage
 - Domain: Railway provides a free `.railway.app` domain
 
@@ -331,7 +331,7 @@ Render provides free hosting with automatic deploys from GitHub.
 #### Deployment Steps
 
 1. **Create New Web Service**
-   - Dashboard → New → Web Service
+   - Dashboard  New  Web Service
    - Connect your GitHub repository
    - Select `zedanazad43/stp`
 
@@ -364,9 +364,9 @@ Render automatically redeploys when you push to the main branch.
 
 #### Monitoring
 
-- Logs: Service dashboard → Logs tab
+- Logs: Service dashboard  Logs tab
 - Metrics: Dashboard shows request metrics
-- Health checks: Configure under Settings → Health & Alerts
+- Health checks: Configure under Settings  Health & Alerts
 
 #### Cost
 - Free tier: Available (sleeps after 15 min inactivity)
@@ -506,7 +506,7 @@ Create `vercel.json` in repository root:
 
 #### Environment Variables
 
-In Vercel dashboard → Settings → Environment Variables:
+In Vercel dashboard  Settings  Environment Variables:
 
 ```
 SYNC_TOKEN=your-secret-token-here
@@ -640,12 +640,12 @@ fly dashboard
 
 | Platform | Ease of Setup | Free Tier | Persistence | Best For |
 |----------|--------------|-----------|-------------|----------|
-| **GitHub Pages** | ⭐⭐⭐⭐⭐ | ✅ Unlimited | N/A (static) | Static site |
-| **Railway** | ⭐⭐⭐⭐⭐ | $5 credit/month | ✅ | Quick deploy |
-| **Render** | ⭐⭐⭐⭐ | ✅ (sleeps) | ✅ | Free backend |
-| **Heroku** | ⭐⭐⭐ | ❌ (paid only) | ✅ | Mature ecosystem |
-| **Vercel** | ⭐⭐⭐⭐ | ✅ | ❌ (serverless) | Edge compute |
-| **Fly.io** | ⭐⭐⭐ | ✅ (limited) | ✅ | Global deploy |
+| **GitHub Pages** |  |  Unlimited | N/A (static) | Static site |
+| **Railway** |  | $5 credit/month |  | Quick deploy |
+| **Render** |  |  (sleeps) |  | Free backend |
+| **Heroku** |  |  (paid only) |  | Mature ecosystem |
+| **Vercel** |  |  |  (serverless) | Edge compute |
+| **Fly.io** |  |  (limited) |  | Global deploy |
 
 ---
 

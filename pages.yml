@@ -3,7 +3,7 @@ name: Build and Deploy to Render
 on:
   push:
     branches: [ main, master ]
-  workflow_dispatch:  # السماح بتشغيل يدوي
+  workflow_dispatch:  #   
 
 jobs:
   build-and-deploy:
@@ -27,15 +27,15 @@ jobs:
 
     - name: Prepare site directory
       run: |
-        # إنشاء مجلد _site إذا لم يكن موجودًا
+        #   _site    
         mkdir -p _site
 
     - name: Copy docs to _site
       run: |
-        # استنساخ المستوديع (تم في الخطوة السابقة)
+        #   (   )
         echo "Repository already checked out in previous step"
 
-        # نسخ محتويات مجلد docs إلى مجلد _site إذا كان موجودًا
+        #    docs   _site   
         if [ -d "docs" ]; then
           echo "Copying docs to _site..."
           cp docs/* _site/ 2>/dev/null || echo "No files found in docs directory"
@@ -45,7 +45,7 @@ jobs:
 
     - name: Create index.html if missing
       run: |
-        # إنشاء ملف index.html إذا لم يكن موجودًا في مجلد _site
+        #   index.html       _site
         if [ ! -f _site/index.html ]; then
           echo "Creating index.html..."
           cat > _site/index.html <<EOF

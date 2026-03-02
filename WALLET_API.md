@@ -1,11 +1,11 @@
 # Digital Wallet API Documentation
-# واجهة برمجة تطبيقات المحفظة الرقمية
+#     
 
-## Overview | نظرة عامة
+## Overview |  
 
 The Digital Wallet API provides endpoints for managing digital wallets, balances, stamps, and peer-to-peer transfers in the Stampcoin platform.
 
-توفر واجهة برمجة تطبيقات المحفظة الرقمية نقاط نهاية لإدارة المحافظ الرقمية والأرصدة والطوابع والتحويلات بين المستخدمين في منصة Stampcoin.
+                  Stampcoin.
 
 ## Base URL
 
@@ -13,9 +13,9 @@ The Digital Wallet API provides endpoints for managing digital wallets, balances
 http://localhost:8080/api
 ```
 
-## Endpoints | نقاط النهاية
+## Endpoints |  
 
-### 1. Create Wallet | إنشاء محفظة
+### 1. Create Wallet |  
 
 **POST** `/api/wallets`
 
@@ -50,7 +50,7 @@ Create a new digital wallet for a user.
 
 ---
 
-### 2. Get Wallet | الحصول على المحفظة
+### 2. Get Wallet |   
 
 **GET** `/api/wallets/:userId`
 
@@ -85,7 +85,7 @@ Retrieve wallet information for a specific user.
 
 ---
 
-### 3. Get All Wallets | الحصول على جميع المحافظ
+### 3. Get All Wallets |    
 
 **GET** `/api/wallets`
 
@@ -115,7 +115,7 @@ Retrieve all wallets in the system.
 
 ---
 
-### 4. Update Balance | تحديث الرصيد
+### 4. Update Balance |  
 
 **POST** `/api/wallets/:userId/balance`
 
@@ -148,7 +148,7 @@ Add or subtract from wallet balance.
 
 ---
 
-### 5. Add Stamp to Wallet | إضافة طابع إلى المحفظة
+### 5. Add Stamp to Wallet |    
 
 **POST** `/api/wallets/:userId/stamps`
 
@@ -188,7 +188,7 @@ Add a digital stamp to a user's wallet.
 
 ---
 
-### 6. Transfer | التحويل
+### 6. Transfer | 
 
 **POST** `/api/wallets/transfer`
 
@@ -234,7 +234,7 @@ Transfer balance or stamps between wallets.
 
 ---
 
-### 7. Get Transaction History | الحصول على سجل المعاملات
+### 7. Get Transaction History |    
 
 **GET** `/api/wallets/:userId/transactions`
 
@@ -266,7 +266,7 @@ Retrieve transaction history for a specific user.
 
 ---
 
-### 8. Get All Transactions | الحصول على جميع المعاملات
+### 8. Get All Transactions |    
 
 **GET** `/api/transactions`
 
@@ -289,9 +289,9 @@ Retrieve all transactions in the system.
 
 ---
 
-## Data Models | نماذج البيانات
+## Data Models |  
 
-### Wallet Object | كائن المحفظة
+### Wallet Object |  
 
 ```typescript
 {
@@ -304,7 +304,7 @@ Retrieve all transactions in the system.
 }
 ```
 
-### Stamp Object | كائن الطابع
+### Stamp Object |  
 
 ```typescript
 {
@@ -319,7 +319,7 @@ Retrieve all transactions in the system.
 }
 ```
 
-### Transaction Object | كائن المعاملة
+### Transaction Object |  
 
 ```typescript
 {
@@ -335,7 +335,7 @@ Retrieve all transactions in the system.
 
 ---
 
-## Example Usage | أمثلة الاستخدام
+## Example Usage |  
 
 ### Create and Fund a Wallet
 
@@ -372,7 +372,7 @@ curl -X POST http://localhost:8080/api/wallets/transfer \
 
 ---
 
-## Error Codes | رموز الخطأ
+## Error Codes |  
 
 - **400 Bad Request**: Invalid input or business rule violation
 - **404 Not Found**: Wallet not found
@@ -380,7 +380,7 @@ curl -X POST http://localhost:8080/api/wallets/transfer \
 
 ---
 
-## Security Considerations | اعتبارات الأمان
+## Security Considerations |  
 
 1. In production, implement authentication and authorization
 2. Use HTTPS for all API calls
@@ -393,7 +393,7 @@ curl -X POST http://localhost:8080/api/wallets/transfer \
 - Migrating to a database with transaction support (PostgreSQL, MongoDB, etc.)
 - Using a queue system for wallet operations to serialize transactions
 
-## Future Enhancements | التحسينات المستقبلية
+## Future Enhancements |  
 
 - Add wallet authentication with JWT tokens
 - Implement transaction rollback functionality

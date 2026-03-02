@@ -1,4 +1,4 @@
-# نموذج إعداد أساسي لـ Copilot في GitHub Actions
+#     Copilot  GitHub Actions
 steps:
   - name: Checkout repository
     uses: actions/checkout@v3

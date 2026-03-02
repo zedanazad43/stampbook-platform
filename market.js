@@ -1,5 +1,5 @@
 /**
- * Market Institution Module (مؤسسة السوق)
+ * Market Institution Module
  * Digital marketplace for stamps and collectibles
  */
 

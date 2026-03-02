@@ -18,7 +18,7 @@
 
 **Location:** https://github.com/zedanazad43/stp
 
-1. Click **Settings** → **Pages**
+1. Click **Settings**  **Pages**
 2. Source: **Deploy from a branch**
 3. Branch: **main**
 4. Folder: **/ (root)**
@@ -26,7 +26,7 @@
 6. Wait for Actions to complete (look for green checkmark)
 7. Site available at: `https://zedanazad43.github.io/stp`
 
-✓ **Done:** GitHub Pages enabled
+ **Done:** GitHub Pages enabled
 
 ---
 
@@ -35,7 +35,7 @@
 **Location:** https://render.com
 
 1. Sign up with GitHub (recommended)
-2. Click **New +** → **Web Service**
+2. Click **New +**  **Web Service**
 3. Connect GitHub repository: `stp`
 4. Configuration:
    - Name: `stampcoin-api`
@@ -59,7 +59,7 @@ Test API:
 curl https://stampcoin-api.onrender.com/sync
 ```
 
-✓ **Done:** API deployed to Render
+ **Done:** API deployed to Render
 
 ---
 
@@ -70,18 +70,18 @@ curl https://stampcoin-api.onrender.com/sync
 ### Namecheap:
 1. Go to https://www.namecheap.com
 2. Search: `stampcoin.com`
-3. Add to cart → Checkout
+3. Add to cart  Checkout
 4. Complete payment
 
 ### Google Domains:
 1. Go to https://domains.google
 2. Search: `stampcoin.com`
-3. Add to cart → Checkout
+3. Add to cart  Checkout
 4. Complete purchase
 
 **Cost:** $8-12/year
 
-✓ **Done:** Domain registered
+ **Done:** Domain registered
 
 ---
 
@@ -106,16 +106,16 @@ Add these 4 records:
 | CNAME | api | stampcoin-api.onrender.com |
 
 **Instructions for Namecheap:**
-1. Dashboard → Manage domain
+1. Dashboard  Manage domain
 2. Advanced DNS tab
 3. Add records using forms
 
 **Instructions for Google Domains:**
-1. Dashboard → your domain
+1. Dashboard  your domain
 2. DNS tab
 3. Add records in "Custom Records" section
 
-✓ **Done:** DNS configured
+ **Done:** DNS configured
 
 ---
 
@@ -151,7 +151,7 @@ GitHub Pages redeploys automatically (1-2 minutes).
    - Should have green padlock (HTTPS)
    - No errors in Console (F12)
 
-2. API: Open DevTools (F12) → Network tab
+2. API: Open DevTools (F12)  Network tab
    - Trigger sync operation
    - Check request to `api.stampcoin.com/sync`
    - Status should be 200 (success)
@@ -163,7 +163,7 @@ GitHub Pages redeploys automatically (1-2 minutes).
    nslookup api.stampcoin.com
    ```
 
-✓ **Done:** Testing complete
+ **Done:** Testing complete
 
 ---
 
@@ -175,7 +175,7 @@ GitHub Pages redeploys automatically (1-2 minutes).
 - [ ] No "Connection not private" warnings
 - [ ] All assets load (images, CSS, JS)
 - [ ] Mobile view works
-- [ ] No console errors (F12 → Console)
+- [ ] No console errors (F12  Console)
 
 ### API (api.stampcoin.com)
 - [ ] Responds to requests
@@ -248,7 +248,7 @@ DNS changes take 15 minutes to 24 hours to fully propagate.
 ## Production Recommendations
 
 ### Performance
-- [ ] Enable caching on Render (Settings → Cache)
+- [ ] Enable caching on Render (Settings  Cache)
 - [ ] Minify static assets
 - [ ] Use CDN for images (optional)
 - [ ] Monitor Lighthouse score
@@ -291,19 +291,19 @@ DNS changes take 15 minutes to 24 hours to fully propagate.
 
 | Phase | Time | Status |
 |-------|------|--------|
-| GitHub Pages | 5 min | ⏳ |
-| Render Deploy | 10 min | ⏳ |
-| Domain Purchase | 10 min | ⏳ |
-| DNS Config | 5 min | ⏳ |
-| DNS Propagation | 15 min - 24 hrs | ⏳ |
-| Testing | 10 min | ⏳ |
+| GitHub Pages | 5 min |  |
+| Render Deploy | 10 min |  |
+| Domain Purchase | 10 min |  |
+| DNS Config | 5 min |  |
+| DNS Propagation | 15 min - 24 hrs |  |
+| Testing | 10 min |  |
 | **Total** | **55 min - 1 day** | |
 
 ---
 
 ## Success Criteria
 
-✓ All items checked = Full Production Deployment
+ All items checked = Full Production Deployment
 
 - [ ] `https://stampcoin.com` loads with HTTPS
 - [ ] `https://api.stampcoin.com` responds with JSON
