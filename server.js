@@ -2,6 +2,8 @@ const express = require("express");
 const fs = require("fs").promises;
 const path = require("path");
 const cors = require("cors");
+const wallet = require("./wallet");
+const market = require("./market");
 
 const app = express();
 app.use(cors());
@@ -12,6 +14,116 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Health check endpoint (used by Docker and docker-compose healthchecks)
 app.get("/health", (req, res) => res.json({ status: "ok" }));
+
+// --- Wallet API ---
+app.post("/api/wallet/create", (req, res) => {
+  try {
+    const { userId, userName } = req.body;
+    if (!userId || !userName) return res.status(400).json({ error: "userId and userName are required" });
+    const w = wallet.createWallet(userId, userName);
+    res.json(w);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/wallet/:userId", (req, res) => {
+  try {
+    const w = wallet.getWallet(req.params.userId);
+    if (!w) return res.status(404).json({ error: "Wallet not found" });
+    res.json(w);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/wallet/transfer", (req, res) => {
+  try {
+    const { fromUserId, toUserId, amount } = req.body;
+    if (!fromUserId || !toUserId || !amount) return res.status(400).json({ error: "fromUserId, toUserId, and amount are required" });
+    const tx = wallet.transfer(fromUserId, toUserId, Number(amount));
+    res.json(tx);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/wallet/:userId/transactions", (req, res) => {
+  try {
+    const txs = wallet.getTransactionHistory(req.params.userId);
+    res.json(txs);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Demo: add test STP balance
+app.post("/api/wallet/:userId/topup", (req, res) => {
+  try {
+    const amount = Number((req.body && req.body.amount) || 1000);
+    const w = wallet.updateBalance(req.params.userId, amount);
+    res.json(w);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// --- Market API ---
+app.get("/api/market/items", (req, res) => {
+  try {
+    const filter = {};
+    if (req.query.status) filter.status = req.query.status;
+    if (req.query.type) filter.type = req.query.type;
+    res.json(market.getAllMarketItems(filter));
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/market/items", (req, res) => {
+  try {
+    const { sellerId, name, description, price, type, imageUrl } = req.body;
+    if (!sellerId || !name) return res.status(400).json({ error: "sellerId and name are required" });
+    const item = market.addMarketItem(sellerId, { name, description, price, type, imageUrl });
+    res.json(item);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/market/items/:itemId", (req, res) => {
+  try {
+    res.json(market.getMarketItem(req.params.itemId));
+  } catch (e) {
+    res.status(404).json({ error: e.message });
+  }
+});
+
+app.post("/api/market/items/:itemId/buy", (req, res) => {
+  try {
+    const { buyerId } = req.body;
+    if (!buyerId) return res.status(400).json({ error: "buyerId is required" });
+    const item = market.getMarketItem(req.params.itemId);
+    // Transfer payment from buyer to seller
+    if (item.price > 0) {
+      wallet.transfer(buyerId, item.sellerId, item.price);
+    }
+    const result = market.purchaseMarketItem(req.params.itemId, buyerId);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.delete("/api/market/items/:itemId", (req, res) => {
+  try {
+    const userId = (req.body && req.body.userId) || req.query.userId;
+    if (!userId) return res.status(400).json({ error: "userId is required" });
+    res.json(market.removeMarketItem(req.params.itemId, userId));
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
 
 const DATA_FILE = path.join(__dirname, "data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
@@ -49,6 +161,32 @@ function requireToken(req, res, next) {
   }
   next();
 }
+
+// --- Token Info API ---
+app.get("/api/token", (req, res) => {
+  res.json({
+    name: "StampCoin",
+    symbol: "STP",
+    totalSupply: 421000000,
+    icoPrice: 1.65,
+    icoUnit: "USD",
+    decimals: 18,
+    license: "MIT",
+    website: "https://ecostamp.net",
+    github: "https://github.com/zedanazad43/stp",
+    contact: "stampcoin.contact@gmail.com",
+    distribution: [
+      { label: "Public ICO Sale",       percent: 20, amount: 84200000 },
+      { label: "Ecosystem & Partners",  percent: 20, amount: 84200000 },
+      { label: "Community & Rewards",   percent: 20, amount: 84200000 },
+      { label: "Liquidity Pool",        percent: 15, amount: 63150000 },
+      { label: "Team & Founders",       percent: 15, amount: 63150000 },
+      { label: "Reserve",               percent: 10, amount: 42100000 }
+    ],
+    contractAddress: "Pending mainnet deployment",
+    network: "EVM-compatible"
+  });
+});
 
 app.get("/sync", requireToken, async (req, res) => {
   const todos = await readData();
