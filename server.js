@@ -162,6 +162,32 @@ function requireToken(req, res, next) {
   next();
 }
 
+// --- Token Info API ---
+app.get("/api/token", (req, res) => {
+  res.json({
+    name: "StampCoin",
+    symbol: "STP",
+    totalSupply: 421000000,
+    icoPrice: 1.65,
+    icoUnit: "USD",
+    decimals: 18,
+    license: "MIT",
+    website: "https://ecostamp.net",
+    github: "https://github.com/zedanazad43/stp",
+    contact: "stampcoin.contact@gmail.com",
+    distribution: [
+      { label: "Public ICO Sale",       percent: 20, amount: 84200000 },
+      { label: "Ecosystem & Partners",  percent: 20, amount: 84200000 },
+      { label: "Community & Rewards",   percent: 20, amount: 84200000 },
+      { label: "Liquidity Pool",        percent: 15, amount: 63150000 },
+      { label: "Team & Founders",       percent: 15, amount: 63150000 },
+      { label: "Reserve",               percent: 10, amount: 42100000 }
+    ],
+    contractAddress: "Pending mainnet deployment",
+    network: "EVM-compatible"
+  });
+});
+
 app.get("/sync", requireToken, async (req, res) => {
   const todos = await readData();
   res.json({ todos });

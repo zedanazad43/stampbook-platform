@@ -343,3 +343,30 @@ For wallet operations, see [WALLET_API.md](WALLET_API.md)
 - [WALLET_API.md](WALLET_API.md) - Digital Wallet API documentation
 - [README.md](README.md) - General platform documentation
 - [INSTALLATION.md](INSTALLATION.md) - Installation instructions
+
+---
+
+## Token Info Endpoint
+
+### GET `/api/token`
+
+Returns StampCoin (STP) token metadata. No authentication required.
+
+**Response:**
+```json
+{
+  "name": "StampCoin",
+  "symbol": "STP",
+  "totalSupply": 421000000,
+  "icoPrice": 1.65,
+  "icoUnit": "USD",
+  "decimals": 18,
+  "license": "MIT",
+  "website": "https://ecostamp.net",
+  "github": "https://github.com/zedanazad43/stp",
+  "contact": "stampcoin.contact@gmail.com",
+  "distribution": [...],
+  "contractAddress": "Pending mainnet deployment",
+  "network": "EVM-compatible"
+}
+```
