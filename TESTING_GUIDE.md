@@ -50,13 +50,13 @@ Before starting tests, ensure:
    - Layout looks correct
 
 **Expected Result:**
-- ✓ Page loads
-- ✓ No 404 or connection errors
-- ✓ Green padlock visible
-- ✓ Content readable
+-  Page loads
+-  No 404 or connection errors
+-  Green padlock visible
+-  Content readable
 
 **If fails:**
-- Check browser console (F12 → Console tab)
+- Check browser console (F12  Console tab)
 - Try `https://zedanazad43.github.io/stp` (GitHub default)
 - Check GitHub Pages is enabled
 - Verify DNS records exist
@@ -72,9 +72,9 @@ Before starting tests, ensure:
 3. Compare to custom domain version
 
 **Expected Result:**
-- ✓ Both URLs load same content
-- ✓ Same styling and layout
-- ✓ All assets present
+-  Both URLs load same content
+-  Same styling and layout
+-  All assets present
 
 ---
 
@@ -96,10 +96,10 @@ Before starting tests, ensure:
    - No errors
 
 **Expected Result:**
-- ✓ Green padlock
-- ✓ "Connection is secure" shown
-- ✓ Certificate valid
-- ✓ No warnings
+-  Green padlock
+-  "Connection is secure" shown
+-  Certificate valid
+-  No warnings
 
 **If fails:**
 - GitHub Pages cert takes 5-10 min to issue
@@ -119,9 +119,9 @@ Before starting tests, ensure:
 4. Page loads normally
 
 **Expected Result:**
-- ✓ Automatically redirected to HTTPS
-- ✓ No mixed content warnings
-- ✓ Green padlock shown
+-  Automatically redirected to HTTPS
+-  No mixed content warnings
+-  Green padlock shown
 
 ---
 
@@ -141,10 +141,10 @@ Before starting tests, ensure:
 6. Check for red X marks (failures)
 
 **Expected Result:**
-- ✓ All files load (status 200)
-- ✓ No red X marks
-- ✓ No 404 errors
-- ✓ Total load time <2 seconds
+-  All files load (status 200)
+-  No red X marks
+-  No 404 errors
+-  Total load time <2 seconds
 
 **Common issues:**
 - 404 on CSS/JS: Check file paths
@@ -169,10 +169,10 @@ Before starting tests, ensure:
    - No horizontal scroll
 
 **Expected Result:**
-- ✓ Readable on mobile
-- ✓ Touch targets large enough
-- ✓ No overflow
-- ✓ Images scale properly
+-  Readable on mobile
+-  Touch targets large enough
+-  No overflow
+-  Images scale properly
 
 ### 3.3 Test Console for Errors
 
@@ -189,10 +189,10 @@ Before starting tests, ensure:
    - Blue = Info
 
 **Expected Result:**
-- ✓ No red errors
-- ✓ No "Refused to connect" messages
-- ✓ No authentication errors
-- ✓ Warnings are acceptable
+-  No red errors
+-  No "Refused to connect" messages
+-  No authentication errors
+-  Warnings are acceptable
 
 **If error appears:**
 - Note exact error message
@@ -230,10 +230,10 @@ Invoke-WebRequest -Uri "https://api.stampcoin.com/sync"
 ```
 
 **Expected Result:**
-- ✓ Response appears instantly
-- ✓ Valid JSON shown
-- ✓ No HTML error page
-- ✓ Status code 200
+-  Response appears instantly
+-  Valid JSON shown
+-  No HTML error page
+-  Status code 200
 
 **If fails - API not responding:**
 
@@ -259,9 +259,9 @@ Invoke-WebRequest -Uri "https://api.stampcoin.com/sync"
 7. Total time should be <500ms
 
 **Expected Result:**
-- ✓ Response time <500ms
-- ✓ No timeouts
-- ✓ Consistent response times
+-  Response time <500ms
+-  No timeouts
+-  Consistent response times
 
 **If slow:**
 - Render free tier may be sleeping
@@ -294,8 +294,8 @@ curl -X GET https://api.stampcoin.com/sync \
 ```
 
 **Expected Result:**
-- ✓ Without token: 401 Unauthorized (if auth enabled)
-- ✓ With token: 200 OK with data
+-  Without token: 401 Unauthorized (if auth enabled)
+-  With token: 200 OK with data
 
 ---
 
@@ -318,10 +318,10 @@ curl -X GET https://api.stampcoin.com/sync \
    - Response contains data
 
 **Expected Result:**
-- ✓ Request made to `api.stampcoin.com`
-- ✓ Status 200 (success)
-- ✓ Response contains JSON
-- ✓ No CORS errors
+-  Request made to `api.stampcoin.com`
+-  Status 200 (success)
+-  Response contains JSON
+-  No CORS errors
 
 **If CORS error appears:**
 
@@ -346,9 +346,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 5. Verify data still exists
 
 **Expected Result:**
-- ✓ Data persists after reload
-- ✓ API successfully stored data
-- ✓ No sync errors in console
+-  Data persists after reload
+-  API successfully stored data
+-  No sync errors in console
 
 ### 5.3 Test Error Handling
 
@@ -366,10 +366,10 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 5. Restart Render service
 
 **Expected Result:**
-- ✓ App shows error message
-- ✓ No blank page or hang
-- ✓ User can retry
-- ✓ App recovers when API comes back
+-  App shows error message
+-  No blank page or hang
+-  User can retry
+-  App recovers when API comes back
 
 ---
 
@@ -400,9 +400,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
    - `stampcoin-api.onrender.com`
 
 **Expected Result:**
-- ✓ Website A records resolve
-- ✓ API CNAME resolves
-- ✓ No NXDOMAIN errors
+-  Website A records resolve
+-  API CNAME resolves
+-  No NXDOMAIN errors
 
 **If fails:**
 
@@ -431,9 +431,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 4. Most locations should show GitHub IPs
 
 **Expected Result:**
-- ✓ Most locations show correct IPs
-- ✓ All showing same values
-- ✓ Completed (100% green)
+-  Most locations show correct IPs
+-  All showing same values
+-  Completed (100% green)
 
 **If incomplete:**
 - Wait more time (max 24 hours)
@@ -452,9 +452,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 4. Try from incognito mode
 
 **Expected Result:**
-- ✓ Loads from all networks
-- ✓ Same content everywhere
-- ✓ Works on all browsers
+-  Loads from all networks
+-  Same content everywhere
+-  Works on all browsers
 
 ---
 
@@ -478,9 +478,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
    - SEO: Target >90
 
 **Expected Result:**
-- ✓ Most scores >85
-- ✓ Green indicators
-- ✓ No critical issues listed
+-  Most scores >85
+-  Green indicators
+-  No critical issues listed
 
 **If score low:**
 - Reduce unused CSS/JS
@@ -502,9 +502,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 6. Note the Z seconds value
 
 **Expected Result:**
-- ✓ Total load <2 seconds
-- ✓ First paint <1 second
-- ✓ Interactive <1.5 seconds
+-  Total load <2 seconds
+-  First paint <1 second
+-  Interactive <1.5 seconds
 
 **If slow:**
 - Check Network tab for slow requests
@@ -526,9 +526,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 6. Look at "Time" or "Duration"
 
 **Expected Result:**
-- ✓ <500ms response time
-- ✓ Consistent timing
-- ✓ No timeouts
+-  <500ms response time
+-  Consistent timing
+-  No timeouts
 
 ---
 
@@ -549,9 +549,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 5. Look for any `http://` requests
 
 **Expected Result:**
-- ✓ All requests are HTTPS
-- ✓ No mixed content warnings
-- ✓ No insecure resource warnings
+-  All requests are HTTPS
+-  No mixed content warnings
+-  No insecure resource warnings
 
 ### 8.2 Check Security Headers
 
@@ -560,7 +560,7 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 **Steps:**
 
 1. Open `https://stampcoin.com`
-2. DevTools → Network tab
+2. DevTools  Network tab
 3. Click page request (first one)
 4. Click "Response Headers"
 5. Look for:
@@ -569,9 +569,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
    - `X-Frame-Options`
 
 **Expected Result:**
-- ✓ Security headers present
-- ✓ No mixed content
-- ✓ Content-Type: text/html
+-  Security headers present
+-  No mixed content
+-  Content-Type: text/html
 
 ### 8.3 Check for Sensitive Data
 
@@ -579,7 +579,7 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 
 **Steps:**
 
-1. DevTools → Network tab
+1. DevTools  Network tab
 2. Look through all requests
 3. Click each request
 4. Check "Response" tab
@@ -590,9 +590,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
    - No credit card info
 
 **Expected Result:**
-- ✓ No sensitive data in responses
-- ✓ No hardcoded credentials
-- ✓ Tokens use Bearer scheme
+-  No sensitive data in responses
+-  No hardcoded credentials
+-  Tokens use Bearer scheme
 
 ---
 
@@ -618,9 +618,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
    - Functionality works
 
 **Expected Result:**
-- ✓ Works on all modern browsers
-- ✓ Consistent appearance
-- ✓ No major differences
+-  Works on all modern browsers
+-  Consistent appearance
+-  No major differences
 
 ### 9.2 Test Across Devices
 
@@ -636,9 +636,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 3. Verify responsive behavior
 
 **Expected Result:**
-- ✓ Works on all sizes
-- ✓ Text readable
-- ✓ Buttons clickable
+-  Works on all sizes
+-  Text readable
+-  Buttons clickable
 
 ---
 
@@ -652,17 +652,17 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 
 1. Open DevTools
 2. Click Network tab
-3. Find network throttle option (settings ⚙)
+3. Find network throttle option (settings )
 4. Select "Offline"
 5. Try to use app
 6. Try API call
 7. Check error message
 
 **Expected Result:**
-- ✓ Graceful error handling
-- ✓ User-friendly error message
-- ✓ No blank page
-- ✓ Can retry
+-  Graceful error handling
+-  User-friendly error message
+-  No blank page
+-  Can retry
 
 ### 10.2 Test API Down
 
@@ -679,9 +679,9 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 7. Resume service
 
 **Expected Result:**
-- ✓ Graceful error message
-- ✓ App doesn't crash
-- ✓ Recovers when API returns
+-  Graceful error message
+-  App doesn't crash
+-  Recovers when API returns
 
 ---
 
@@ -740,14 +740,14 @@ Error looks like: `Access to XMLHttpRequest blocked by CORS policy`
 
 | Test Area | Status | Notes |
 |-----------|--------|-------|
-| Website Loading | ✓/✗ | |
-| HTTPS/SSL | ✓/✗ | |
-| API Response | ✓/✗ | |
-| Integration | ✓/✗ | |
-| Domain/DNS | ✓/✗ | |
-| Performance | ✓/✗ | |
-| Security | ✓/✗ | |
-| Compatibility | ✓/✗ | |
+| Website Loading | / | |
+| HTTPS/SSL | / | |
+| API Response | / | |
+| Integration | / | |
+| Domain/DNS | / | |
+| Performance | / | |
+| Security | / | |
+| Compatibility | / | |
 
 ---
 

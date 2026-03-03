@@ -1,11 +1,11 @@
 {
   "language": "Deutsch",
   "languageCode": "de",
-  "flag": "🇩🇪",
+  "flag": "DE",
   "platform": {
     "title": "Stampcoin Plattform",
     "subtitle": "Digitale Plattform",
-    "description": "Eine innovative Blockchain-basierte Plattform für digitale Briefmarken, Prämien und Treuepunkte. Sichere Peer-to-Peer-Übertragungen und ein Marktplatz für digitale Sammlerstücke mit Transparenz und Vertrauen.",
+    "description": "Eine innovative Blockchain-basierte Plattform fur digitale Briefmarken, Pramien und Treuepunkte. Sichere Peer-to-Peer-Ubertragungen und ein Marktplatz fur digitale Sammlerstucke mit Transparenz und Vertrauen.",
     "status": {
       "live": "Live",
       "openSource": "Open Source"
@@ -18,23 +18,23 @@
       "description": "Sichere Speicherung und Verwaltung Ihrer digitalen Briefmarken und Token mit Blockchain-Technologie"
     },
     "transfers": {
-      "title": "Sichere Übertragungen",
-      "description": "Blockchain-gestützte Peer-to-Peer-Transaktionen mit vollständiger Transparenz und Sicherheit"
+      "title": "Sichere Ubertragungen",
+      "description": "Blockchain-gestutzte Peer-to-Peer-Transaktionen mit vollstandiger Transparenz und Sicherheit"
     },
     "marketplace": {
       "title": "Marktplatz",
-      "description": "Kaufen, verkaufen und handeln Sie digitale Sammlerstücke auf einem vertrauenswürdigen Community-Marktplatz"
+      "description": "Kaufen, verkaufen und handeln Sie digitale Sammlerstucke auf einem vertrauenswurdigen Community-Marktplatz"
     },
     "profiles": {
       "title": "Benutzerprofile",
-      "description": "Verifizierte Konten mit vollständiger Profilverwaltung und Sammlungsverfolgung"
+      "description": "Verifizierte Konten mit vollstandiger Profilverwaltung und Sammlungsverfolgung"
     }
   },
   "documentation": {
     "title": "Dokumentation",
     "businessPlan": {
       "title": "Business One-Pager",
-      "description": "Vollständiger Geschäftsplan in mehreren Sprachen"
+      "description": "Vollstandiger Geschaftsplan in mehreren Sprachen"
     },
     "roadmap": {
       "title": "Projekt-Roadmap",
@@ -46,17 +46,17 @@
     "reportIssues": "Probleme melden"
   },
   "footer": {
-    "multilingual": "Mehrsprachige Unterstützung",
+    "multilingual": "Mehrsprachige Unterstutzung",
     "contact": "Kontakt",
-    "founder": "Azad Zedan - Gründer von Stampcoin",
-    "copyright": "Stampcoin Plattform. Mit ❤️ für Sammler weltweit gebaut."
+    "founder": "Azad Zedan - Grunder von Stampcoin",
+    "copyright": "Stampcoin Plattform. Mit  fur Sammler weltweit gebaut."
   },
   "readme": {
-    "description": "Stampcoin ist eine innovative Plattform auf Blockchain-Basis für digitale Briefmarken, Prämien und loyale Sammler.",
+    "description": "Stampcoin ist eine innovative Plattform auf Blockchain-Basis fur digitale Briefmarken, Pramien und loyale Sammler.",
     "features": [
-      "Digitale Wallet für Stampcoins",
+      "Digitale Wallet fur Stampcoins",
       "Sichere Nutzer-Transaktionen",
-      "Märkte für Sammlerstücke und Stampcoins",
+      "Markte fur Sammlerstucke und Stampcoins",
       "Nutzerprofile & Verifikationen",
       "API-Integration"
     ],
@@ -65,6 +65,6 @@
     "development": "Entwicklung",
     "productionBuild": "Produktion",
     "testing": "Tests",
-    "windowsNote": "Windows-Benutzer: Siehe WINDOWS_SETUP.md für detaillierte Anweisungen mit Chocolatey."
+    "windowsNote": "Windows-Benutzer: Siehe WINDOWS_SETUP.md fur detaillierte Anweisungen mit Chocolatey."
   }
 }

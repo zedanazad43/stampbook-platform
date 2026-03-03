@@ -1,70 +1,70 @@
 {
-  "language": "العربية",
+  "language": "Arabic",
   "languageCode": "ar",
-  "flag": "🇸🇦",
+  "flag": "",
   "platform": {
-    "title": "منصة Stampcoin",
-    "subtitle": "منصة رقمية",
-    "description": "منصة رقمية مبتكرة مبنية على تكنولوجيا البلوكشين للطوابع الرقمية والمكافآت ورموز الولاء. عمليات نقل آمنة بين الأفراد وسوق للمقتنيات الرقمية يعمل بالشفافية والثقة المجتمعية.",
+    "title": "Stampcoin Platform",
+    "subtitle": "Digital Platform",
+    "description": "An innovative blockchain-based platform for digital stamps, rewards, and loyalty tokens. Secure peer-to-peer transfers and a marketplace for digital collectibles powered by transparency and community trust.",
     "status": {
-      "live": "مباشر",
-      "openSource": "مفتوح المصدر"
+      "live": "Live",
+      "openSource": "Open Source"
     }
   },
   "features": {
-    "title": "المميزات",
+    "title": "Features",
     "wallet": {
-      "title": "محفظة رقمية",
-      "description": "تخزين وإدارة آمنة لطوابعك ورموزك الرقمية باستخدام تقنية البلوكشين"
+      "title": "Digital Wallet",
+      "description": "Secure storage and management of your digital stamps and tokens with blockchain technology"
     },
     "transfers": {
-      "title": "تحويلات آمنة",
-      "description": "معاملات بين الأفراد مدعومة بتقنية البلوكشين مع شفافية وأمان كاملين"
+      "title": "Secure Transfers",
+      "description": "Blockchain-powered peer-to-peer transactions with complete transparency and security"
     },
     "marketplace": {
-      "title": "سوق",
-      "description": "شراء وبيع وتداول المقتنيات الرقمية في سوق مجتمعي موثوق"
+      "title": "Marketplace",
+      "description": "Buy, sell, and trade digital collectibles in a trusted community marketplace"
     },
     "profiles": {
-      "title": "ملفات المستخدمين",
-      "description": "حسابات موثقة مع إدارة كاملة للملف الشخصي وتتبع المجموعات"
+      "title": "User Profiles",
+      "description": "Verified accounts with complete profile management and collection tracking"
     }
   },
   "documentation": {
-    "title": "التوثيق",
+    "title": "Documentation",
     "businessPlan": {
-      "title": "خطة العمل",
-      "description": "خطة عمل كاملة بعدة لغات"
+      "title": "Business One-Pager",
+      "description": "Complete business plan in multiple languages"
     },
     "roadmap": {
-      "title": "خارطة الطريق",
-      "description": "الجدول الزمني للتطوير والمراحل الرئيسية"
+      "title": "Project Roadmap",
+      "description": "Development timeline and milestones"
     }
   },
   "cta": {
-    "viewGitHub": "عرض على GitHub",
-    "reportIssues": "الإبلاغ عن المشاكل"
+    "viewGitHub": "View on GitHub",
+    "reportIssues": "Report Issues"
   },
   "footer": {
-    "multilingual": "دعم متعدد اللغات",
-    "contact": "التواصل",
-    "founder": "آزاد زيدان - مؤسس Stampcoin",
-    "copyright": "منصة Stampcoin. صُنعت بـ ❤️ للهواة حول العالم."
+    "multilingual": "Multilingual Support",
+    "contact": "Contact",
+    "founder": "Azad Zedan - Founder of Stampcoin",
+    "copyright": "Stampcoin Platform. Built for collectors worldwide."
   },
   "readme": {
-    "description": "Stampcoin منصة رقمية مبتكرة مبنية على تكنولوجيا البلوكشين، متخصصة في جمع وتداول الطوابع الرقمية والمكافآت وهدايا الولاء.",
+    "description": "Stampcoin is an innovative platform for digital currency based on blockchain tech, focused on digital stamps, rewards, and loyalty tokens.",
     "features": [
-      "محفظة طوابع رقمية",
-      "تعاملات آمنة بين المستخدمين",
-      "سوق طوابع رقمية ومقتنيات حديثة",
-      "إدارة ملفات المستخدم والتحقق",
-      "تكامل API وخدمات إضافية"
+      "Digital stamps wallet",
+      "Secure peer-to-peer transfers",
+      "Marketplace for digital stamps & collectibles",
+      "User profile & verification",
+      "API integration"
     ],
-    "start": "الإنطلاق",
-    "prerequisites": "المتطلبات الأساسية",
-    "development": "بدء التطوير",
-    "productionBuild": "البناء للإنتاج",
-    "testing": "الاختبارات",
-    "windowsNote": "ملاحظة لمستخدمي Windows: راجع WINDOWS_SETUP.md للحصول على تعليمات مفصلة باستخدام Chocolatey."
+    "start": "Start",
+    "prerequisites": "Prerequisites",
+    "development": "Development",
+    "productionBuild": "Production Build",
+    "testing": "Testing",
+    "windowsNote": "Windows Users: See WINDOWS_SETUP.md for detailed setup instructions using Chocolatey."
   }
 }

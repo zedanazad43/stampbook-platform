@@ -1,57 +1,57 @@
-# التثبيت / Installation / Installation
+#  / Installation / Installation
 
-## العربية 🇸🇦
+##  
 
-### طريقة التثبيت التقليدية
-1. تأكد من وجود Python وNode.js
-2. استنسخ المشروع:
+###   
+1.    Python Node.js
+2.  :
    ```
    git clone https://github.com/zedanazad43/stp.git
    cd stp
    ```
-3. ثبّت المتطلبات:
+3.  :
    ```
    npm install
    pip install -r requirements.txt
    ```
 
-### باستخدام Docker
-1. تأكد من تثبيت Docker Desktop وتشغيله
-   - Windows: قم بتشغيل Docker Desktop من قائمة ابدأ
-   - تحقق من أن Docker يعمل: `docker --version`
-2. اسحب صورة Docker:
+###  Docker
+1.    Docker Desktop 
+   - Windows:   Docker Desktop   
+   -    Docker : `docker --version`
+2.   Docker:
    ```
    docker pull ghcr.io/zedanazad43/stampcoin-platform:latest
    ```
-3. شغّل الحاوية:
+3.  :
    ```
    docker run -p 8080:8080 ghcr.io/zedanazad43/stampcoin-platform:latest
    ```
-4. افتح المتصفح على: `http://localhost:8080`
+4.   : `http://localhost:8080`
 
-**استكشاف الأخطاء**:
-- إذا ظهرت رسالة "failed to connect to docker API": تأكد من تشغيل Docker Desktop
-- Windows: Docker Desktop يجب أن يكون مفتوحاً وعاملاً في الخلفية
+** **:
+-    "failed to connect to docker API":    Docker Desktop
+- Windows: Docker Desktop       
 
-### باستخدام Docker (موصى به)
-1. تأكد من تثبيت Docker Desktop وتشغيله
-   - Windows: قم بتشغيل Docker Desktop من قائمة ابدأ
-   - تحقق من أن Docker يعمل: `docker --version`
-2. اسحب صورة Docker:
+###  Docker ( )
+1.    Docker Desktop 
+   - Windows:   Docker Desktop   
+   -    Docker : `docker --version`
+2.   Docker:
    ```
    docker pull ghcr.io/zedanazad43/stampcoin-platform:latest
    ```
-3. شغّل الحاوية:
+3.  :
    ```
    docker run -p 8080:8080 ghcr.io/zedanazad43/stampcoin-platform:latest
    ```
-4. افتح المتصفح على: `http://localhost:8080`
+4.   : `http://localhost:8080`
 
-**استكشاف الأخطاء**:
-- إذا ظهرت رسالة "failed to connect to docker API": تأكد من تشغيل Docker Desktop
-- Windows: Docker Desktop يجب أن يكون مفتوحاً وعاملاً في الخلفية
+** **:
+-    "failed to connect to docker API":    Docker Desktop
+- Windows: Docker Desktop       
 
-## English 🇬🇧
+## English 
 
 ### Traditional Installation
 1. Ensure Python & Node.js are installed.
@@ -84,10 +84,10 @@
 - If you see "failed to connect to docker API": Ensure Docker Desktop is running
 - Windows: Docker Desktop must be open and running in the background
 
-## Deutsch 🇩🇪
+## Deutsch 
 
 ### Traditionelle Installation
-1. Sorge dafür, dass Python & Node.js installiert sind.
+1. Sorge dafur, dass Python & Node.js installiert sind.
 2. Klonen:
    ```
    git clone https://github.com/zedanazad43/stp.git
@@ -101,8 +101,8 @@
 
 ### Mit Docker (Empfohlen)
 1. Installiere und starte Docker Desktop
-   - Windows: Starte Docker Desktop vom Startmenü
-   - Überprüfe, dass Docker läuft: `docker --version`
+   - Windows: Starte Docker Desktop vom Startmenu
+   - Uberprufe, dass Docker lauft: `docker --version`
 2. Lade das Docker-Image:
    ```
    docker pull ghcr.io/zedanazad43/stampcoin-platform:latest
@@ -111,8 +111,8 @@
    ```
    docker run -p 8080:8080 ghcr.io/zedanazad43/stampcoin-platform:latest
    ```
-4. Öffne deinen Browser: `http://localhost:8080`
+4. Offne deinen Browser: `http://localhost:8080`
 
 **Fehlerbehebung**:
-- Bei "failed to connect to docker API": Stelle sicher, dass Docker Desktop läuft
-- Windows: Docker Desktop muss geöffnet und im Hintergrund aktiv sein
+- Bei "failed to connect to docker API": Stelle sicher, dass Docker Desktop lauft
+- Windows: Docker Desktop muss geoffnet und im Hintergrund aktiv sein

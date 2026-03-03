@@ -28,6 +28,6 @@ jobs:
 
     - name: Deploy project
       run: |
-        # أضف أوامر النشر الخاصة بمشروعك هنا
-        # مثال: rsync -av dist/ /path/to/deployment/
+        #      
+        # : rsync -av dist/ /path/to/deployment/
         echo "Deployment completed successfully"

@@ -11,11 +11,11 @@ This installs everything you need automatically.
 
 ## What Gets Installed
 
-- ✅ Chocolatey (package manager)
-- ✅ Python 3.14.3
-- ✅ Node.js LTS (>= 16.x)
-- ✅ Git
-- ✅ Visual Studio 2022 Build Tools
+-  Chocolatey (package manager)
+-  Python 3.14.3
+-  Node.js LTS (>= 16.x)
+-  Git
+-  Visual Studio 2022 Build Tools
 
 ## After Installation
 

@@ -1,20 +1,20 @@
-# 🚀 Quick Deployment Guide | دليل النشر السريع
+#  Quick Deployment Guide |   
 
-## 🌐 Website Deployment (GitHub Pages)
+##  Website Deployment (GitHub Pages)
 
 Your website is **ALREADY DEPLOYED** at:
 
-**👉 https://zedanazad43.github.io/stp/**
+** https://zedanazad43.github.io/stp/**
 
-✅ Automatic deployment on every push to `main` branch
+ Automatic deployment on every push to `main` branch
 
 ---
 
-## 🔌 Backend API Deployment (Choose One)
+##  Backend API Deployment (Choose One)
 
 Choose your preferred platform below:
 
-### Option 1: Railway (⭐ Recommended - Easiest)
+### Option 1: Railway ( Recommended - Easiest)
 
 ```bash
 # 1. Install Railway CLI
@@ -37,7 +37,7 @@ railway variable add SYNC_TOKEN=your-secret-token-here
 ### Option 2: Render (Free Tier Available)
 
 1. Go to https://render.com
-2. Click **New → Web Service**
+2. Click **New  Web Service**
 3. Connect your GitHub repo `zedanazad43/stp`
 4. Configure:
    - **Build Command**: `npm install`
@@ -59,7 +59,7 @@ npm install -g vercel
 vercel
 
 # 3. Add environment variable in Vercel dashboard
-# Settings → Environment Variables → Add SYNC_TOKEN
+# Settings  Environment Variables  Add SYNC_TOKEN
 ```
 
 **Result**: Your API will be at `https://stampcoin-platform.vercel.app`
@@ -114,7 +114,7 @@ git push heroku main
 
 ---
 
-## ✅ Deployment Checklist
+##  Deployment Checklist
 
 After deploying your backend, verify:
 
@@ -126,7 +126,7 @@ After deploying your backend, verify:
 
 ---
 
-## 🧪 Test Your Deployment
+##  Test Your Deployment
 
 ### Test the API
 
@@ -158,19 +158,19 @@ fetch('https://your-api-url/sync', {
 
 ---
 
-## 📊 Monitoring Your Deployment
+##  Monitoring Your Deployment
 
 ### Railway
 - Dashboard: https://railway.app
-- View logs: Dashboard → Deployments → Logs
+- View logs: Dashboard  Deployments  Logs
 
 ### Render
 - Dashboard: https://render.com/dashboard
-- View logs: Service → Logs tab
+- View logs: Service  Logs tab
 
 ### Vercel
 - Dashboard: https://vercel.com/dashboard
-- View logs: Project → Deployments → Logs
+- View logs: Project  Deployments  Logs
 
 ### Fly.io
 - View logs: `fly logs`
@@ -182,7 +182,7 @@ fetch('https://your-api-url/sync', {
 
 ---
 
-## 🔒 Security Best Practices
+##  Security Best Practices
 
 1. **Never commit SYNC_TOKEN** - Use environment variables only
 2. **Use strong tokens** - Generate random 32+ character strings
@@ -202,7 +202,7 @@ openssl rand -base64 32
 
 ---
 
-## 🎯 Full Deployment Example
+##  Full Deployment Example
 
 ### Complete setup for Railway:
 
@@ -232,11 +232,11 @@ curl -X GET https://your-railway-url/sync \
   -H "Authorization: Bearer your-token"
 ```
 
-That's it! 🎉
+That's it! 
 
 ---
 
-## 📚 Full Documentation
+##  Full Documentation
 
 For detailed information about each platform, see:
 - **[DEPLOYMENT.md](DEPLOYMENT.md)** - Comprehensive deployment guide with all platforms
@@ -245,7 +245,7 @@ For detailed information about each platform, see:
 
 ---
 
-## ❓ Troubleshooting
+##  Troubleshooting
 
 ### API returns 401 Unauthorized
 - Check `SYNC_TOKEN` is set correctly
@@ -265,12 +265,12 @@ For detailed information about each platform, see:
 
 ---
 
-## 🚀 Next Steps
+##  Next Steps
 
-1. ✅ Deploy website (GitHub Pages) - **Already done!**
-2. ✅ Deploy backend API (Choose platform above)
-3. 📊 Monitor your deployments
-4. 📈 Set up automated backups
-5. 🔐 Configure custom domain (optional)
+1.  Deploy website (GitHub Pages) - **Already done!**
+2.  Deploy backend API (Choose platform above)
+3.  Monitor your deployments
+4.  Set up automated backups
+5.  Configure custom domain (optional)
 
-**You're all set!** 🎉
+**You're all set!** 

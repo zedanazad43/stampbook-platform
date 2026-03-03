@@ -1,7 +1,7 @@
 {
   "mcp_version": "1.0",
   "agent_id": "copilot-agent-azad-001",
-  "description": "تفويض مقيد لوكيل Copilot لإجراء تغييرات برمجية مشروطة بمراجعة بشرية",
+  "description": "   Copilot      ",
   "owner": "AzadZedan",
   "allowed_repositories": [
     "Stampcoin-platform/stampcoin-platform"

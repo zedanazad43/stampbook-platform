@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# 1. الانتقال إلى مجلد المشروع (تأكد من أنك في المسار الصحيح)
+# 1.     (     )
 # cd path/to/your/stp-repo 
 
-echo "=== بدء عملية مراجعة وتحديث المستودع ==="
+echo "===      ==="
 
-# 2. التأكد من وجود المجلدات الأساسية وإنشاؤها إذا لم تكن موجودة
-echo "- التحقق من بنية المجلدات..."
+# 2.          
+echo "-    ..."
 mkdir -p .github/workflows
 mkdir -p .vscode
 mkdir -p docs/architecture
@@ -15,8 +15,8 @@ mkdir -p src/main/java
 mkdir -p src/main/resources
 mkdir -p src/test/java
 
-# 3. تحديث ملف .gitignore (لفلترة الملفات غير المرغوبة)
-echo "- تحديث ملف .gitignore..."
+# 3.   .gitignore (   )
+echo "-   .gitignore..."
 cat > .gitignore <<EOF
 # Compiled class files
 *.class
@@ -92,7 +92,7 @@ bin/
 
 # VS Code
 .vscode/
-!.vscode/settings.json      # <-- استثناء: نريد تتبع إعدادات المحرر
+!.vscode/settings.json      # <-- :    
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -108,8 +108,8 @@ logs/
 *.log
 EOF
 
-# 4. إنشاء/تحديث ملف .vscode/settings.json
-echo "- تحديث إعدادات GitLens والمحرر..."
+# 4. /  .vscode/settings.json
+echo "-   GitLens ..."
 cat > .vscode/settings.json <<EOF
 {
     "gitlens.advanced.messages": {
@@ -131,8 +131,8 @@ cat > .vscode/settings.json <<EOF
 }
 EOF
 
-# 5. إنشاء ملف .vscode/extensions.json (لإقتراح الامتدادات المطلوبة)
-echo "- إنشاء قائمة الامتدادات المقترحة..."
+# 5.   .vscode/extensions.json (  )
+echo "-    ..."
 cat > .vscode/extensions.json <<EOF
 {
     "recommendations": [
@@ -144,8 +144,8 @@ cat > .vscode/extensions.json <<EOF
 }
 EOF
 
-# 6. تحديث CHANGELOG.md
-echo "- تحديث سجل التغييرات..."
+# 6.  CHANGELOG.md
+echo "-   ..."
 cat > CHANGELOG.md <<EOF
 # Changelog
 
@@ -179,33 +179,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 EOF
 
-# 7. تحديث README.md
-echo "- تحديث ملف README.md..."
+# 7.  README.md
+echo "-   README.md..."
 cat > README.md <<EOF
 # STP Project Repository
 
 This repository contains the source code, documentation, and deployment configurations for the STP project.
 
-## 📂 Structure
+##  Structure
 
 - \`src/\`: Source code (Main and Test).
 - \`docs/\`: Architecture diagrams and API docs.
 - \`.github/workflows/\`: CI/CD pipelines.
 - \`CHANGELOG.md\`: History of changes.
 
-## 🚀 Setup
+##  Setup
 
 1. Clone the repository.
 2. Open in VS Code (recommended extensions will be suggested).
 3. Install dependencies (Maven/Gradle).
 
-## 📦 Deployment
+##  Deployment
 
 Deployment is handled automatically via GitHub Actions upon pushing to the \`main\` branch.
 EOF
 
-# 8. تحديث سير العمل (GitHub Actions)
-echo "- تحديث ملف سير العمل (CI/CD)..."
+# 8.    (GitHub Actions)
+echo "-     (CI/CD)..."
 cat > .github/workflows/deploy.yml <<EOF
 name: CI/CD Pipeline
 
@@ -250,9 +250,9 @@ jobs:
         # Add deployment commands here
 EOF
 
-# 9. إنشاء ملف pom.xml افتراضي (إذا لم يكن موجوداً لمنع حدوث خطأ في الـ Build)
+# 9.   pom.xml  (         Build)
 if [ ! -f "pom.xml" ]; then
-  echo "- إنشاء ملف pom.xml افتراضي..."
+  echo "-   pom.xml ..."
   cat > pom.xml <<EOF
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -285,15 +285,15 @@ if [ ! -f "pom.xml" ]; then
 EOF
 fi
 
-# 10. إضافة جميع الملفات إلى Git (Add)
-echo "- جاري إضافة جميع الملفات المحدثة إلى Git..."
+# 10.     Git (Add)
+echo "-       Git..."
 git add .
 
-# 11. حفظ التغييرات (Commit)
-echo "- جاري حفظ التغييرات (Commit)..."
-git commit -m "chore: تحديث البنية الكاملة للمستودع وإضافة الملفات الناقصة (GitLens, CI/CD, Docs)"
+# 11.   (Commit)
+echo "-    (Commit)..."
+git commit -m "chore:        (GitLens, CI/CD, Docs)"
 
-# 12. الرفع (Push) - (اختياري، قم بإلغاء التعليق إذا كنت تريد الرفع فوراً)
+# 12.  (Push) - (        )
 # git push origin main
 
-echo "=== تم الانتهاء! المستودع الآن محدث ومنظم بالكامل ==="
+echo "===  !      ==="

@@ -42,7 +42,7 @@ async function readData() {
 - **Latency:** Reduced latency for all requests, especially under load
 - **Scalability:** Server can now scale to handle more concurrent users
 
-**Benchmark estimate:** ~10-100x improvement in throughput under concurrent load (e.g., 1 request/sec → 10-100 requests/sec)
+**Benchmark estimate:** ~10-100x improvement in throughput under concurrent load (e.g., 1 request/sec  10-100 requests/sec)
 
 ---
 
@@ -124,10 +124,10 @@ with open(filename, "r") as fp:
 #### 2.4 List Accumulation for String Building
 
 **Problem:**
-DS1000 processing used string concatenation (`prefix += line`) in loops, which creates new string objects on each iteration (O(n²) complexity).
+DS1000 processing used string concatenation (`prefix += line`) in loops, which creates new string objects on each iteration (O(n2) complexity).
 
 ```python
-# Before: O(n²) string concatenation
+# Before: O(n2) string concatenation
 prefix = ""
 for line in lines:
     prefix += line  # Creates new string each time
@@ -193,11 +193,11 @@ For typical workloads:
 ## Testing
 
 All changes have been:
-- ✅ Syntax validated (Python compilation successful)
-- ✅ Server functionality tested (starts correctly, handles requests)
-- ✅ Code reviewed (behavioral compatibility verified)
-- ✅ Security scanned (CodeQL - 0 vulnerabilities)
-- ✅ Backward compatible (no API changes)
+-  Syntax validated (Python compilation successful)
+-  Server functionality tested (starts correctly, handles requests)
+-  Code reviewed (behavioral compatibility verified)
+-  Security scanned (CodeQL - 0 vulnerabilities)
+-  Backward compatible (no API changes)
 
 ---
 

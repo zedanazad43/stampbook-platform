@@ -53,7 +53,7 @@ input,select,textarea{padding:10px 14px;border:1px solid var(--border);border-ra
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--purple);background:#fff}
 textarea{resize:vertical;min-height:70px}
 .wallet-card{background:linear-gradient(135deg,var(--purple-dark),var(--purple));color:#fff;border-radius:16px;padding:28px;margin-bottom:20px;position:relative;overflow:hidden}
-.wallet-card::after{content:'💎';position:absolute;right:24px;bottom:16px;font-size:3rem;opacity:.2}
+.wallet-card::after{content:'';position:absolute;right:24px;bottom:16px;font-size:3rem;opacity:.2}
 .wallet-name{font-size:1.3rem;font-weight:700;margin-bottom:4px}
 .wallet-id{font-size:.8rem;opacity:.7;margin-bottom:16px;font-family:monospace}
 .wallet-balance{font-size:2.4rem;font-weight:700;color:var(--gold)}
@@ -139,11 +139,11 @@ textarea{resize:vertical;min-height:70px}
   </div>
   <div class="nav-right">
     <select class="lang-select" id="lang-select" onchange="setLang(this.value)">
-      <option value="en">🇬🇧 EN</option>
-      <option value="ar">🇸🇦 AR</option>
-      <option value="de">🇩🇪 DE</option>
-      <option value="es">🇪🇸 ES</option>
-      <option value="zh">🇨🇳 ZH</option>
+      <option value="en">EN</option>
+      <option value="ar">AR</option>
+      <option value="de">DE</option>
+      <option value="es">ES</option>
+      <option value="zh">ZH</option>
     </select>
   </div>
 </nav>
@@ -298,7 +298,7 @@ textarea{resize:vertical;min-height:70px}
       <text x="35" y="42" text-anchor="middle" fill="#6C3082" font-size="18" font-weight="900" font-family="sans-serif">STP</text>
     </svg>
     <h1 id="tok-title" style="color:var(--gold);margin-top:16px">STP Token</h1>
-    <p style="opacity:.9;max-width:520px;margin:0 auto">StampCoin (STP) · ecostamp.net</p>
+    <p style="opacity:.9;max-width:520px;margin:0 auto">StampCoin (STP)  ecostamp.net</p>
   </div>
 
   <!-- Key Stats -->
@@ -348,7 +348,7 @@ textarea{resize:vertical;min-height:70px}
       <div style="background:linear-gradient(135deg,#880e4f,#e91e63);border-radius:12px;padding:18px;color:#fff;text-align:center">
         <div style="font-size:1.8rem;font-weight:900">15%</div>
         <div id="tok-dist-5" style="font-size:.85rem;opacity:.9;margin-top:4px">Team &amp; Founders</div>
-        <div style="font-size:.8rem;opacity:.7">63.15M STP · 2yr vest</div>
+        <div style="font-size:.8rem;opacity:.7">63.15M STP  2yr vest</div>
       </div>
       <div style="background:linear-gradient(135deg,#37474f,#607d8b);border-radius:12px;padding:18px;color:#fff;text-align:center">
         <div style="font-size:1.8rem;font-weight:900">10%</div>
@@ -363,9 +363,9 @@ textarea{resize:vertical;min-height:70px}
     <div class="card">
       <h2 id="tok-contract" style="margin-bottom:12px;font-size:1.1rem">Contract Address</h2>
       <div style="background:var(--bg);border-radius:8px;padding:12px;font-family:monospace;font-size:.85rem;word-break:break-all;border:1px solid var(--border);color:var(--purple)">
-        0x0000000000000000000000000000000000000000 <span style="font-size:.7rem;color:var(--muted)" id="tok-contract-pending">(TBD — pending mainnet deployment)</span>
+        0x0000000000000000000000000000000000000000 <span style="font-size:.7rem;color:var(--muted)" id="tok-contract-pending">(TBD  pending mainnet deployment)</span>
       </div>
-      <p style="margin-top:10px;font-size:.85rem;color:var(--muted)">Network: EVM-compatible · Symbol: STP · Decimals: 18</p>
+      <p style="margin-top:10px;font-size:.85rem;color:var(--muted)">Network: EVM-compatible  Symbol: STP  Decimals: 18</p>
     </div>
     <div class="card">
       <h2 id="tok-how" style="margin-bottom:12px;font-size:1.1rem">How to Participate</h2>
@@ -383,35 +383,35 @@ textarea{resize:vertical;min-height:70px}
     <h2 id="tok-contact-title" style="margin-bottom:16px">Contact</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
       <div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:8px">
-        <span style="font-size:1.4rem">📧</span>
+        <span style="font-size:1.4rem"></span>
         <div>
           <div style="font-size:.75rem;color:var(--muted);font-weight:600">Official</div>
           <a href="mailto:stampcoin.contact@gmail.com" style="color:var(--purple);font-size:.9rem">stampcoin.contact@gmail.com</a>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:8px">
-        <span style="font-size:1.4rem">📧</span>
+        <span style="font-size:1.4rem"></span>
         <div>
           <div style="font-size:.75rem;color:var(--muted);font-weight:600">Founder</div>
           <a href="mailto:azadzedan13@gmail.com" style="color:var(--purple);font-size:.9rem">azadzedan13@gmail.com</a>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:8px">
-        <span style="font-size:1.4rem">💬</span>
+        <span style="font-size:1.4rem"></span>
         <div>
           <div style="font-size:.75rem;color:var(--muted);font-weight:600">WhatsApp / Telegram</div>
           <span style="color:var(--text);font-size:.9rem">+49 1521 6933122</span>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:8px">
-        <span style="font-size:1.4rem">🌐</span>
+        <span style="font-size:1.4rem"></span>
         <div>
           <div style="font-size:.75rem;color:var(--muted);font-weight:600">Website</div>
           <a href="https://ecostamp.net" style="color:var(--purple);font-size:.9rem">ecostamp.net</a>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:8px">
-        <span style="font-size:1.4rem">🐙</span>
+        <span style="font-size:1.4rem"></span>
         <div>
           <div style="font-size:.75rem;color:var(--muted);font-weight:600">GitHub</div>
           <a href="https://github.com/zedanazad43/stp" style="color:var(--purple);font-size:.9rem">github.com/zedanazad43/stp</a>
@@ -457,7 +457,7 @@ var T = {
     "tok-contact-title":"Contact","tok-dist-title":"Token Distribution",
     "tok-dist-1":"Public ICO Sale","tok-dist-2":"Ecosystem &amp; Partners","tok-dist-3":"Community &amp; Rewards",
     "tok-dist-4":"Liquidity Pool","tok-dist-5":"Team &amp; Founders","tok-dist-6":"Reserve",
-    "tok-contract-pending":"(TBD — pending mainnet deployment)",
+    "tok-contract-pending":"(TBD  pending mainnet deployment)",
     "tok-step-1":"Create a wallet on this platform",
     "tok-step-2":"Contact us at stampcoin.contact@gmail.com",
     "tok-step-3":"Send payment &amp; receive STP tokens",
@@ -536,9 +536,9 @@ var T = {
     "tok-title":"STP Token","tok-supply":"Gesamtangebot","tok-price":"ICO-Preis",
     "tok-contract":"Vertragsadresse","tok-how":"Wie man teilnimmt",
     "tok-contact-title":"Kontakt","tok-dist-title":"Token-Verteilung",
-    "tok-dist-1":"Öffentlicher ICO-Verkauf","tok-dist-2":"Ökosystem &amp; Partner","tok-dist-3":"Community &amp; Prämien",
-    "tok-dist-4":"Liquiditätspool","tok-dist-5":"Team &amp; Gründer","tok-dist-6":"Reserve",
-    "tok-contract-pending":"(TBD — ausstehende Mainnet-Bereitstellung)",
+    "tok-dist-1":"Offentlicher ICO-Verkauf","tok-dist-2":"Okosystem &amp; Partner","tok-dist-3":"Community &amp; Pramien",
+    "tok-dist-4":"Liquiditatspool","tok-dist-5":"Team &amp; Grunder","tok-dist-6":"Reserve",
+    "tok-contract-pending":"(TBD  ausstehende Mainnet-Bereitstellung)",
     "tok-step-1":"Erstellen Sie eine Wallet auf dieser Plattform",
     "tok-step-2":"Kontaktieren Sie uns unter stampcoin.contact@gmail.com",
     "tok-step-3":"Zahlung senden &amp; STP-Token erhalten",
@@ -575,13 +575,13 @@ var T = {
     "lang-toggle":"Idioma",
     "tok-title":"Token STP","tok-supply":"Suministro total","tok-price":"Precio ICO",
     "tok-contract":"Direcci\u00f3n del contrato","tok-how":"C\u00f3mo participar",
-    "tok-contact-title":"Contacto","tok-dist-title":"Distribución del token",
-    "tok-dist-1":"Venta pública ICO","tok-dist-2":"Ecosistema &amp; Socios","tok-dist-3":"Comunidad &amp; Recompensas",
+    "tok-contact-title":"Contacto","tok-dist-title":"Distribucion del token",
+    "tok-dist-1":"Venta publica ICO","tok-dist-2":"Ecosistema &amp; Socios","tok-dist-3":"Comunidad &amp; Recompensas",
     "tok-dist-4":"Fondo de liquidez","tok-dist-5":"Equipo &amp; Fundadores","tok-dist-6":"Reserva",
-    "tok-contract-pending":"(Por definir — pendiente de implementación en mainnet)",
+    "tok-contract-pending":"(Por definir  pendiente de implementacion en mainnet)",
     "tok-step-1":"Crea una cartera en esta plataforma",
-    "tok-step-2":"Contáctenos en stampcoin.contact@gmail.com",
-    "tok-step-3":"Envía el pago &amp; recibe tokens STP",
+    "tok-step-2":"Contactenos en stampcoin.contact@gmail.com",
+    "tok-step-3":"Envia el pago &amp; recibe tokens STP",
     "tok-step-4":"Intercambia sellos en el mercado"
   },
   zh: {
@@ -651,7 +651,7 @@ function applyLang() {
     'tok-dist-1','tok-dist-2','tok-dist-3','tok-dist-4','tok-dist-5','tok-dist-6',
     'tok-contract-pending','tok-step-1','tok-step-3','tok-step-4'];
   ids.forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=t(id); });
-  // tok-step-2 has an inline link — use innerHTML so it renders correctly
+  // tok-step-2 has an inline link  use innerHTML so it renders correctly
   var s2 = document.getElementById('tok-step-2');
   if(s2) s2.innerHTML = t('tok-step-2').replace('stampcoin.contact@gmail.com','<a href="mailto:stampcoin.contact@gmail.com" style="color:var(--purple)">stampcoin.contact@gmail.com</a>');
 }
@@ -713,9 +713,9 @@ function switchWalletTab(tab) {
 function doCreateWallet() {
   var userId = document.getElementById('cw-userId').value.trim();
   var userName = document.getElementById('cw-userName').value.trim();
-  if(!userId||!userName){ toast(lang==='ar'?'يرجى تعبئة جميع الحقول':'Please fill all fields','error'); return; }
+  if(!userId||!userName){ toast(lang==='ar'?'   ':'Please fill all fields','error'); return; }
   api('POST','/api/wallet/create',{userId:userId,userName:userName}).then(function(w){
-    toast(lang==='ar'?('تم إنشاء المحفظة لـ '+w.userName):('Wallet created for '+w.userName),'success');
+    toast(lang==='ar'?('    '+w.userName):('Wallet created for '+w.userName),'success');
     renderWallet(w);
     switchWalletTab('load');
   }).catch(function(e){ toast(e.message,'error'); });
@@ -723,7 +723,7 @@ function doCreateWallet() {
 
 function doLoadWallet() {
   var userId = document.getElementById('lw-userId').value.trim();
-  if(!userId){ toast(lang==='ar'?'أدخل معرف المستخدم':'Enter user ID','error'); return; }
+  if(!userId){ toast(lang==='ar'?'  ':'Enter user ID','error'); return; }
   api('GET','/api/wallet/'+userId).then(function(w){ renderWallet(w); }).catch(function(e){ toast(e.message,'error'); });
 }
 
@@ -755,25 +755,25 @@ function loadTxHistory(userId) {
     if(!txs.length){ el.innerHTML='<div class="empty-state"><div class="icon">&#128203;</div><span>'+t('no-tx-msg')+'</span></div>'; return; }
     el.innerHTML = '<div class="tx-list">'+txs.slice(-20).reverse().map(function(tx){
       var out = tx.from===userId;
-      return '<div class="tx-item '+(out?'tx-out':'tx-in')+'"><div><b>'+(out?(lang==='ar'?'إلى':'To'):(lang==='ar'?'من':'From'))+': '+(out?tx.to:tx.from)+'</b><br><small>'+new Date(tx.timestamp).toLocaleString()+'</small></div><div class="'+(out?'tx-amount-out':'tx-amount-in')+'">'+(out?'-':'+')+tx.amount+' STP</div></div>';
+      return '<div class="tx-item '+(out?'tx-out':'tx-in')+'"><div><b>'+(out?(lang==='ar'?'':'To'):(lang==='ar'?'':'From'))+': '+(out?tx.to:tx.from)+'</b><br><small>'+new Date(tx.timestamp).toLocaleString()+'</small></div><div class="'+(out?'tx-amount-out':'tx-amount-in')+'">'+(out?'-':'+')+tx.amount+' STP</div></div>';
     }).join('')+'</div>';
   }).catch(function(){});
 }
 
 function doTopup() {
-  if(!activeWalletId){ toast(lang==='ar'?'حمِّل محفظتك أولاً':'Load a wallet first','error'); return; }
+  if(!activeWalletId){ toast(lang==='ar'?'  ':'Load a wallet first','error'); return; }
   api('POST','/api/wallet/'+activeWalletId+'/topup',{amount:1000}).then(function(w){
-    renderWallet(w); toast(lang==='ar'?'تمت إضافة 1000 STP':'Added 1000 STP','success');
+    renderWallet(w); toast(lang==='ar'?'  1000 STP':'Added 1000 STP','success');
   }).catch(function(e){ toast(e.message,'error'); });
 }
 
 function doSendSTP() {
-  if(!activeWalletId){ toast(lang==='ar'?'حمِّل محفظتك أولاً':'Load wallet first','error'); return; }
+  if(!activeWalletId){ toast(lang==='ar'?'  ':'Load wallet first','error'); return; }
   var toUserId = document.getElementById('send-to').value.trim();
   var amount = Number(document.getElementById('send-amount').value);
-  if(!toUserId||!amount){ toast(lang==='ar'?'أدخل المستلم والمبلغ':'Enter recipient and amount','error'); return; }
+  if(!toUserId||!amount){ toast(lang==='ar'?'  ':'Enter recipient and amount','error'); return; }
   api('POST','/api/wallet/transfer',{fromUserId:activeWalletId,toUserId:toUserId,amount:amount}).then(function(){
-    toast(lang==='ar'?('تم إرسال '+amount+' STP إلى '+toUserId):('Sent '+amount+' STP to '+toUserId),'success');
+    toast(lang==='ar'?('  '+amount+' STP  '+toUserId):('Sent '+amount+' STP to '+toUserId),'success');
     doRefreshWallet();
     document.getElementById('send-to').value='';
     document.getElementById('send-amount').value='';
@@ -804,7 +804,7 @@ function renderMarket() {
   var items = marketFilter==='all'?allMarketItems:allMarketItems.filter(function(i){ return i.status===marketFilter; });
   var el = document.getElementById('market-grid');
   if(!items.length){
-    el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="icon">&#127991;</div><span>'+(lang==='ar'?'لا توجد عناصر':'No items found')+'</span></div>';
+    el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="icon">&#127991;</div><span>'+(lang==='ar'?'  ':'No items found')+'</span></div>';
     return;
   }
   el.innerHTML = items.map(function(item){
@@ -812,18 +812,18 @@ function renderMarket() {
       ? '<img src="'+escHtml(item.imageUrl)+'" style="max-height:100%;max-width:100%;object-fit:contain" onerror="this.style.display=\'none\'"/>'
       : stampSVG(item.name,70);
     var action = item.status==='available'
-      ? '<button class="btn btn-gold btn-sm buy-btn" data-id="'+escHtml(item.id)+'">'+(lang==='ar'?'شراء':'Buy')+'</button>'
-      : '<span class="badge badge-sold">'+(lang==='ar'?'مُباع':'Sold')+'</span>';
+      ? '<button class="btn btn-gold btn-sm buy-btn" data-id="'+escHtml(item.id)+'">'+(lang==='ar'?'':'Buy')+'</button>'
+      : '<span class="badge badge-sold">'+(lang==='ar'?'':'Sold')+'</span>';
     return '<div class="market-card"><div class="market-card-art">'+art+'</div>'
       +'<div class="market-card-body"><div class="market-card-name">'+escHtml(item.name)+'</div>'
       +'<div class="market-card-desc">'+escHtml(item.description||'')+'</div>'
       +'<div class="market-card-footer"><span class="market-price">&#9889; '+item.price+' STP</span>'+action+'</div>'
-      +'<div style="margin-top:6px"><span class="badge badge-'+item.status+'">'+(item.status==='available'?(lang==='ar'?'متاح':'Available'):(lang==='ar'?'مُباع':'Sold'))+'</span></div>'
+      +'<div style="margin-top:6px"><span class="badge badge-'+item.status+'">'+(item.status==='available'?(lang==='ar'?'':'Available'):(lang==='ar'?'':'Sold'))+'</span></div>'
       +'</div></div>';
   }).join('');
 }
 
-// Use event delegation for buy buttons — registered once at startup
+// Use event delegation for buy buttons  registered once at startup
 if (!document.getElementById('market-grid')._buyDelegated) {
   document.getElementById('market-grid').addEventListener('click', function(e) {
     var btn = e.target.closest('.buy-btn');
@@ -861,15 +861,15 @@ function doBuyItem(itemId) {
   var item = allMarketItems.find(function(i){ return i.id===itemId; });
   if(!item) return;
   showModal(
-    lang==='ar'?'شراء طابع':'Buy Stamp',
-    lang==='ar'?('سعر: '+item.price+' STP — "'+item.name+'"'):('Price: '+item.price+' STP — "'+item.name+'"'),
-    lang==='ar'?'معرف محفظتك':'Your Wallet User ID',
-    lang==='ar'?'أدخل معرف المستخدم':'Enter your user ID',
-    lang==='ar'?'تأكيد الشراء':'Confirm Purchase',
-    lang==='ar'?'إلغاء':'Cancel',
+    lang==='ar'?' ':'Buy Stamp',
+    lang==='ar'?(': '+item.price+' STP  "'+item.name+'"'):('Price: '+item.price+' STP  "'+item.name+'"'),
+    lang==='ar'?' ':'Your Wallet User ID',
+    lang==='ar'?'  ':'Enter your user ID',
+    lang==='ar'?' ':'Confirm Purchase',
+    lang==='ar'?'':'Cancel',
     function(buyerId) {
       api('POST','/api/market/items/'+itemId+'/buy',{buyerId:buyerId}).then(function(){
-        toast(lang==='ar'?('تم شراء "'+item.name+'" بنجاح'):('Purchased "'+item.name+'" successfully'),'success');
+        toast(lang==='ar'?('  "'+item.name+'" '):('Purchased "'+item.name+'" successfully'),'success');
         loadMarketItems();
       }).catch(function(e){ toast(e.message,'error'); });
     }
@@ -887,9 +887,9 @@ function doListStamp() {
   var description = document.getElementById('li-desc').value.trim();
   var sellerId = document.getElementById('li-seller').value.trim();
   var imageUrl = document.getElementById('li-img').value.trim();
-  if(!name||!sellerId){ toast(lang==='ar'?'أدخل الاسم ومعرف المستخدم':'Enter name and user ID','error'); return; }
+  if(!name||!sellerId){ toast(lang==='ar'?'   ':'Enter name and user ID','error'); return; }
   api('POST','/api/market/items',{name:name,description:description,price:price,sellerId:sellerId,imageUrl:imageUrl,type:'stamp'}).then(function(){
-    toast(lang==='ar'?('تم عرض "'+name+'" في السوق'):('Listed "'+name+'" on the market'),'success');
+    toast(lang==='ar'?('  "'+name+'"  '):('Listed "'+name+'" on the market'),'success');
     ['li-name','li-price','li-desc','li-seller','li-img'].forEach(function(id){ document.getElementById(id).value=''; });
     document.getElementById('list-form').style.display='none';
     loadMarketItems();
@@ -900,9 +900,9 @@ function doExchangeTransfer() {
   var fromUserId = document.getElementById('ex-from').value.trim();
   var toUserId = document.getElementById('ex-to').value.trim();
   var amount = Number(document.getElementById('ex-amount').value);
-  if(!fromUserId||!toUserId||!amount){ toast(lang==='ar'?'يرجى تعبئة جميع الحقول':'Please fill all fields','error'); return; }
+  if(!fromUserId||!toUserId||!amount){ toast(lang==='ar'?'   ':'Please fill all fields','error'); return; }
   api('POST','/api/wallet/transfer',{fromUserId:fromUserId,toUserId:toUserId,amount:amount}).then(function(){
-    toast(lang==='ar'?('تم إرسال '+amount+' STP بنجاح'):('Sent '+amount+' STP successfully'),'success');
+    toast(lang==='ar'?('  '+amount+' STP '):('Sent '+amount+' STP successfully'),'success');
     ['ex-from','ex-to','ex-amount'].forEach(function(id){ document.getElementById(id).value=''; });
     if(document.getElementById('stats-uid').value) loadExchStats();
   }).catch(function(e){ toast(e.message,'error'); });
@@ -910,7 +910,7 @@ function doExchangeTransfer() {
 
 function loadExchStats() {
   var uid = document.getElementById('stats-uid').value.trim();
-  if(!uid){ toast(lang==='ar'?'أدخل معرف المستخدم':'Enter user ID','error'); return; }
+  if(!uid){ toast(lang==='ar'?'  ':'Enter user ID','error'); return; }
   Promise.all([api('GET','/api/wallet/'+uid), api('GET','/api/wallet/'+uid+'/transactions')]).then(function(res){
     var w=res[0], txs=res[1];
     document.getElementById('es-balance').textContent = (w.balance||0).toLocaleString();
@@ -919,7 +919,7 @@ function loadExchStats() {
     document.getElementById('es-sent').textContent = sent.toLocaleString();
     document.getElementById('es-recv').textContent = recv.toLocaleString();
     var ledger = document.getElementById('exch-ledger');
-    if(!txs.length){ ledger.innerHTML='<div class="empty-state"><div class="icon">&#128202;</div><span>'+(lang==='ar'?'لا توجد معاملات':'No transactions')+'</span></div>'; return; }
+    if(!txs.length){ ledger.innerHTML='<div class="empty-state"><div class="icon">&#128202;</div><span>'+(lang==='ar'?'  ':'No transactions')+'</span></div>'; return; }
     ledger.innerHTML = '<div class="tx-list">'+txs.slice(-20).reverse().map(function(tx){
       var out = tx.from===uid;
       return '<div class="tx-item '+(out?'tx-out':'tx-in')+'"><div><b>'+(out?'\u2192':'\u2190')+': '+(out?tx.to:tx.from)+'</b><br><small>'+new Date(tx.timestamp).toLocaleString()+'</small></div><div class="'+(out?'tx-amount-out':'tx-amount-in')+'">'+(out?'-':'+')+tx.amount+' STP</div></div>';
