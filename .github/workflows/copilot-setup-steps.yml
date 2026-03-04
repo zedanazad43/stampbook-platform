@@ -1,4 +1,5 @@
 # Copilot Setup Steps for CI Automation
+# This workflow is run by GitHub Copilot before every agent task to prepare the environment.
 name: Copilot Setup Steps
 
 on:
@@ -15,23 +16,66 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install dependencies (Node.js)
+      - name: Install project dependencies
         run: |
-          if [ -f package.json ]; then
+          if [ -f package-lock.json ]; then
+            npm ci
+          elif [ -f package.json ]; then
             npm install
           fi
+
+      - name: Install MCP server packages
+        run: |
+          npm install --no-save \
+            @modelcontextprotocol/server-filesystem \
+            @modelcontextprotocol/server-git \
+            @modelcontextprotocol/server-github \
+            @modelcontextprotocol/server-gitlab \
+            @modelcontextprotocol/server-memory \
+            @modelcontextprotocol/server-fetch \
+            @modelcontextprotocol/server-postgres \
+            @modelcontextprotocol/server-sqlite \
+            @cloudflare/mcp-server-cloudflare
+
+      - name: Validate MCP configuration
+        run: |
+          node -e "
+            const fs = require('fs');
+            const files = [
+              '.github/copilot/mcp.json',
+              '.vscode/mcp.json',
+              'mcp.json'
+            ];
+            let ok = true;
+            files.forEach(f => {
+              if (!fs.existsSync(f)) {
+                console.error('MISSING:', f);
+                ok = false;
+                return;
+              }
+              try {
+                JSON.parse(fs.readFileSync(f, 'utf8'));
+                console.log('OK:', f);
+              } catch (e) {
+                console.error('INVALID JSON:', f, '-', e.message);
+                ok = false;
+              }
+            });
+            if (!ok) process.exit(1);
+          "
 
       - name: Install dependencies (Python)
         run: |
