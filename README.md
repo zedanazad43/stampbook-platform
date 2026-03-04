@@ -248,4 +248,26 @@ Once the runner is started, you can monitor it in the GitHub Actions tab of your
 
 - If the runner fails to start, check the PowerShell output
 - Verify the URL and token are correct
-- Restart the runner if needed       
+- Restart the runner if needed
+
+### Submodule Errors in CI/CD
+
+If you see `fatal: No url found for submodule path 'git' in .gitmodules` or a similar error during CI/CD or local builds, a stale submodule entry is tracked in the git index but missing from `.gitmodules`. To fix:
+
+```bash
+# Remove the stale submodule entry from the index
+git submodule deinit git || true
+git rm --cached git || true
+rm -rf .git/modules/git || true
+
+# Commit the fix
+git add .gitmodules
+git commit -m "fix: remove stale git submodule from index"
+git push
+```
+
+To check which submodule paths are currently tracked:
+```bash
+git ls-files --stage | grep "^160000"
+```
+Each path listed must have a matching `[submodule "..."]` entry in `.gitmodules`. If not, run `git rm --cached <path>` to remove it.       

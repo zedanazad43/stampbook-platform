@@ -189,6 +189,25 @@ docker system prune -a
 docker build --no-cache -t stampcoin-platform .
 ```
 
+### Submodule errors in CI/CD
+If you see `fatal: No url found for submodule path 'git' in .gitmodules` during CI/CD or local builds:
+```bash
+# Remove the stale submodule entry from the git index
+git submodule deinit git || true
+git rm --cached git || true
+rm -rf .git/modules/git || true
+
+# Commit and push
+git add .gitmodules
+git commit -m "fix: remove stale git submodule from index"
+git push
+```
+Check for any unregistered submodule paths with:
+```bash
+git ls-files --stage | grep "^160000"
+```
+Each listed path must have a matching entry in `.gitmodules`. Remove unregistered entries with `git rm --cached <path>`.
+
 ## Next Steps /  
 
 1.  Basic setup complete
