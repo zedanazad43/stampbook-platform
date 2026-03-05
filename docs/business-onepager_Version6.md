@@ -1,97 +1,65 @@
-# Stampcoin – خطة عمل مختصرة / Business One-Pager / Businessplan-Kurzfassung
+# Stampcoin Business One-Pager
 
 ---
 
-## العربية 🇸🇦
+## English
 
-**الرؤية:**  
-منصة رائدة رقمية لسوق الطوابع والعملات الرقمية مبنية على البلوكشين وبنية شفافة.
-
-**المشكلة:**  
-لا توجد حلول ثقة، مجتمعية وآمنة لهواة الطوابع الرقمية والأصول الافتراضية الصغيرة.
-
-**الحل:**  
-سوق ومجتمع رمزي ذكي وسهل لتداول وجمع الطوابع الرقمية، متوفر لهواة الجمع والشركات، بمعايير أمان وشفافية عالية.
-
-**آليات الربح:**  
-- رسوم معاملات على التداول
-- اشتراكات لخدمات مميزة
-- رعايات وعقود B2B مع الشركاء
-
-**السوق المستهدف:**  
-هواة الجمع، الأسواق الناشئة، شركات الهوايات والتسويق
-
-**الفريق:**  
-Azad Zedan (المؤسس، ريادي أعمال وتقنية)
-
-**للتواصل:**  
-Azad Zedan  
-مؤسس Stampcoin  
-GitHub: [AzadZedan](https://github.com/AzadZedan)  
-Email: azadzedan13@gmail.com  
-Email (رسمي): stampcoin.contact@gmail.com  
-WhatsApp / Telegram: +49 1521 6933122
-
----
-
-## English 🇬🇧
-
-**Vision:**  
+**Vision:**
 A leading digital marketplace for stamp and tokenized collectibles, built on blockchain and transparency.
 
-**The Problem:**  
+**The Problem:**
 No true, trusted, or community-centric solution exists for stamp collectors and digital micro-assets.
 
-**The Solution:**  
-A user-friendly, secure, smart stamp marketplace—serving both hobbyists and business partners through advanced safety and transparency.
+**The Solution:**
+A user-friendly, secure, smart stamp marketplace serving both hobbyists and business partners through advanced safety and transparency.
 
-**Revenue:**  
+**Revenue:**
 - Transaction fees
 - Premium subscriptions
 - Sponsorship & B2B contracts
 
-**Target Market:**  
+**Target Market:**
 Collectors, emerging markets, hobby/loyalty companies
 
-**Team:**  
+**Team:**
 Azad Zedan (Founder, Entrepreneur & Technologist)
 
-**Contact:**  
-Azad Zedan  
-Founder of Stampcoin  
-GitHub: [AzadZedan](https://github.com/AzadZedan)  
-Email: azadzedan13@gmail.com  
-Email (official): stampcoin.contact@gmail.com  
+**Contact:**
+Azad Zedan
+Founder of Stampcoin
+GitHub: [AzadZedan](https://github.com/AzadZedan)
+Email: azadzedan13@gmail.com
+Email (official): stampcoin.contact@gmail.com
 WhatsApp / Telegram: +49 1521 6933122
 
 ---
 
-## Deutsch 🇩🇪
+## Deutsch
 
-**Vision:**  
-Eine führende, digitale Plattform für Briefmarken und Token-Sammlerstücke auf Blockchain-Basis, transparent und sicher.
+**Vision:**
+Eine fuhrende, digitale Plattform fur Briefmarken und Token-Sammlerstucke auf Blockchain-Basis, transparent und sicher.
 
-**Problem:**  
-Keine wirklich vertrauenswürdige, gemeinschaftsorientierte Lösung für Sammler im Bereich digitale Briefmarken.
+**Problem:**
+Keine wirklich vertrauenswurdige, gemeinschaftsorientierte Losung fur Sammler im Bereich digitale Briefmarken.
 
-**Lösung:**  
-Eine nutzerfreundliche, sichere und intelligente Plattform für digitale Briefmarken – für Sammler und Partnerunternehmen gleichermaßen.
+**Losung:**
+Eine nutzerfreundliche, sichere und intelligente Plattform fur digitale Briefmarken - fur Sammler und Partnerunternehmen gleichermasen.
 
-**Einnahmen:**  
-- Handelsgebühren
+**Einnahmen:**
+- Handelsgebuhren
 - Premium-Abos
-- Sponsoring/B2B-Verträge
+- Sponsoring/B2B-Vertrage
 
-**Zielgruppe:**  
+**Zielgruppe:**
 Sammler, Emerging Markets, Hobby-/Treuefirmen
 
-**Team:**  
-Azad Zedan (Gründer, Unternehmer & Technologe)
+**Team:**
+Azad Zedan (Grunder, Unternehmer & Technologe)
 
-**Kontakt:**  
-Azad Zedan  
-Gründer von Stampcoin  
-GitHub: [AzadZedan](https://github.com/AzadZedan)  
-E-Mail: azadzedan13@gmail.com  
-E-Mail (offiziell): stampcoin.contact@gmail.com  
+**Kontakt:**
+Azad Zedan
+Grunder von Stampcoin
+GitHub: [AzadZedan](https://github.com/AzadZedan)
+E-Mail: azadzedan13@gmail.com
+E-Mail (offiziell): stampcoin.contact@gmail.com
 WhatsApp / Telegram: +49 1521 6933122

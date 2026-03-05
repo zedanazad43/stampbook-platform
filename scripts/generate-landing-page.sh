@@ -97,8 +97,8 @@ cat > "$OUTPUT_DIR/index.html" << 'EOF'
 </head>
 <body>
     <div class="container">
-        <h1>🎯 Stampcoin Platform</h1>
-        <p class="subtitle">منصة رقمية | Digital Platform | Digitale Plattform</p>
+        <h1> Stampcoin Platform</h1>
+        <p class="subtitle">  | Digital Platform | Digitale Plattform</p>
         
         <p class="description">
             An innovative blockchain-based platform for digital stamps, rewards, and loyalty tokens.
@@ -107,19 +107,19 @@ cat > "$OUTPUT_DIR/index.html" << 'EOF'
 
         <div class="features">
             <div class="feature">
-                <h3>💳 Digital Wallet</h3>
+                <h3> Digital Wallet</h3>
                 <p>Secure storage for your digital stamps and tokens</p>
             </div>
             <div class="feature">
-                <h3>🔒 Secure Transfers</h3>
+                <h3> Secure Transfers</h3>
                 <p>Blockchain-powered peer-to-peer transactions</p>
             </div>
             <div class="feature">
-                <h3>🛍️ Marketplace</h3>
+                <h3> Marketplace</h3>
                 <p>Buy, sell, and trade digital collectibles</p>
             </div>
             <div class="feature">
-                <h3>👤 User Profiles</h3>
+                <h3> User Profiles</h3>
                 <p>Verified accounts with complete profile management</p>
             </div>
         </div>
@@ -127,7 +127,7 @@ cat > "$OUTPUT_DIR/index.html" << 'EOF'
         <a href="https://github.com/zedanazad43/stp" class="cta-button">View on GitHub</a>
 
         <div class="languages">
-            <p>🇸🇦 العربية • 🇬🇧 English • 🇩🇪 Deutsch</p>
+            <p>    English   Deutsch</p>
         </div>
     </div>
 </body>

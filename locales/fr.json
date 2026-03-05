@@ -1,33 +1,33 @@
 {
-  "language": "Français",
+  "language": "Francais",
   "languageCode": "fr",
-  "flag": "🇫🇷",
+  "flag": "FR",
   "platform": {
     "title": "Plateforme Stampcoin",
-    "subtitle": "Plateforme Numérique",
-    "description": "Une plateforme innovante basée sur la blockchain pour les timbres numériques, les récompenses et les jetons de fidélité. Transferts sécurisés peer-to-peer et une place de marché pour les objets de collection numériques alimentée par la transparence et la confiance de la communauté.",
+    "subtitle": "Plateforme Numerique",
+    "description": "Une plateforme innovante basee sur la blockchain pour les timbres numeriques, les recompenses et les jetons de fidelite. Transferts securises peer-to-peer et une place de marche pour les objets de collection numeriques alimentee par la transparence et la confiance de la communaute.",
     "status": {
       "live": "En ligne",
       "openSource": "Open Source"
     }
   },
   "features": {
-    "title": "Fonctionnalités",
+    "title": "Fonctionnalites",
     "wallet": {
-      "title": "Portefeuille Numérique",
-      "description": "Stockage et gestion sécurisés de vos timbres et jetons numériques avec la technologie blockchain"
+      "title": "Portefeuille Numerique",
+      "description": "Stockage et gestion securises de vos timbres et jetons numeriques avec la technologie blockchain"
     },
     "transfers": {
-      "title": "Transferts Sécurisés",
-      "description": "Transactions peer-to-peer alimentées par blockchain avec transparence et sécurité complètes"
+      "title": "Transferts Securises",
+      "description": "Transactions peer-to-peer alimentees par blockchain avec transparence et securite completes"
     },
     "marketplace": {
-      "title": "Place de Marché",
-      "description": "Achetez, vendez et échangez des objets de collection numériques sur une place de marché communautaire de confiance"
+      "title": "Place de Marche",
+      "description": "Achetez, vendez et echangez des objets de collection numeriques sur une place de marche communautaire de confiance"
     },
     "profiles": {
       "title": "Profils Utilisateurs",
-      "description": "Comptes vérifiés avec gestion complète du profil et suivi de la collection"
+      "description": "Comptes verifies avec gestion complete du profil et suivi de la collection"
     }
   },
   "documentation": {
@@ -38,33 +38,33 @@
     },
     "roadmap": {
       "title": "Feuille de Route",
-      "description": "Calendrier de développement et jalons"
+      "description": "Calendrier de developpement et jalons"
     }
   },
   "cta": {
     "viewGitHub": "Voir sur GitHub",
-    "reportIssues": "Signaler des Problèmes"
+    "reportIssues": "Signaler des Problemes"
   },
   "footer": {
     "multilingual": "Support Multilingue",
     "contact": "Contact",
     "founder": "Azad Zedan - Fondateur de Stampcoin",
-    "copyright": "Plateforme Stampcoin. Créé avec ❤️ pour les collectionneurs du monde entier."
+    "copyright": "Plateforme Stampcoin. Cree avec  pour les collectionneurs du monde entier."
   },
   "readme": {
-    "description": "Stampcoin est une plateforme innovante de monnaie numérique basée sur la technologie blockchain, axée sur les timbres numériques, les récompenses et les jetons de fidélité.",
+    "description": "Stampcoin est une plateforme innovante de monnaie numerique basee sur la technologie blockchain, axee sur les timbres numeriques, les recompenses et les jetons de fidelite.",
     "features": [
-      "Portefeuille de timbres numériques",
-      "Transferts peer-to-peer sécurisés",
-      "Place de marché pour timbres et objets de collection numériques",
-      "Profil utilisateur et vérification",
-      "Intégration API"
+      "Portefeuille de timbres numeriques",
+      "Transferts peer-to-peer securises",
+      "Place de marche pour timbres et objets de collection numeriques",
+      "Profil utilisateur et verification",
+      "Integration API"
     ],
-    "start": "Démarrer",
-    "prerequisites": "Prérequis",
-    "development": "Développement",
+    "start": "Demarrer",
+    "prerequisites": "Prerequis",
+    "development": "Developpement",
     "productionBuild": "Build de Production",
     "testing": "Tests",
-    "windowsNote": "Utilisateurs Windows : Voir WINDOWS_SETUP.md pour des instructions détaillées d'installation avec Chocolatey."
+    "windowsNote": "Utilisateurs Windows : Voir WINDOWS_SETUP.md pour des instructions detaillees d'installation avec Chocolatey."
   }
 }

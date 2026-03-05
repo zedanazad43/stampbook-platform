@@ -1,9 +1,9 @@
-# 🎊 Your Stampcoin Platform is Ready! | منصة ستامب كوين جاهزة!
+#  Your Stampcoin Platform is Ready! |    !
 
-## 🌟 What You Have Now
+##  What You Have Now
 
-### ✅ Website (LIVE NOW!)
-👉 **https://zedanazad43.github.io/stp/**
+###  Website (LIVE NOW!)
+ **https://zedanazad43.github.io/stp/**
 
 Your website is **LIVE and RUNNING** right now!
 - Automatic updates on every GitHub push
@@ -11,21 +11,21 @@ Your website is **LIVE and RUNNING** right now!
 - CDN powered
 - Mobile responsive
 
-### ✅ Backend API (Ready to Deploy)
+###  Backend API (Ready to Deploy)
 
 Choose ONE of these platforms and deploy in 3-5 minutes:
 
-#### 🥇 Railway (Most Recommended)
+####  Railway (Most Recommended)
 ```bash
 npm install -g @railway/cli && railway login && cd stp && railway up
 ```
 Cost: $5-10/month | Time: 3 min
 
-#### 🥈 Render (Free Tier)
-Go to render.com → New Service → Select repo → Deploy  
+####  Render (Free Tier)
+Go to render.com  New Service  Select repo  Deploy  
 Cost: Free | Time: 5 min
 
-#### 🥉 Vercel (Fastest)
+####  Vercel (Fastest)
 ```bash
 npm install -g vercel && cd stp && vercel
 ```
@@ -33,25 +33,25 @@ Cost: Free | Time: 2 min
 
 ---
 
-## 📦 What's Included
+##  What's Included
 
 ```
-✅ Docker containerization (Dockerfile + docker-compose.yml)
-✅ Node.js/Express backend (server.js)
-✅ Static website (HTML/CSS)
-✅ GitHub Pages auto-deployment
-✅ Multi-platform configs (Railway, Render, Vercel, Fly.io, Heroku)
-✅ Complete documentation
-✅ Security configured
-✅ API endpoints ready
+ Docker containerization (Dockerfile + docker-compose.yml)
+ Node.js/Express backend (server.js)
+ Static website (HTML/CSS)
+ GitHub Pages auto-deployment
+ Multi-platform configs (Railway, Render, Vercel, Fly.io, Heroku)
+ Complete documentation
+ Security configured
+ API endpoints ready
 ```
 
 ---
 
-## 🚀 Deploy Your Backend Now (5 minutes)
+##  Deploy Your Backend Now (5 minutes)
 
 ### Step 1: Choose Platform
-Pick one: Railway ⭐ | Render | Vercel | Fly.io | Heroku
+Pick one: Railway  | Render | Vercel | Fly.io | Heroku
 
 ### Step 2: Follow the Guide
 See [DEPLOYMENT_QUICK_START.md](DEPLOYMENT_QUICK_START.md)
@@ -70,7 +70,7 @@ curl -X GET YOUR_API_URL/sync \
 
 ---
 
-## 📊 Files Created for You
+##  Files Created for You
 
 | File | Purpose |
 |------|---------|
@@ -86,7 +86,7 @@ curl -X GET YOUR_API_URL/sync \
 
 ---
 
-## 🎯 30-Second Quick Start
+##  30-Second Quick Start
 
 ```bash
 # Website
@@ -106,18 +106,18 @@ npm install -g vercel && cd stp && vercel
 
 ---
 
-## 📈 What's Next
+##  What's Next
 
 1. Deploy backend (3-5 minutes)
 2. Test API (1 minute)
-3. Share your live links! 🎉
+3. Share your live links! 
 
 Your website is already live:  
-👉 **https://zedanazad43.github.io/stp/**
+ **https://zedanazad43.github.io/stp/**
 
 ---
 
-## 🔗 Important Links
+##  Important Links
 
 - **Your Repo**: https://github.com/zedanazad43/stp
 - **Quick Start**: [DEPLOYMENT_QUICK_START.md](DEPLOYMENT_QUICK_START.md)
@@ -127,7 +127,7 @@ Your website is already live:
 
 ---
 
-## ✅ Checklist
+##  Checklist
 
 - [x] Website live
 - [x] Docker ready
@@ -136,10 +136,10 @@ Your website is already live:
 - [x] GitHub updated
 - [ ] Deploy backend (your turn!)
 - [ ] Test API (your turn!)
-- [ ] Celebrate! 🎉
+- [ ] Celebrate! 
 
 ---
 
-**Your website is LIVE! Now deploy the backend in 5 minutes.** 🚀
+**Your website is LIVE! Now deploy the backend in 5 minutes.** 
 
-Choose your platform → Follow the guide → Done!
+Choose your platform  Follow the guide  Done!

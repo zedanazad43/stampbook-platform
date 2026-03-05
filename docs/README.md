@@ -1,17 +1,13 @@
-# 📚 Stampcoin Platform Documentation / توثيق منصة ستامب كوين / Dokumentation
+# Stampcoin Platform Documentation
 
 Welcome to the Stampcoin Platform documentation! This directory contains all project documentation organized for easy access.
 
-مرحبًا بك في وثائق منصة ستامب كوين! يحتوي هذا المجلد على جميع وثائق المشروع منظمة لسهولة الوصول.
-
-Willkommen in der Stampcoin Platform Dokumentation! Dieses Verzeichnis enthält die gesamte Projektdokumentation für einfachen Zugriff.
-
 ---
 
-## 🌐 Documentation Portal / بوابة التوثيق / Dokumentationsportal
+## Documentation Portal
 
-**Visit our interactive documentation portal:**  
-🔗 **[https://zedanazad43.github.io/stp/](https://zedanazad43.github.io/stp/)**
+**Visit our interactive documentation portal:**
+**[https://zedanazad43.github.io/stp/](https://zedanazad43.github.io/stp/)**
 
 The portal provides a beautiful, user-friendly interface to access all documentation with:
 - Easy navigation
@@ -20,11 +16,11 @@ The portal provides a beautiful, user-friendly interface to access all documenta
 
 ---
 
-## 📖 Available Documentation / الوثائق المتاحة / Verfügbare Dokumentation
+## Available Documentation
 
-### Core Documentation / الوثائق الأساسية / Kerndokumentation
+### Core Documentation
 
-1. **[README](../README.md)** - Main project overview in 3 languages
+1. **[README](../README.md)** - Main project overview
    - Project description and features
    - Quick start guide
    - Prerequisites and requirements
@@ -39,7 +35,7 @@ The portal provides a beautiful, user-friendly interface to access all documenta
    - Windows-specific configurations
    - Common Windows issues
 
-### Business & Planning / الأعمال والتخطيط / Geschäft & Planung
+### Business & Planning
 
 4. **[Business One-Pager](business-onepager_Version6.md)** - Business overview
    - Vision and mission
@@ -53,7 +49,7 @@ The portal provides a beautiful, user-friendly interface to access all documenta
    - Feature development plan
    - Partnership and investment timeline
 
-### Community & Contribution / المجتمع والمساهمة / Gemeinschaft & Beitrag
+### Community & Contribution
 
 6. **[Contributing Guidelines](../CONTRIBUTING.md)** - How to contribute
    - Code of conduct
@@ -65,7 +61,7 @@ The portal provides a beautiful, user-friendly interface to access all documenta
    - Security best practices
    - Contact for security issues
 
-### Version History / سجل الإصدارات / Versionsgeschichte
+### Version History
 
 8. **[Changelog](../CHANGELOG.md)** - Version history
    - Release notes
@@ -74,33 +70,33 @@ The portal provides a beautiful, user-friendly interface to access all documenta
 
 ---
 
-## 🚀 Quick Links / روابط سريعة / Schnelllinks
+## Quick Links
 
-### For Developers / للمطورين / Für Entwickler
+### For Developers
 - [Installation Guide](../INSTALLATION.md)
 - [Contributing Guidelines](../CONTRIBUTING.md)
 - [Security Policy](../SECURITY.md)
 
-### For Business / للأعمال / Für Unternehmen
+### For Business
 - [Business One-Pager](business-onepager_Version6.md)
 - [Project Roadmap](roadmap.md)
 
-### For Users / للمستخدمين / Für Benutzer
+### For Users
 - [README](../README.md)
 - [Windows Setup](../WINDOWS_SETUP.md)
 
 ---
 
-## 🌍 Languages / اللغات / Sprachen
+## Languages
 
 All main documentation is available in:
-- 🇸🇦 العربية (Arabic)
-- 🇬🇧 English
-- 🇩🇪 Deutsch (German)
+- Arabic
+- English
+- Deutsch (German)
 
 ---
 
-## 📞 Contact / اتصل بنا / Kontakt
+## Contact
 
 **Azad Zedan** - Founder of Stampcoin
 
@@ -110,7 +106,7 @@ All main documentation is available in:
 
 ---
 
-## 🔗 Additional Resources / موارد إضافية / Zusätzliche Ressourcen
+## Additional Resources
 
 - **GitHub Repository**: [zedanazad43/stp](https://github.com/zedanazad43/stp)
 - **GitHub Pages**: [Documentation Portal](https://zedanazad43.github.io/stp/)
@@ -118,4 +114,4 @@ All main documentation is available in:
 
 ---
 
-© 2024-2026 Stampcoin Platform. Built with ❤️ for collectors worldwide.
+2024-2026 Stampcoin Platform. Built for collectors worldwide.

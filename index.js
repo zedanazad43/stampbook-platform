@@ -1,7 +1,8 @@
-FROM node:18
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --production
-COPY . .
-EXPOSE 4000
-CMD ["node", "index.js"]
+// Entry point for Stampcoin Platform
+// Starts the main server
+try {
+  require('./server');
+} catch (err) {
+  console.error('Failed to start server:', err.message);
+  process.exit(1);
+}

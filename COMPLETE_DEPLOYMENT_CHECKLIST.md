@@ -1,6 +1,6 @@
-# 🚀 Complete Deployment Checklist | قائمة فحص النشر الكاملة
+#  Complete Deployment Checklist |    
 
-## ✅ PHASE 1: GitHub & Render (IMMEDIATE)
+##  PHASE 1: GitHub & Render (IMMEDIATE)
 
 ### GitHub Deployment:
 - [x] Code pushed to GitHub
@@ -14,7 +14,7 @@
 ### Render Deployment:
 - [ ] Go to: https://render.com
 - [ ] Sign up with GitHub
-- [ ] Click: + New → Web Service
+- [ ] Click: + New  Web Service
 - [ ] Click: Connect a repository
 - [ ] Search: zedanazad43/stp
 - [ ] Click: Connect
@@ -40,7 +40,7 @@ SYNC_TOKEN = (generate random token)
 
 ---
 
-## ⏳ PHASE 2: Domain Purchase (OPTIONAL but Recommended)
+##  PHASE 2: Domain Purchase (OPTIONAL but Recommended)
 
 ### Choose Domain Registrar:
 - [ ] Option 1: **Namecheap** ($8.88/year) - https://namecheap.com
@@ -56,7 +56,7 @@ SYNC_TOKEN = (generate random token)
 
 ---
 
-## 🔧 PHASE 3: DNS Configuration (If You Bought Domain)
+##  PHASE 3: DNS Configuration (If You Bought Domain)
 
 ### Add DNS Records:
 
@@ -84,7 +84,7 @@ TTL:   3600
 
 ---
 
-## 🌐 PHASE 4: Connect Domain to Services
+##  PHASE 4: Connect Domain to Services
 
 ### Connect Domain to GitHub Pages:
 1. Go to: https://github.com/zedanazad43/stp/settings/pages
@@ -100,7 +100,7 @@ TTL:   3600
 
 ---
 
-## ✅ PHASE 5: Verification
+##  PHASE 5: Verification
 
 ### Test Website:
 - [ ] `https://zedanazad43.github.io/stp/` (always works)
@@ -135,7 +135,7 @@ fetch('https://stampcoin-api.onrender.com/sync', {
 
 ---
 
-## 📊 FINAL URLS
+##  FINAL URLS
 
 ### With Domain (if purchased):
 ```
@@ -151,23 +151,23 @@ API:      https://stampcoin-api.onrender.com/sync
 
 ---
 
-## ⏱️ Timeline
+##  Timeline
 
 | Step | Time | Status |
 |------|------|--------|
-| GitHub Pages | 1 min | ✅ |
-| Render Deploy | 5-10 min | ✅ |
-| Domain Purchase | 5 min | ⏳ Optional |
-| DNS Setup | 5 min | ⏳ Optional |
-| DNS Propagation | 24 hours | ⏳ Optional |
-| HTTPS Certificate | 24 hours | ⏳ Optional |
+| GitHub Pages | 1 min |  |
+| Render Deploy | 5-10 min |  |
+| Domain Purchase | 5 min |  Optional |
+| DNS Setup | 5 min |  Optional |
+| DNS Propagation | 24 hours |  Optional |
+| HTTPS Certificate | 24 hours |  Optional |
 
 **Minimum time to live (without domain): 10 minutes**
 **Full setup (with domain): 24 hours**
 
 ---
 
-## 💰 Costs
+##  Costs
 
 | Item | Cost | Notes |
 |------|------|-------|
@@ -181,7 +181,7 @@ API:      https://stampcoin-api.onrender.com/sync
 
 ---
 
-## 🔐 Environment Variables
+##  Environment Variables
 
 Make sure to generate a strong SYNC_TOKEN:
 
@@ -206,12 +206,12 @@ openssl rand -base64 32
 
 ---
 
-## 🎯 Quick Action Plan
+##  Quick Action Plan
 
 **If you want to launch TODAY:**
 1. GitHub Pages: 1 minute
 2. Render Deploy: 5-10 minutes
-3. **DONE! 🎉** Website + API live
+3. **DONE! ** Website + API live
 
 **If you want custom domain:**
 1. Complete above
@@ -222,7 +222,7 @@ openssl rand -base64 32
 
 ---
 
-## 📞 Support Links
+##  Support Links
 
 - **Render Docs**: https://docs.render.com
 - **GitHub Pages**: https://docs.github.com/pages
@@ -231,13 +231,13 @@ openssl rand -base64 32
 
 ---
 
-## ❓ Common Issues
+##  Common Issues
 
 ### Issue: GitHub Pages shows 404
 **Solution**: Wait 2-5 minutes after saving, then refresh
 
 ### Issue: Render not starting
-**Solution**: Check Logs tab → look for errors
+**Solution**: Check Logs tab  look for errors
 
 ### Issue: API returns 401
 **Solution**: Make sure SYNC_TOKEN is set in Render dashboard
@@ -250,10 +250,10 @@ openssl rand -base64 32
 
 ---
 
-## 📋 Final Checklist
+##  Final Checklist
 
 - [ ] Code pushed to GitHub
-- [ ] GitHub Pages enabled (Settings → Pages)
+- [ ] GitHub Pages enabled (Settings  Pages)
 - [ ] Render account created
 - [ ] API deployed to Render
 - [ ] SYNC_TOKEN set in Render
@@ -268,7 +268,7 @@ openssl rand -base64 32
 
 ---
 
-## 🎊 You're All Set!
+##  You're All Set!
 
 Your complete deployment stack:
 
@@ -277,7 +277,7 @@ Your complete deployment stack:
 **Domain**: Your choice (optional, ~$10/year)  
 **Total Cost**: $0-15/year  
 
-**Start now - you'll be live in 10 minutes!** 🚀
+**Start now - you'll be live in 10 minutes!** 
 
 ---
 

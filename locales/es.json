@@ -1,21 +1,21 @@
 {
-  "language": "Español",
+  "language": "Espanol",
   "languageCode": "es",
-  "flag": "🇪🇸",
+  "flag": "ES",
   "platform": {
     "title": "Plataforma Stampcoin",
     "subtitle": "Plataforma Digital",
     "description": "Una plataforma innovadora basada en blockchain para sellos digitales, recompensas y tokens de lealtad. Transferencias seguras peer-to-peer y un mercado de coleccionables digitales impulsado por la transparencia y la confianza de la comunidad.",
     "status": {
       "live": "En vivo",
-      "openSource": "Código Abierto"
+      "openSource": "Codigo Abierto"
     }
   },
   "features": {
-    "title": "Características",
+    "title": "Caracteristicas",
     "wallet": {
       "title": "Cartera Digital",
-      "description": "Almacenamiento y gestión seguros de sus sellos y tokens digitales con tecnología blockchain"
+      "description": "Almacenamiento y gestion seguros de sus sellos y tokens digitales con tecnologia blockchain"
     },
     "transfers": {
       "title": "Transferencias Seguras",
@@ -27,11 +27,11 @@
     },
     "profiles": {
       "title": "Perfiles de Usuario",
-      "description": "Cuentas verificadas con gestión completa de perfil y seguimiento de colección"
+      "description": "Cuentas verificadas con gestion completa de perfil y seguimiento de coleccion"
     }
   },
   "documentation": {
-    "title": "Documentación",
+    "title": "Documentacion",
     "businessPlan": {
       "title": "Plan de Negocio",
       "description": "Plan de negocio completo en varios idiomas"
@@ -46,25 +46,25 @@
     "reportIssues": "Reportar Problemas"
   },
   "footer": {
-    "multilingual": "Soporte Multilingüe",
+    "multilingual": "Soporte Multilingue",
     "contact": "Contacto",
     "founder": "Azad Zedan - Fundador de Stampcoin",
-    "copyright": "Plataforma Stampcoin. Hecho con ❤️ para coleccionistas de todo el mundo."
+    "copyright": "Plataforma Stampcoin. Hecho con  para coleccionistas de todo el mundo."
   },
   "readme": {
-    "description": "Stampcoin es una plataforma innovadora de moneda digital basada en tecnología blockchain, enfocada en sellos digitales, recompensas y tokens de lealtad.",
+    "description": "Stampcoin es una plataforma innovadora de moneda digital basada en tecnologia blockchain, enfocada en sellos digitales, recompensas y tokens de lealtad.",
     "features": [
       "Cartera de sellos digitales",
       "Transferencias peer-to-peer seguras",
       "Mercado de sellos digitales y coleccionables",
-      "Perfil de usuario y verificación",
-      "Integración API"
+      "Perfil de usuario y verificacion",
+      "Integracion API"
     ],
     "start": "Comenzar",
     "prerequisites": "Requisitos Previos",
     "development": "Desarrollo",
-    "productionBuild": "Build de Producción",
+    "productionBuild": "Build de Produccion",
     "testing": "Pruebas",
-    "windowsNote": "Usuarios de Windows: Ver WINDOWS_SETUP.md para instrucciones detalladas de configuración usando Chocolatey."
+    "windowsNote": "Usuarios de Windows: Ver WINDOWS_SETUP.md para instrucciones detalladas de configuracion usando Chocolatey."
   }
 }

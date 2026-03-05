@@ -1,94 +1,94 @@
-# دليل استخدام config.sh لإعداد العداد المخصص
+#   config.sh   
 
-## مقدمة
-هذا الدليل يشرح كيفية استخدام ملف config.sh الذي قمت بتنزيله لإعداد العداد المخصص لمشروعك.
+## 
+      config.sh       .
 
-## المتطلبات الأساسية
-- خادم Linux (Ubuntu 20.04 أو أحدث موصى به)
-- اتصال بالإنترنت
-- صلاحيات المستخدم المسؤول (sudo) على الخادم
-- رمز تسجيل من GitHub (يجب الحصول عليه من إعدادات المستودع)
+##  
+-  Linux (Ubuntu 20.04    )
+-  
+-    (sudo)  
+-    GitHub (     )
 
-## الخطوات التفصيلية
+##  
 
-### 1. الحصول على رمز التسجيل من GitHub
-1. افتح المتصفح وانتقل إلى: https://github.com/zedanazad43/stp/settings/actions/runners
-2. انقر على زر "New self-hosted runner"
-3. اختر نظام التشغيل: Linux والبنية: x64
-4. انسخ الرمز المقدم (سيكون له صيغة مشابهة: `AAB1234567890abcdef1234567890abcdef1234567890abcdef12345678`)
+### 1.      GitHub
+1.    : https://github.com/zedanazad43/stp/settings/actions/runners
+2.    "New self-hosted runner"
+3.   : Linux : x64
+4.    (   : `AAB1234567890abcdef1234567890abcdef1234567890abcdef12345678`)
 
-### 2. نقل ملفات العداد إلى الخادم
-1. قم بإنشاء مجلد للعداد على الخادم:
+### 2.     
+1.      :
    ```bash
    mkdir actions-runner && cd actions-runner
    ```
-2. قم بنقل محتويات مجلد المؤقت (Rar$DIa22900.1791.rartemp) إلى مجلد actions-runner الجديد
+2.      (Rar$DIa22900.1791.rartemp)   actions-runner 
 
-### 3. جعل ملف config.sh قابلاً للتنفيذ
+### 3.   config.sh  
 ```bash
 cd actions-runner
 chmod +x config.sh
 ```
 
-### 4. تشغيل config.sh لتكوين العداد
+### 4.  config.sh  
 ```bash
 ./config.sh --url https://github.com/zedanazad43/stp --token YOUR_TOKEN
 ```
-- استبدل `YOUR_TOKEN` بالرمز الذي نسخته في الخطوة 1
-- عند المطالبة بالتسميات (labels)، أدخل: `self-hosted,linux`
+-  `YOUR_TOKEN`      1
+-    (labels) : `self-hosted,linux`
 
-### 5. تشغيل العداد كخدمة
+### 5.   
 ```bash
 sudo ./svc.sh install
 sudo ./svc.sh start
 sudo ./svc.sh status
 ```
 
-### 6. التحقق من نجاح الإعداد
-1. ارجع إلى صفحة GitHub (https://github.com/zedanazad43/stp/settings/actions/runners)
-2. يجب أن يظهر العداد الجديد في قائمة "Self-hosted runners" مع الحالة "online"
+### 6.    
+1.    GitHub (https://github.com/zedanazad43/stp/settings/actions/runners)
+2.        "Self-hosted runners"   "online"
 
-## استكشاف الأخطاء وإصلاحها
+##   
 
-### مشكلة: "Must not run with sudo"
-- لا تشغل config.sh مباشرة باستخدام sudo
-- إذا كنت بحاجة إلى صلاحيات المسؤول، قم بتعيين متغير البيئة:
+### : "Must not run with sudo"
+-   config.sh   sudo
+-          :
   ```bash
   RUNNER_ALLOW_RUNASROOT=1 ./config.sh --url https://github.com/zedanazad43/stp --token YOUR_TOKEN
   ```
 
-### مشكلة: "Dependencies is missing for Dotnet Core 6.0"
-- قم بتثبيت الاعتماديات المفقودة:
+### : "Dependencies is missing for Dotnet Core 6.0"
+-    :
   ```bash
   sudo ./bin/installdependencies.sh
   ```
 
-### مشكلة: العداد غير متصل
-- تحقق من حالة الخدمة:
+### :   
+-    :
   ```bash
   sudo ./svc.sh status
   ```
-- أعد تشغيل الخدمة:
+-   :
   ```bash
   sudo ./svc.sh restart
   ```
-- راقب سجلات الخدمة:
+-   :
   ```bash
   sudo journalctl -u actions-runner.service -f
   ```
 
-## تحديث العداد
-لتحديث العداد إلى أحدث إصدار:
+##  
+    :
 ```bash
 cd actions-runner
 sudo ./svc.sh stop
 sudo ./svc.sh uninstall
 sudo ./config.sh remove --token YOUR_TOKEN
-# ثم كرر الخطوات 2-5
+#    2-5
 ```
 
-## نصائح إضافية
-1. تأكد من أن الخادم لديه موارد كافية (CPU, RAM)
-2. قم بتغيير كلمة مرور SSH بانتظام
-3. استخدم جدار حماية (firewall) لحماية الخادم
-4. قم بتحديث نظام التشغيل بانتregel
+##  
+1.        (CPU, RAM)
+2.     SSH 
+3.    (firewall)  
+4.     regel

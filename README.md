@@ -1,4 +1,4 @@
-# 🏛️ Stampcoin Platform | منصة ستامب كوين
+# Stampcoin Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org)
@@ -6,28 +6,28 @@
 
 An innovative blockchain-based digital stamps platform with wallet and marketplace features.
 
-🌐 **[Live Demo](https://zedanazad43.github.io/stp/)** | 📖 **[Documentation](docs/)** | 🛣️ **[Roadmap](docs/roadmap.html)**
+**[Live Demo](https://zedanazad43.github.io/stp/)** | **[Documentation](docs/)** | **[Roadmap](docs/roadmap.html)**
 
 ---
 
-## 🌍 Languages | اللغات
+## Languages
 
-- **العربية** 🇸🇦 | **English** 🇬🇧 | **Deutsch** 🇩🇪 | **中文** 🇨🇳 | **Français** 🇫🇷 | **Español** 🇪🇸
-
----
-
-## ✨ Features | المميزات
-
-- 🏦 **Digital Wallet API** - Create, manage, and transfer digital stamps securely
-- 🛍️ **Market Institution API** - Buy, sell, and trade digital stamps in a marketplace
-- 🔐 **Secure P2P Transfers** - Peer-to-peer transactions with full transaction history
-- 🌐 **Multi-Language Support** - 6+ languages supported
-- 🐳 **Docker Ready** - Full Docker and Docker Compose support
-- ⚡ **High Performance** - Built with Express.js and Node.js
+- **Arabic** | **English** | **Deutsch** | **Chinese** | **Francais** | **Espanol**
 
 ---
 
-## 🚀 Quick Start
+## Features
+
+- **Digital Wallet API** - Create, manage, and transfer digital stamps securely
+- **Market Institution API** - Buy, sell, and trade digital stamps in a marketplace
+- **Secure P2P Transfers** - Peer-to-peer transactions with full transaction history
+- **Multi-Language Support** - 6+ languages supported
+- **Docker Ready** - Full Docker and Docker Compose support
+- **High Performance** - Built with Express.js and Node.js
+
+---
+
+## Quick Start
 
 ### Prerequisites
 - Node.js >= 16.x
@@ -61,7 +61,7 @@ npm run dev
 
 ---
 
-## 📦 Installation & Setup
+## Installation & Setup
 
 See detailed guides:
 - **[Installation Guide](INSTALLATION.md)**
@@ -70,17 +70,17 @@ See detailed guides:
 
 ---
 
-## 🔌 API Documentation
+## API Documentation
 
-### Wallet API | واجهة برمجة المحفظة
+### Wallet API
 Complete wallet management endpoints and examples: **[WALLET_API.md](WALLET_API.md)**
 
-### Market API | واجهة برمجة السوق
+### Market API
 Complete marketplace endpoints and examples: **[MARKET_API.md](MARKET_API.md)**
 
 ---
 
-## 🛠️ Development
+## Development
 
 ```bash
 # Install dependencies
@@ -118,37 +118,37 @@ docker compose down
 
 ---
 
-## 📚 Full Documentation
+## Full Documentation
 
-- 🌐 **[Online Documentation Portal](https://zedanazad43.github.io/stp/)**
-- 📁 **[docs/ Directory](docs/)**
-- 🔒 **[Security Guidelines](SECURITY.md)**
-- 📋 **[Deployment Guide](DEPLOYMENT.md)**
-- 🤝 **[Contributing Guide](CONTRIBUTING.md)**
+- **[Online Documentation Portal](https://zedanazad43.github.io/stp/)**
+- **[docs/ Directory](docs/)**
+- **[Security Guidelines](SECURITY.md)**
+- **[Deployment Guide](DEPLOYMENT.md)**
+- **[Contributing Guide](CONTRIBUTING.md)**
 
 ---
 
-## 🔒 Security
+## Security
 
 For security information and guidelines, see **[SECURITY.md](SECURITY.md)**.
 
-⚠️ **Important**: Always use HTTPS in production and keep your private keys secure.
+**Important**: Always use HTTPS in production and keep your private keys secure.
 
 ---
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see **[LICENSE](LICENSE)** for details.
 
 ---
 
-## 👥 Contributing
+## Contributing
 
 Contributions are welcome! See **[CONTRIBUTING.md](CONTRIBUTING.md)** for guidelines.
 
 ---
 
-## 📧 Contact & Support
+## Contact & Support
 
 - **Author**: Azad Zedan
 - **Repository**: [github.com/zedanazad43/stp](https://github.com/zedanazad43/stp)
@@ -156,7 +156,7 @@ Contributions are welcome! See **[CONTRIBUTING.md](CONTRIBUTING.md)** for guidel
 
 ---
 
-## 🌐 Website
+## Website
 
 **Live Website**: https://zedanazad43.github.io/stp/
 
@@ -169,84 +169,105 @@ See **[CHANGELOG.md](CHANGELOG.md)** for version history and updates.
 ---
 
 **Last Updated**: 2025
-**Status**: ✅ Active Development
+**Status**: Active Development
 
 ---
 
-## 🤖 إعداد GitHub Actions Runner ونشر المشروع
+## GitHub Actions Runner Setup
 
-هذا المشروع يدعم استخدام GitHub Actions Runner المضيف الذاتي (Self-hosted Runner) لبناء ونشر المشروع تلقائيًا.
+This section explains how to set up a self-hosted GitHub Actions Runner.
 
-### المتطلبات الأساسية
-- حساب GitHub
-- وصول إلى مستودع المشروع
-- نظام التشغيل Windows (مع PowerShell)
+### Prerequisites
+- A GitHub account
+- A Windows machine
+- PowerShell
 
-### إعداد Runner المضيف الذاتي
+### Runner Setup Steps
 
-#### الخطوة 1: تنزيل GitHub Actions Runner
+#### Step 1: Download GitHub Actions Runner
 
-1. افتح PowerShell
-2. أنشئ مجلدًا للـ Runner:
+1. Open PowerShell
+2. Create a directory for the runner:
    ```
    mkdir actions-runner
    cd actions-runner
    ```
-3. قم بتنزيل Runner (نسخة Windows):
+3. Download the runner (Windows):
    ```
    curl -o actions-runner-win-x64-2.331.0.zip -L https://github.com/actions/runner/releases/download/v2.331.0/actions-runner-win-x64-2.331.0.zip
    ```
-4. قم بفك ضغط الملف:
+4. Extract the archive:
    ```
    Expand-Archive -Path actions-runner-win-x64-2.331.0.zip -DestinationPath .
    ```
 
-#### الخطوة 2: الحصول على عنوان URL ورمز Runner
+#### Step 2: Get the Runner URL and Token
 
-1. سجل الدخول إلى حساب GitHub الخاص بك
-2. اذهب إلى مستودعك
-3. من القمة اليمنى، انقر على 'Settings'
-4. في القمة اليسرى، انقر على 'Actions'
-5. في القمة اليسرى، انقر على 'Runners'
-6. انقر على زر 'New runner'
-7. انسخ عنوان URL ورمز Runner الظاهرين لك
+1. Go to your repository on GitHub
+2. Click Settings
+3. Click Actions
+4. Click Runners
+5. Click New runner
+6. Copy the URL and token shown
 
-#### الخطوة 3: تكوين الـ Runner
+#### Step 3: Configure the Runner
 
-1. في PowerShell، انتقل إلى مجلد الـ Runner:
+1. In PowerShell, navigate to the runner directory:
    ```
    cd C:\Users\azadz\actions-runner
    ```
-2. قم بتكوين الـ Runner باستخدام عنوان URL ورمزك:
+2. Configure the runner with your URL and token:
    ```
    .\config.cmd --url YOUR_REPO_URL --token YOUR_RUNNER_TOKEN
    ```
-   استبدل `YOUR_REPO_URL` و`YOUR_RUNNER_TOKEN` بالقيم الفعلية
+   Replace `YOUR_REPO_URL` and `YOUR_RUNNER_TOKEN` with your values.
 
-#### الخطوة 4: تشغيل الـ Runner
+#### Step 4: Start the Runner
 
-1. بعد التكوين بنجاح، قم بتشغيل الـ Runner:
+1. Start the runner:
    ```
    .\run.cmd
    ```
 
-### إعداد سير العمل (Workflow) لنشر المشروع
+### Workflow Configuration
 
-لقد قمنا مسبقًا بإنشاء ملف سير العمل في `.github/workflows/publish.yml`. هذا الملف يقوم بالآتي:
+The deploy workflow is defined in `.github/workflows/publish.yml`. It runs the following steps:
 
-1. يستنسخ المستودع عند كل دفع إلى الفرع الرئيسي
-2. يثبت Node.js والتبعيات
-3. يقوم ببناء المشروع
-4. ينشر المشروع
+1. Checkout the repository
+2. Install Node.js
+3. Install dependencies
+4. Deploy the project
 
-لتخصيص سير العمل حسب احتياجاتك، قم بتعديل قسم "Deploy project" في ملف `publish.yml`.
+The workflow is triggered by pushing to the main branch.
 
-### نشر المشروع
+### Monitoring
 
-بعد إعداد Runner وتكوين سير العمل، سيتم نشر المشروع تلقائيًا عند كل دفع إلى الفرع الرئيسي. يمكنك مراقبة سير العمل في قسم "Actions" في مستودعك على GitHub.
+Once the runner is started, you can monitor it in the GitHub Actions tab of your repository.
 
-### استكشاف الأخطاء وإصلاحها
+### Troubleshooting
 
-- إذا لم يبدأ الـ Runner، تحقق من وجود رسائل خطأ في نافذة PowerShell
-- تأكد من أن عنوان URL ورمز Runner صحيحان وغير منتهي الصلاحية
-- تأكد من أن الـ Runner لديه الأذونات الكافية للوصول إلى ملفات المشروع
+- If the runner fails to start, check the PowerShell output
+- Verify the URL and token are correct
+- Restart the runner if needed
+
+### Submodule Errors in CI/CD
+
+If you see `fatal: No url found for submodule path 'git' in .gitmodules` or a similar error during CI/CD or local builds, a stale submodule entry is tracked in the git index but missing from `.gitmodules`. To fix:
+
+```bash
+# Remove the stale submodule entry from the index
+git submodule deinit git || true
+git rm --cached git || true
+rm -rf .git/modules/git || true
+
+# Commit the fix
+git add .gitmodules
+git commit -m "fix: remove stale git submodule from index"
+git push
+```
+
+To check which submodule paths are currently tracked:
+```bash
+git ls-files --stage | grep "^160000"
+```
+Each path listed must have a matching `[submodule "..."]` entry in `.gitmodules`. If not, run `git rm --cached <path>` to remove it.       
