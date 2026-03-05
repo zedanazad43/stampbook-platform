@@ -23,13 +23,26 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org/'
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
+      - name: Configure npm authentication
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -n "$NODE_AUTH_TOKEN" ]; then
+            echo "npm authentication configured via NODE_AUTH_TOKEN"
+          else
+            echo "NPM_TOKEN not set; skipping private registry authentication"
+          fi
+
       - name: Install project dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [ -f package-lock.json ]; then
             npm ci
@@ -37,17 +50,27 @@ jobs:
             npm install
           fi
 
-      - name: Install MCP server packages
+      - name: Install required public MCP server packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          set -e
           npm install --no-save \
             @modelcontextprotocol/server-filesystem \
-            @modelcontextprotocol/server-git \
             @modelcontextprotocol/server-github \
-            @modelcontextprotocol/server-gitlab \
             @modelcontextprotocol/server-memory \
             @modelcontextprotocol/server-postgres \
             @modelcontextprotocol/server-sqlite \
             @cloudflare/mcp-server-cloudflare
+
+      - name: Install optional or private MCP server packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm install --no-save @modelcontextprotocol/server-git || \
+            echo "Skipping @modelcontextprotocol/server-git (not available in registry)"
+          npm install --no-save @modelcontextprotocol/server-gitlab || \
+            echo "Skipping @modelcontextprotocol/server-gitlab (not available in registry)"
 
       - name: Validate MCP configuration
         run: |
