@@ -37,11 +37,14 @@ jobs:
             npm install
           fi
 
+      - name: Log in to npm
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
       - name: Install MCP server packages
         run: |
           npm install --no-save \
             @modelcontextprotocol/server-filesystem \
-            @modelcontextprotocol/server-git \
+            git+https://github.com/your-org/server-git.git \
             @modelcontextprotocol/server-github \
             @modelcontextprotocol/server-gitlab \
             @modelcontextprotocol/server-memory \
