@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>StampCoin &mdash; Digital Stamp Platform</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" integrity="sha384-Htz1SE4Sl5aitpvFgr2j0sfsGUIuSXI6t8hEyrlQ93zflEF3a29bH2AvkUROUw7J" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--purple:#6C3082;--purple-dark:#4a1f5a;--purple-light:#9b59b6;--gold:#FFD700;--gold-dark:#e6c200;--white:#fff;--bg:#f8f5ff;--card:#fff;--text:#1a1a2e;--muted:#666;--border:#e0d6f0;--success:#27ae60;--error:#e74c3c;--radius:12px;--shadow:0 4px 20px rgba(108,48,130,.12)}
@@ -138,6 +139,7 @@ textarea{resize:vertical;min-height:70px}
     <button class="nav-link" onclick="navigate('token')" id="nav-token"></button>
   </div>
   <div class="nav-right">
+    <button id="btn-metamask" class="btn btn-sm" onclick="connectMetaMask()" title="Connect MetaMask" style="background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.3);padding:6px 14px;border-radius:20px;font-size:.82rem;font-weight:600;white-space:nowrap;cursor:pointer">🦊 <span id="metamask-label">Connect</span></button>
     <select class="lang-select" id="lang-select" onchange="setLang(this.value)">
       <option value="en">EN</option>
       <option value="ar">AR</option>
@@ -418,6 +420,21 @@ textarea{resize:vertical;min-height:70px}
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- BSC On-chain Wallet (shown after MetaMask connect) -->
+  <div id="bsc-wallet-card" class="card" style="display:none;margin-bottom:20px">
+    <h2 id="bsc-wallet-title" style="margin-bottom:16px">🦊 BSC Wallet — On-chain Balance</h2>
+    <div class="wallet-card" style="margin-bottom:12px">
+      <div class="wallet-name" id="mm-address" style="font-size:.85rem;word-break:break-all">—</div>
+      <div class="wallet-balance" id="mm-stp-balance">0</div>
+      <div class="wallet-balance-label">STP on BNB Smart Chain</div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-sm btn-outline" onclick="refreshOnChainBalance()" id="btn-refresh-bsc">↻ Refresh</button>
+      <a id="bscscan-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-purple" style="text-decoration:none">🔍 BscScan</a>
+    </div>
+    <p style="margin-top:10px;font-size:.8rem;color:var(--muted)" id="bsc-network-info">Network: BSC Testnet (Chain ID 97)</p>
   </div>
 </section>
 
@@ -938,6 +955,134 @@ function stampSVG(name, size) {
 
 function hashColor(s) {
   var h=0; for(var i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;} return Math.abs(h)%360;
+}
+
+// ---------------------------------------------------------------------------
+// MetaMask / BSC on-chain integration (ethers.js v5)
+// ---------------------------------------------------------------------------
+
+// Contract address — update after testnet/mainnet deployment
+var STP_CONTRACT_ADDRESS = (typeof window !== "undefined" && window.STP_CONTRACT_ADDRESS) || null;
+
+var BSC_TESTNET = {
+  chainId:        "0x61",       // 97
+  chainName:      "BSC Testnet",
+  nativeCurrency: { name: "BNB", symbol: "BNB", decimals: 18 },
+  rpcUrls:        ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+  blockExplorerUrls: ["https://testnet.bscscan.com"]
+};
+
+var STP_ABI = [
+  "function balanceOf(address) view returns (uint256)",
+  "function decimals() view returns (uint8)",
+  "function symbol() view returns (string)"
+];
+
+var mmProvider = null;
+var mmSigner   = null;
+var mmAddress  = null;
+
+async function connectMetaMask() {
+  if (typeof window === "undefined" || typeof window.ethereum === "undefined") {
+    toast(lang === "ar" ? "يرجى تثبيت MetaMask أولاً" : "Please install MetaMask first", "error");
+    window.open("https://metamask.io/download/", "_blank");
+    return;
+  }
+  try {
+    var accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+    mmAddress = accounts[0];
+
+    // Switch to BSC Testnet
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: BSC_TESTNET.chainId }]
+      });
+    } catch (switchErr) {
+      if (switchErr.code === 4902) {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [BSC_TESTNET]
+        });
+      }
+    }
+
+    mmProvider = new ethers.providers.Web3Provider(window.ethereum);
+    mmSigner   = mmProvider.getSigner();
+
+    // Update nav button
+    var shortAddr = mmAddress.slice(0, 6) + "…" + mmAddress.slice(-4);
+    document.getElementById("metamask-label").textContent = shortAddr;
+    var btn = document.getElementById("btn-metamask");
+    btn.style.background     = "rgba(39,174,96,.25)";
+    btn.style.borderColor    = "rgba(39,174,96,.5)";
+    btn.style.color          = "#27ae60";
+
+    // Load balance
+    await loadOnChainBalance(mmAddress);
+    toast(lang === "ar" ? "تم ربط MetaMask بنجاح ✅" : "MetaMask connected!", "success");
+
+    // Listen for account changes
+    window.ethereum.on("accountsChanged", function(accs) {
+      if (accs.length === 0) {
+        mmAddress = null; mmProvider = null; mmSigner = null;
+        document.getElementById("metamask-label").textContent = "Connect";
+        document.getElementById("btn-metamask").style.cssText = "";
+        document.getElementById("bsc-wallet-card").style.display = "none";
+      } else {
+        mmAddress = accs[0];
+        loadOnChainBalance(mmAddress);
+      }
+    });
+  } catch (e) {
+    toast(e.message || "MetaMask error", "error");
+  }
+}
+
+async function loadOnChainBalance(address) {
+  try {
+    if (!mmProvider) return;
+    var isZero = !STP_CONTRACT_ADDRESS;
+    var balanceText = "0";
+
+    if (!isZero) {
+      var contract  = new ethers.Contract(STP_CONTRACT_ADDRESS, STP_ABI, mmProvider);
+      var balance   = await contract.balanceOf(address);
+      var decimals  = await contract.decimals();
+      // Keep full string precision from formatUnits; trim trailing zeros
+      var raw = ethers.utils.formatUnits(balance, decimals);
+      var parts = raw.split(".");
+      var intPart = Number(parts[0]).toLocaleString();
+      var decPart = parts[1] ? parts[1].replace(/0+$/, "") : "";
+      balanceText = intPart + (decPart ? "." + decPart.slice(0, 6) : "");
+    }
+
+    document.getElementById("mm-address").textContent     = address;
+    document.getElementById("mm-stp-balance").textContent = balanceText;
+    document.getElementById("bsc-wallet-card").style.display = "";
+
+    // BscScan link
+    var explorerBase = "https://testnet.bscscan.com";
+    var link = document.getElementById("bscscan-link");
+    link.href = explorerBase + "/address/" + address;
+
+    if (isZero) {
+      document.getElementById("mm-stp-balance").textContent = "0 (contract pending)";
+    }
+  } catch (e) {
+    console.error("loadOnChainBalance error:", e.message);
+    document.getElementById("mm-stp-balance").textContent = "Error loading";
+    document.getElementById("bsc-wallet-card").style.display = "";
+  }
+}
+
+async function refreshOnChainBalance() {
+  if (!mmAddress) {
+    toast(lang === "ar" ? "ارتبط بـ MetaMask أولاً" : "Connect MetaMask first", "error");
+    return;
+  }
+  await loadOnChainBalance(mmAddress);
+  toast(lang === "ar" ? "تم تحديث الرصيد" : "Balance refreshed", "success");
 }
 
 applyLang();
