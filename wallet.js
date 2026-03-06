@@ -9,6 +9,24 @@ const WALLETS_FILE = path.join(__dirname, 'wallets.json');
 const TRANSACTIONS_FILE = path.join(__dirname, 'transactions.json');
 
 /**
+ * Validate a userId to prevent prototype-pollution and injection attacks.
+ * @param {*} userId - Value to validate
+ * @throws {Error} if userId is invalid
+ */
+function validateUserId(userId) {
+  if (
+    typeof userId !== 'string' ||
+    userId.trim() === '' ||
+    userId === '__proto__' ||
+    userId === 'constructor' ||
+    userId === 'prototype'
+  ) {
+    throw new Error('Invalid userId');
+  }
+}
+
+
+/**
  * Initialize wallet storage files if they don't exist
  */
 function initializeStorage() {
@@ -89,6 +107,10 @@ function writeTransactions(transactions) {
  * @returns {object} The created wallet object
  */
 function createWallet(userId, userName) {
+  validateUserId(userId);
+  if (typeof userName !== 'string' || userName.trim() === '') {
+    throw new Error('Invalid userName');
+  }
   const wallets = readWallets();
   
   if (wallets[userId]) {
@@ -116,6 +138,7 @@ function createWallet(userId, userName) {
  * @returns {object|null} Wallet object or null if not found
  */
 function getWallet(userId) {
+  validateUserId(userId);
   const wallets = readWallets();
   return wallets[userId] || null;
 }
@@ -135,15 +158,7 @@ function getAllWallets() {
  * @returns {object} Updated wallet
  */
 function updateBalance(userId, amount) {
-  // Prevent prototype-polluting or otherwise invalid user identifiers
-  if (
-    typeof userId !== 'string' ||
-    userId === '__proto__' ||
-    userId === 'constructor' ||
-    userId === 'prototype'
-  ) {
-    throw new Error('Invalid userId');
-  }
+  validateUserId(userId);
 
   const wallets = readWallets();
   const wallet = wallets[userId];
@@ -173,6 +188,7 @@ function updateBalance(userId, amount) {
  * @returns {object} Updated wallet
  */
 function addStamp(userId, stamp) {
+  validateUserId(userId);
   const wallets = readWallets();
   const wallet = wallets[userId];
   
@@ -204,6 +220,8 @@ function addStamp(userId, stamp) {
  * @returns {object} Transaction record
  */
 function transfer(fromUserId, toUserId, amount = 0, stampId = null) {
+  validateUserId(fromUserId);
+  validateUserId(toUserId);
   // Validate that either amount or stampId is provided
   if (!stampId && (!amount || amount <= 0)) {
     throw new Error('Transfer amount must be a positive number when transferring balance');
@@ -274,6 +292,7 @@ function transfer(fromUserId, toUserId, amount = 0, stampId = null) {
  * @returns {array} Array of transactions
  */
 function getTransactionHistory(userId) {
+  validateUserId(userId);
   const transactions = readTransactions();
   return transactions.filter(t => t.from === userId || t.to === userId);
 }

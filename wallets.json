@@ -23,12 +23,1892 @@
     "createdAt": "2026-03-01T23:34:42.131Z",
     "updatedAt": "2026-03-01T23:34:42.145Z"
   },
-  "user_alice": {
-    "userId": "user_alice",
-    "userName": "Alice",
+  "api_wallet_1772756737228": {
+    "userId": "api_wallet_1772756737228",
+    "userName": "API Test User",
     "balance": 0,
     "stamps": [],
-    "createdAt": "2026-03-01T23:38:33.702Z",
-    "updatedAt": "2026-03-01T23:38:33.702Z"
+    "createdAt": "2026-03-06T00:25:37.240Z",
+    "updatedAt": "2026-03-06T00:25:37.240Z"
+  },
+  "api_get_1772756737288": {
+    "userId": "api_get_1772756737288",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.291Z",
+    "updatedAt": "2026-03-06T00:25:37.291Z"
+  },
+  "api_topup_1772756737317": {
+    "userId": "api_topup_1772756737317",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.319Z",
+    "updatedAt": "2026-03-06T00:25:37.323Z"
+  },
+  "api_from_1772756737319": {
+    "userId": "api_from_1772756737319",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.321Z",
+    "updatedAt": "2026-03-06T00:25:37.329Z"
+  },
+  "api_to_1772756737319": {
+    "userId": "api_to_1772756737319",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.324Z",
+    "updatedAt": "2026-03-06T00:25:37.329Z"
+  },
+  "api_insuf_1772756737338": {
+    "userId": "api_insuf_1772756737338",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.340Z",
+    "updatedAt": "2026-03-06T00:25:37.340Z"
+  },
+  "api_txs_1772756737347": {
+    "userId": "api_txs_1772756737347",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.350Z",
+    "updatedAt": "2026-03-06T00:25:37.350Z"
+  },
+  "api_recv2_1772756737338": {
+    "userId": "api_recv2_1772756737338",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.357Z",
+    "updatedAt": "2026-03-06T00:25:37.357Z"
+  },
+  "seller_api_1772756737420": {
+    "userId": "seller_api_1772756737420",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.426Z",
+    "updatedAt": "2026-03-06T00:25:37.426Z"
+  },
+  "seller_get_1772756737455": {
+    "userId": "seller_get_1772756737455",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.457Z",
+    "updatedAt": "2026-03-06T00:25:37.457Z"
+  },
+  "seller_del_1772756737467": {
+    "userId": "seller_del_1772756737467",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:37.468Z",
+    "updatedAt": "2026-03-06T00:25:37.468Z"
+  },
+  "seller_1772756741819": {
+    "userId": "seller_1772756741819",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:41.825Z",
+    "updatedAt": "2026-03-06T00:25:41.825Z"
+  },
+  "test_create_1772756743611": {
+    "userId": "test_create_1772756743611",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:43.730Z",
+    "updatedAt": "2026-03-06T00:25:43.730Z"
+  },
+  "test_id_1772756744096": {
+    "userId": "test_id_1772756744096",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:44.232Z",
+    "updatedAt": "2026-03-06T00:25:44.232Z"
+  },
+  "test_load_1772756744716": {
+    "userId": "test_load_1772756744716",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:44.727Z",
+    "updatedAt": "2026-03-06T00:25:44.727Z"
+  },
+  "test_topup_1772756744772": {
+    "userId": "test_topup_1772756744772",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:44.916Z",
+    "updatedAt": "2026-03-06T00:25:44.995Z"
+  },
+  "test_send_1772756745356": {
+    "userId": "test_send_1772756745356",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:45.469Z",
+    "updatedAt": "2026-03-06T00:25:45.469Z"
+  },
+  "test_tx_1772756745579": {
+    "userId": "test_tx_1772756745579",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:45.696Z",
+    "updatedAt": "2026-03-06T00:25:45.696Z"
+  },
+  "test_stamps_1772756745980": {
+    "userId": "test_stamps_1772756745980",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:25:46.094Z",
+    "updatedAt": "2026-03-06T00:25:46.094Z"
+  },
+  "api_wallet_1772756842704": {
+    "userId": "api_wallet_1772756842704",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.713Z",
+    "updatedAt": "2026-03-06T00:27:22.713Z"
+  },
+  "api_get_1772756842746": {
+    "userId": "api_get_1772756842746",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.748Z",
+    "updatedAt": "2026-03-06T00:27:22.748Z"
+  },
+  "api_topup_1772756842777": {
+    "userId": "api_topup_1772756842777",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.779Z",
+    "updatedAt": "2026-03-06T00:27:22.783Z"
+  },
+  "api_from_1772756842790": {
+    "userId": "api_from_1772756842790",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.793Z",
+    "updatedAt": "2026-03-06T00:27:22.802Z"
+  },
+  "api_to_1772756842790": {
+    "userId": "api_to_1772756842790",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.796Z",
+    "updatedAt": "2026-03-06T00:27:22.802Z"
+  },
+  "api_insuf_1772756842803": {
+    "userId": "api_insuf_1772756842803",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.805Z",
+    "updatedAt": "2026-03-06T00:27:22.805Z"
+  },
+  "api_recv2_1772756842803": {
+    "userId": "api_recv2_1772756842803",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.807Z",
+    "updatedAt": "2026-03-06T00:27:22.807Z"
+  },
+  "api_txs_1772756842841": {
+    "userId": "api_txs_1772756842841",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.855Z",
+    "updatedAt": "2026-03-06T00:27:22.855Z"
+  },
+  "seller_api_1772756842902": {
+    "userId": "seller_api_1772756842902",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.905Z",
+    "updatedAt": "2026-03-06T00:27:22.905Z"
+  },
+  "seller_get_1772756842923": {
+    "userId": "seller_get_1772756842923",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.925Z",
+    "updatedAt": "2026-03-06T00:27:22.925Z"
+  },
+  "seller_del_1772756842929": {
+    "userId": "seller_del_1772756842929",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:22.930Z",
+    "updatedAt": "2026-03-06T00:27:22.930Z"
+  },
+  "seller_1772756847544": {
+    "userId": "seller_1772756847544",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:27.561Z",
+    "updatedAt": "2026-03-06T00:27:27.561Z"
+  },
+  "test_create_1772756849293": {
+    "userId": "test_create_1772756849293",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:29.429Z",
+    "updatedAt": "2026-03-06T00:27:29.429Z"
+  },
+  "test_id_1772756849832": {
+    "userId": "test_id_1772756849832",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:29.963Z",
+    "updatedAt": "2026-03-06T00:27:29.963Z"
+  },
+  "test_load_1772756850464": {
+    "userId": "test_load_1772756850464",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:30.473Z",
+    "updatedAt": "2026-03-06T00:27:30.473Z"
+  },
+  "test_topup_1772756850494": {
+    "userId": "test_topup_1772756850494",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:30.651Z",
+    "updatedAt": "2026-03-06T00:27:30.748Z"
+  },
+  "test_send_1772756851142": {
+    "userId": "test_send_1772756851142",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:31.276Z",
+    "updatedAt": "2026-03-06T00:27:31.276Z"
+  },
+  "test_tx_1772756851298": {
+    "userId": "test_tx_1772756851298",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:31.444Z",
+    "updatedAt": "2026-03-06T00:27:31.444Z"
+  },
+  "test_stamps_1772756851838": {
+    "userId": "test_stamps_1772756851838",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:31.958Z",
+    "updatedAt": "2026-03-06T00:27:31.958Z"
+  },
+  "api_wallet_1772756853414": {
+    "userId": "api_wallet_1772756853414",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.417Z",
+    "updatedAt": "2026-03-06T00:27:33.417Z"
+  },
+  "api_get_1772756853479": {
+    "userId": "api_get_1772756853479",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.480Z",
+    "updatedAt": "2026-03-06T00:27:33.480Z"
+  },
+  "api_topup_1772756853533": {
+    "userId": "api_topup_1772756853533",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.536Z",
+    "updatedAt": "2026-03-06T00:27:33.544Z"
+  },
+  "api_from_1772756853556": {
+    "userId": "api_from_1772756853556",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.557Z",
+    "updatedAt": "2026-03-06T00:27:33.563Z"
+  },
+  "api_to_1772756853556": {
+    "userId": "api_to_1772756853556",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.559Z",
+    "updatedAt": "2026-03-06T00:27:33.563Z"
+  },
+  "api_insuf_1772756853576": {
+    "userId": "api_insuf_1772756853576",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.577Z",
+    "updatedAt": "2026-03-06T00:27:33.577Z"
+  },
+  "api_recv2_1772756853576": {
+    "userId": "api_recv2_1772756853576",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.579Z",
+    "updatedAt": "2026-03-06T00:27:33.579Z"
+  },
+  "api_txs_1772756853593": {
+    "userId": "api_txs_1772756853593",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.594Z",
+    "updatedAt": "2026-03-06T00:27:33.594Z"
+  },
+  "seller_api_1772756853629": {
+    "userId": "seller_api_1772756853629",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.631Z",
+    "updatedAt": "2026-03-06T00:27:33.631Z"
+  },
+  "seller_get_1772756853673": {
+    "userId": "seller_get_1772756853673",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.675Z",
+    "updatedAt": "2026-03-06T00:27:33.675Z"
+  },
+  "seller_del_1772756853696": {
+    "userId": "seller_del_1772756853696",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:33.698Z",
+    "updatedAt": "2026-03-06T00:27:33.698Z"
+  },
+  "seller_1772756862019": {
+    "userId": "seller_1772756862019",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:42.327Z",
+    "updatedAt": "2026-03-06T00:27:42.327Z"
+  },
+  "test_create_1772756865339": {
+    "userId": "test_create_1772756865339",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:45.560Z",
+    "updatedAt": "2026-03-06T00:27:45.560Z"
+  },
+  "test_id_1772756865486": {
+    "userId": "test_id_1772756865486",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:45.740Z",
+    "updatedAt": "2026-03-06T00:27:45.740Z"
+  },
+  "test_load_1772756866457": {
+    "userId": "test_load_1772756866457",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:46.768Z",
+    "updatedAt": "2026-03-06T00:27:46.768Z"
+  },
+  "test_topup_1772756866931": {
+    "userId": "test_topup_1772756866931",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:47.189Z",
+    "updatedAt": "2026-03-06T00:27:47.281Z"
+  },
+  "test_send_1772756867574": {
+    "userId": "test_send_1772756867574",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:47.799Z",
+    "updatedAt": "2026-03-06T00:27:47.799Z"
+  },
+  "test_tx_1772756868053": {
+    "userId": "test_tx_1772756868053",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:48.256Z",
+    "updatedAt": "2026-03-06T00:27:48.257Z"
+  },
+  "test_stamps_1772756868753": {
+    "userId": "test_stamps_1772756868753",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:48.936Z",
+    "updatedAt": "2026-03-06T00:27:48.936Z"
+  },
+  "api_wallet_1772756870798": {
+    "userId": "api_wallet_1772756870798",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:50.802Z",
+    "updatedAt": "2026-03-06T00:27:50.802Z"
+  },
+  "api_get_1772756870870": {
+    "userId": "api_get_1772756870870",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:50.872Z",
+    "updatedAt": "2026-03-06T00:27:50.872Z"
+  },
+  "api_topup_1772756870940": {
+    "userId": "api_topup_1772756870940",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:50.951Z",
+    "updatedAt": "2026-03-06T00:27:50.956Z"
+  },
+  "api_from_1772756870969": {
+    "userId": "api_from_1772756870969",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:50.971Z",
+    "updatedAt": "2026-03-06T00:27:50.977Z"
+  },
+  "api_to_1772756870969": {
+    "userId": "api_to_1772756870969",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:50.973Z",
+    "updatedAt": "2026-03-06T00:27:50.977Z"
+  },
+  "api_insuf_1772756870991": {
+    "userId": "api_insuf_1772756870991",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:50.993Z",
+    "updatedAt": "2026-03-06T00:27:50.993Z"
+  },
+  "api_recv2_1772756870991": {
+    "userId": "api_recv2_1772756870991",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:50.995Z",
+    "updatedAt": "2026-03-06T00:27:50.995Z"
+  },
+  "api_txs_1772756871010": {
+    "userId": "api_txs_1772756871010",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:51.011Z",
+    "updatedAt": "2026-03-06T00:27:51.011Z"
+  },
+  "seller_api_1772756871045": {
+    "userId": "seller_api_1772756871045",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:51.047Z",
+    "updatedAt": "2026-03-06T00:27:51.047Z"
+  },
+  "seller_get_1772756871089": {
+    "userId": "seller_get_1772756871089",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:51.091Z",
+    "updatedAt": "2026-03-06T00:27:51.091Z"
+  },
+  "seller_del_1772756871112": {
+    "userId": "seller_del_1772756871112",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:27:51.114Z",
+    "updatedAt": "2026-03-06T00:27:51.114Z"
+  },
+  "api_wallet_1772756934118": {
+    "userId": "api_wallet_1772756934118",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.126Z",
+    "updatedAt": "2026-03-06T00:28:54.126Z"
+  },
+  "api_get_1772756934155": {
+    "userId": "api_get_1772756934155",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.158Z",
+    "updatedAt": "2026-03-06T00:28:54.158Z"
+  },
+  "api_topup_1772756934199": {
+    "userId": "api_topup_1772756934199",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.201Z",
+    "updatedAt": "2026-03-06T00:28:54.205Z"
+  },
+  "api_from_1772756934210": {
+    "userId": "api_from_1772756934210",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.213Z",
+    "updatedAt": "2026-03-06T00:28:54.222Z"
+  },
+  "api_to_1772756934210": {
+    "userId": "api_to_1772756934210",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.215Z",
+    "updatedAt": "2026-03-06T00:28:54.222Z"
+  },
+  "api_insuf_1772756934223": {
+    "userId": "api_insuf_1772756934223",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.225Z",
+    "updatedAt": "2026-03-06T00:28:54.225Z"
+  },
+  "api_recv2_1772756934223": {
+    "userId": "api_recv2_1772756934223",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.227Z",
+    "updatedAt": "2026-03-06T00:28:54.227Z"
+  },
+  "api_txs_1772756934240": {
+    "userId": "api_txs_1772756934240",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.257Z",
+    "updatedAt": "2026-03-06T00:28:54.257Z"
+  },
+  "seller_api_1772756934328": {
+    "userId": "seller_api_1772756934328",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.330Z",
+    "updatedAt": "2026-03-06T00:28:54.330Z"
+  },
+  "seller_get_1772756934350": {
+    "userId": "seller_get_1772756934350",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.352Z",
+    "updatedAt": "2026-03-06T00:28:54.352Z"
+  },
+  "seller_del_1772756934351": {
+    "userId": "seller_del_1772756934351",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:54.353Z",
+    "updatedAt": "2026-03-06T00:28:54.354Z"
+  },
+  "seller_1772756939061": {
+    "userId": "seller_1772756939061",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:28:59.071Z",
+    "updatedAt": "2026-03-06T00:28:59.071Z"
+  },
+  "test_create_1772756940788": {
+    "userId": "test_create_1772756940788",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:00.926Z",
+    "updatedAt": "2026-03-06T00:29:00.926Z"
+  },
+  "test_id_1772756941282": {
+    "userId": "test_id_1772756941282",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:01.435Z",
+    "updatedAt": "2026-03-06T00:29:01.435Z"
+  },
+  "test_topup_1772756941954": {
+    "userId": "test_topup_1772756941954",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:02.073Z",
+    "updatedAt": "2026-03-06T00:29:02.156Z"
+  },
+  "test_load_1772756941956": {
+    "userId": "test_load_1772756941956",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:02.272Z",
+    "updatedAt": "2026-03-06T00:29:02.272Z"
+  },
+  "test_send_1772756942654": {
+    "userId": "test_send_1772756942654",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:02.777Z",
+    "updatedAt": "2026-03-06T00:29:02.777Z"
+  },
+  "test_tx_1772756942862": {
+    "userId": "test_tx_1772756942862",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:02.995Z",
+    "updatedAt": "2026-03-06T00:29:02.995Z"
+  },
+  "test_stamps_1772756943299": {
+    "userId": "test_stamps_1772756943299",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:03.404Z",
+    "updatedAt": "2026-03-06T00:29:03.404Z"
+  },
+  "api_wallet_1772756944921": {
+    "userId": "api_wallet_1772756944921",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:04.924Z",
+    "updatedAt": "2026-03-06T00:29:04.924Z"
+  },
+  "api_get_1772756944982": {
+    "userId": "api_get_1772756944982",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:04.984Z",
+    "updatedAt": "2026-03-06T00:29:04.984Z"
+  },
+  "api_topup_1772756945037": {
+    "userId": "api_topup_1772756945037",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.046Z",
+    "updatedAt": "2026-03-06T00:29:05.048Z"
+  },
+  "api_from_1772756945061": {
+    "userId": "api_from_1772756945061",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.062Z",
+    "updatedAt": "2026-03-06T00:29:05.068Z"
+  },
+  "api_to_1772756945061": {
+    "userId": "api_to_1772756945061",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.064Z",
+    "updatedAt": "2026-03-06T00:29:05.068Z"
+  },
+  "api_insuf_1772756945081": {
+    "userId": "api_insuf_1772756945081",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.082Z",
+    "updatedAt": "2026-03-06T00:29:05.082Z"
+  },
+  "api_recv2_1772756945081": {
+    "userId": "api_recv2_1772756945081",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.084Z",
+    "updatedAt": "2026-03-06T00:29:05.084Z"
+  },
+  "api_txs_1772756945098": {
+    "userId": "api_txs_1772756945098",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.099Z",
+    "updatedAt": "2026-03-06T00:29:05.099Z"
+  },
+  "seller_api_1772756945135": {
+    "userId": "seller_api_1772756945135",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.137Z",
+    "updatedAt": "2026-03-06T00:29:05.137Z"
+  },
+  "seller_get_1772756945181": {
+    "userId": "seller_get_1772756945181",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.182Z",
+    "updatedAt": "2026-03-06T00:29:05.182Z"
+  },
+  "seller_del_1772756945213": {
+    "userId": "seller_del_1772756945213",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:05.216Z",
+    "updatedAt": "2026-03-06T00:29:05.216Z"
+  },
+  "seller_1772756953609": {
+    "userId": "seller_1772756953609",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:13.918Z",
+    "updatedAt": "2026-03-06T00:29:13.918Z"
+  },
+  "test_create_1772756957007": {
+    "userId": "test_create_1772756957007",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:17.249Z",
+    "updatedAt": "2026-03-06T00:29:17.249Z"
+  },
+  "test_id_1772756957092": {
+    "userId": "test_id_1772756957092",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:17.313Z",
+    "updatedAt": "2026-03-06T00:29:17.313Z"
+  },
+  "test_load_1772756958046": {
+    "userId": "test_load_1772756958046",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:18.054Z",
+    "updatedAt": "2026-03-06T00:29:18.054Z"
+  },
+  "test_topup_1772756958662": {
+    "userId": "test_topup_1772756958662",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:18.877Z",
+    "updatedAt": "2026-03-06T00:29:18.970Z"
+  },
+  "test_send_1772756958950": {
+    "userId": "test_send_1772756958950",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:19.217Z",
+    "updatedAt": "2026-03-06T00:29:19.217Z"
+  },
+  "test_stamps_1772756959882": {
+    "userId": "test_stamps_1772756959882",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:20.099Z",
+    "updatedAt": "2026-03-06T00:29:20.099Z"
+  },
+  "test_tx_1772756960004": {
+    "userId": "test_tx_1772756960004",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:20.239Z",
+    "updatedAt": "2026-03-06T00:29:20.239Z"
+  },
+  "api_wallet_1772756962522": {
+    "userId": "api_wallet_1772756962522",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.525Z",
+    "updatedAt": "2026-03-06T00:29:22.525Z"
+  },
+  "api_get_1772756962592": {
+    "userId": "api_get_1772756962592",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.594Z",
+    "updatedAt": "2026-03-06T00:29:22.594Z"
+  },
+  "api_topup_1772756962627": {
+    "userId": "api_topup_1772756962627",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.634Z",
+    "updatedAt": "2026-03-06T00:29:22.639Z"
+  },
+  "api_from_1772756962657": {
+    "userId": "api_from_1772756962657",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.660Z",
+    "updatedAt": "2026-03-06T00:29:22.683Z"
+  },
+  "api_to_1772756962657": {
+    "userId": "api_to_1772756962657",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.666Z",
+    "updatedAt": "2026-03-06T00:29:22.683Z"
+  },
+  "api_insuf_1772756962673": {
+    "userId": "api_insuf_1772756962673",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.678Z",
+    "updatedAt": "2026-03-06T00:29:22.678Z"
+  },
+  "api_recv2_1772756962673": {
+    "userId": "api_recv2_1772756962673",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.682Z",
+    "updatedAt": "2026-03-06T00:29:22.682Z"
+  },
+  "api_txs_1772756962697": {
+    "userId": "api_txs_1772756962697",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.699Z",
+    "updatedAt": "2026-03-06T00:29:22.699Z"
+  },
+  "seller_api_1772756962716": {
+    "userId": "seller_api_1772756962716",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.718Z",
+    "updatedAt": "2026-03-06T00:29:22.718Z"
+  },
+  "seller_del_1772756962745": {
+    "userId": "seller_del_1772756962745",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.752Z",
+    "updatedAt": "2026-03-06T00:29:22.752Z"
+  },
+  "seller_get_1772756962755": {
+    "userId": "seller_get_1772756962755",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:29:22.759Z",
+    "updatedAt": "2026-03-06T00:29:22.759Z"
+  },
+  "api_wallet_1772757023865": {
+    "userId": "api_wallet_1772757023865",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:23.874Z",
+    "updatedAt": "2026-03-06T00:30:23.874Z"
+  },
+  "api_get_1772757023897": {
+    "userId": "api_get_1772757023897",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:23.899Z",
+    "updatedAt": "2026-03-06T00:30:23.899Z"
+  },
+  "api_topup_1772757023933": {
+    "userId": "api_topup_1772757023933",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:23.936Z",
+    "updatedAt": "2026-03-06T00:30:23.940Z"
+  },
+  "api_from_1772757023950": {
+    "userId": "api_from_1772757023950",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:23.952Z",
+    "updatedAt": "2026-03-06T00:30:23.971Z"
+  },
+  "api_to_1772757023950": {
+    "userId": "api_to_1772757023950",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:23.955Z",
+    "updatedAt": "2026-03-06T00:30:23.971Z"
+  },
+  "api_insuf_1772757023956": {
+    "userId": "api_insuf_1772757023956",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:23.958Z",
+    "updatedAt": "2026-03-06T00:30:23.958Z"
+  },
+  "api_recv2_1772757023956": {
+    "userId": "api_recv2_1772757023956",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:23.970Z",
+    "updatedAt": "2026-03-06T00:30:23.970Z"
+  },
+  "api_txs_1772757024017": {
+    "userId": "api_txs_1772757024017",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:24.023Z",
+    "updatedAt": "2026-03-06T00:30:24.023Z"
+  },
+  "seller_api_1772757024043": {
+    "userId": "seller_api_1772757024043",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:24.046Z",
+    "updatedAt": "2026-03-06T00:30:24.046Z"
+  },
+  "seller_get_1772757024099": {
+    "userId": "seller_get_1772757024099",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:24.101Z",
+    "updatedAt": "2026-03-06T00:30:24.101Z"
+  },
+  "seller_del_1772757024109": {
+    "userId": "seller_del_1772757024109",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:24.111Z",
+    "updatedAt": "2026-03-06T00:30:24.111Z"
+  },
+  "seller_1772757028868": {
+    "userId": "seller_1772757028868",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:28.895Z",
+    "updatedAt": "2026-03-06T00:30:28.895Z"
+  },
+  "test_create_1772757030706": {
+    "userId": "test_create_1772757030706",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:30.855Z",
+    "updatedAt": "2026-03-06T00:30:30.855Z"
+  },
+  "test_id_1772757031185": {
+    "userId": "test_id_1772757031185",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:31.327Z",
+    "updatedAt": "2026-03-06T00:30:31.327Z"
+  },
+  "test_topup_1772757031879": {
+    "userId": "test_topup_1772757031879",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:32.001Z",
+    "updatedAt": "2026-03-06T00:30:32.071Z"
+  },
+  "test_load_1772757031837": {
+    "userId": "test_load_1772757031837",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:32.150Z",
+    "updatedAt": "2026-03-06T00:30:32.150Z"
+  },
+  "test_send_1772757032584": {
+    "userId": "test_send_1772757032584",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:32.719Z",
+    "updatedAt": "2026-03-06T00:30:32.719Z"
+  },
+  "test_tx_1772757032721": {
+    "userId": "test_tx_1772757032721",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:32.855Z",
+    "updatedAt": "2026-03-06T00:30:32.855Z"
+  },
+  "test_stamps_1772757033225": {
+    "userId": "test_stamps_1772757033225",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:33.341Z",
+    "updatedAt": "2026-03-06T00:30:33.341Z"
+  },
+  "api_wallet_1772757034782": {
+    "userId": "api_wallet_1772757034782",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:34.786Z",
+    "updatedAt": "2026-03-06T00:30:34.786Z"
+  },
+  "api_get_1772757034858": {
+    "userId": "api_get_1772757034858",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:34.860Z",
+    "updatedAt": "2026-03-06T00:30:34.860Z"
+  },
+  "api_topup_1772757034926": {
+    "userId": "api_topup_1772757034926",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:34.928Z",
+    "updatedAt": "2026-03-06T00:30:34.931Z"
+  },
+  "api_from_1772757034944": {
+    "userId": "api_from_1772757034944",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:34.946Z",
+    "updatedAt": "2026-03-06T00:30:34.953Z"
+  },
+  "api_to_1772757034944": {
+    "userId": "api_to_1772757034944",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:34.949Z",
+    "updatedAt": "2026-03-06T00:30:34.953Z"
+  },
+  "api_insuf_1772757034967": {
+    "userId": "api_insuf_1772757034967",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:34.969Z",
+    "updatedAt": "2026-03-06T00:30:34.969Z"
+  },
+  "api_recv2_1772757034967": {
+    "userId": "api_recv2_1772757034967",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:34.971Z",
+    "updatedAt": "2026-03-06T00:30:34.971Z"
+  },
+  "api_txs_1772757034986": {
+    "userId": "api_txs_1772757034986",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:34.988Z",
+    "updatedAt": "2026-03-06T00:30:34.988Z"
+  },
+  "seller_api_1772757035028": {
+    "userId": "seller_api_1772757035028",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:35.031Z",
+    "updatedAt": "2026-03-06T00:30:35.031Z"
+  },
+  "seller_get_1772757035078": {
+    "userId": "seller_get_1772757035078",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:35.080Z",
+    "updatedAt": "2026-03-06T00:30:35.080Z"
+  },
+  "seller_del_1772757035100": {
+    "userId": "seller_del_1772757035100",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:35.102Z",
+    "updatedAt": "2026-03-06T00:30:35.102Z"
+  },
+  "seller_1772757043394": {
+    "userId": "seller_1772757043394",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:43.701Z",
+    "updatedAt": "2026-03-06T00:30:43.701Z"
+  },
+  "test_create_1772757046737": {
+    "userId": "test_create_1772757046737",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:46.994Z",
+    "updatedAt": "2026-03-06T00:30:46.994Z"
+  },
+  "test_id_1772757047065": {
+    "userId": "test_id_1772757047065",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:47.290Z",
+    "updatedAt": "2026-03-06T00:30:47.290Z"
+  },
+  "test_load_1772757048017": {
+    "userId": "test_load_1772757048017",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:48.022Z",
+    "updatedAt": "2026-03-06T00:30:48.022Z"
+  },
+  "test_topup_1772757048490": {
+    "userId": "test_topup_1772757048490",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:48.714Z",
+    "updatedAt": "2026-03-06T00:30:48.800Z"
+  },
+  "test_send_1772757048948": {
+    "userId": "test_send_1772757048948",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:49.212Z",
+    "updatedAt": "2026-03-06T00:30:49.212Z"
+  },
+  "test_tx_1772757049565": {
+    "userId": "test_tx_1772757049565",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:49.749Z",
+    "updatedAt": "2026-03-06T00:30:49.749Z"
+  },
+  "test_stamps_1772757050144": {
+    "userId": "test_stamps_1772757050144",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:50.309Z",
+    "updatedAt": "2026-03-06T00:30:50.309Z"
+  },
+  "api_wallet_1772757052355": {
+    "userId": "api_wallet_1772757052355",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.359Z",
+    "updatedAt": "2026-03-06T00:30:52.359Z"
+  },
+  "api_get_1772757052433": {
+    "userId": "api_get_1772757052433",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.435Z",
+    "updatedAt": "2026-03-06T00:30:52.435Z"
+  },
+  "api_topup_1772757052501": {
+    "userId": "api_topup_1772757052501",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.504Z",
+    "updatedAt": "2026-03-06T00:30:52.506Z"
+  },
+  "api_from_1772757052519": {
+    "userId": "api_from_1772757052519",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.521Z",
+    "updatedAt": "2026-03-06T00:30:52.528Z"
+  },
+  "api_to_1772757052519": {
+    "userId": "api_to_1772757052519",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.524Z",
+    "updatedAt": "2026-03-06T00:30:52.528Z"
+  },
+  "api_insuf_1772757052543": {
+    "userId": "api_insuf_1772757052543",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.545Z",
+    "updatedAt": "2026-03-06T00:30:52.545Z"
+  },
+  "api_recv2_1772757052543": {
+    "userId": "api_recv2_1772757052543",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.547Z",
+    "updatedAt": "2026-03-06T00:30:52.547Z"
+  },
+  "api_txs_1772757052563": {
+    "userId": "api_txs_1772757052563",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.565Z",
+    "updatedAt": "2026-03-06T00:30:52.565Z"
+  },
+  "seller_api_1772757052601": {
+    "userId": "seller_api_1772757052601",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.603Z",
+    "updatedAt": "2026-03-06T00:30:52.603Z"
+  },
+  "seller_get_1772757052647": {
+    "userId": "seller_get_1772757052647",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.649Z",
+    "updatedAt": "2026-03-06T00:30:52.649Z"
+  },
+  "seller_del_1772757052670": {
+    "userId": "seller_del_1772757052670",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:30:52.672Z",
+    "updatedAt": "2026-03-06T00:30:52.672Z"
+  },
+  "api_wallet_1772757113044": {
+    "userId": "api_wallet_1772757113044",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.053Z",
+    "updatedAt": "2026-03-06T00:31:53.053Z"
+  },
+  "api_get_1772757113089": {
+    "userId": "api_get_1772757113089",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.092Z",
+    "updatedAt": "2026-03-06T00:31:53.092Z"
+  },
+  "api_topup_1772757113117": {
+    "userId": "api_topup_1772757113117",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.119Z",
+    "updatedAt": "2026-03-06T00:31:53.122Z"
+  },
+  "api_from_1772757113129": {
+    "userId": "api_from_1772757113129",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.131Z",
+    "updatedAt": "2026-03-06T00:31:53.141Z"
+  },
+  "api_to_1772757113129": {
+    "userId": "api_to_1772757113129",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.134Z",
+    "updatedAt": "2026-03-06T00:31:53.141Z"
+  },
+  "api_insuf_1772757113139": {
+    "userId": "api_insuf_1772757113139",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.142Z",
+    "updatedAt": "2026-03-06T00:31:53.142Z"
+  },
+  "api_recv2_1772757113139": {
+    "userId": "api_recv2_1772757113139",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.145Z",
+    "updatedAt": "2026-03-06T00:31:53.145Z"
+  },
+  "api_txs_1772757113179": {
+    "userId": "api_txs_1772757113179",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.185Z",
+    "updatedAt": "2026-03-06T00:31:53.185Z"
+  },
+  "seller_api_1772757113244": {
+    "userId": "seller_api_1772757113244",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.246Z",
+    "updatedAt": "2026-03-06T00:31:53.246Z"
+  },
+  "seller_get_1772757113262": {
+    "userId": "seller_get_1772757113262",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.264Z",
+    "updatedAt": "2026-03-06T00:31:53.264Z"
+  },
+  "seller_del_1772757113265": {
+    "userId": "seller_del_1772757113265",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:53.267Z",
+    "updatedAt": "2026-03-06T00:31:53.267Z"
+  },
+  "seller_1772757118063": {
+    "userId": "seller_1772757118063",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:31:58.076Z",
+    "updatedAt": "2026-03-06T00:31:58.076Z"
+  },
+  "test_create_1772757120521": {
+    "userId": "test_create_1772757120521",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:00.630Z",
+    "updatedAt": "2026-03-06T00:32:00.630Z"
+  },
+  "test_id_1772757120988": {
+    "userId": "test_id_1772757120988",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:01.099Z",
+    "updatedAt": "2026-03-06T00:32:01.099Z"
+  },
+  "test_load_1772757121804": {
+    "userId": "test_load_1772757121804",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:02.112Z",
+    "updatedAt": "2026-03-06T00:32:02.112Z"
+  },
+  "test_topup_1772757122537": {
+    "userId": "test_topup_1772757122537",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:02.647Z",
+    "updatedAt": "2026-03-06T00:32:02.712Z"
+  },
+  "test_send_1772757123087": {
+    "userId": "test_send_1772757123087",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:03.179Z",
+    "updatedAt": "2026-03-06T00:32:03.179Z"
+  },
+  "test_tx_1772757123553": {
+    "userId": "test_tx_1772757123553",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:03.662Z",
+    "updatedAt": "2026-03-06T00:32:03.662Z"
+  },
+  "test_stamps_1772757124039": {
+    "userId": "test_stamps_1772757124039",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:04.145Z",
+    "updatedAt": "2026-03-06T00:32:04.145Z"
+  },
+  "api_wallet_1772757125809": {
+    "userId": "api_wallet_1772757125809",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:05.812Z",
+    "updatedAt": "2026-03-06T00:32:05.812Z"
+  },
+  "api_get_1772757125884": {
+    "userId": "api_get_1772757125884",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:05.888Z",
+    "updatedAt": "2026-03-06T00:32:05.888Z"
+  },
+  "api_topup_1772757125924": {
+    "userId": "api_topup_1772757125924",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:05.926Z",
+    "updatedAt": "2026-03-06T00:32:05.928Z"
+  },
+  "api_from_1772757125942": {
+    "userId": "api_from_1772757125942",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:05.943Z",
+    "updatedAt": "2026-03-06T00:32:05.949Z"
+  },
+  "api_to_1772757125942": {
+    "userId": "api_to_1772757125942",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:05.945Z",
+    "updatedAt": "2026-03-06T00:32:05.949Z"
+  },
+  "api_insuf_1772757125966": {
+    "userId": "api_insuf_1772757125966",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:05.967Z",
+    "updatedAt": "2026-03-06T00:32:05.967Z"
+  },
+  "api_recv2_1772757125966": {
+    "userId": "api_recv2_1772757125966",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:05.970Z",
+    "updatedAt": "2026-03-06T00:32:05.970Z"
+  },
+  "api_txs_1772757125987": {
+    "userId": "api_txs_1772757125987",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:05.989Z",
+    "updatedAt": "2026-03-06T00:32:05.989Z"
+  },
+  "seller_api_1772757126033": {
+    "userId": "seller_api_1772757126033",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:06.035Z",
+    "updatedAt": "2026-03-06T00:32:06.035Z"
+  },
+  "seller_get_1772757126070": {
+    "userId": "seller_get_1772757126070",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:06.072Z",
+    "updatedAt": "2026-03-06T00:32:06.072Z"
+  },
+  "seller_del_1772757126093": {
+    "userId": "seller_del_1772757126093",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:06.094Z",
+    "updatedAt": "2026-03-06T00:32:06.094Z"
+  },
+  "seller_1772757136729": {
+    "userId": "seller_1772757136729",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:17.034Z",
+    "updatedAt": "2026-03-06T00:32:17.034Z"
+  },
+  "test_create_1772757140974": {
+    "userId": "test_create_1772757140974",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:21.146Z",
+    "updatedAt": "2026-03-06T00:32:21.146Z"
+  },
+  "test_id_1772757141640": {
+    "userId": "test_id_1772757141640",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:21.818Z",
+    "updatedAt": "2026-03-06T00:32:21.818Z"
+  },
+  "test_load_1772757143219": {
+    "userId": "test_load_1772757143219",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:23.523Z",
+    "updatedAt": "2026-03-06T00:32:23.523Z"
+  },
+  "test_topup_1772757144111": {
+    "userId": "test_topup_1772757144111",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:24.290Z",
+    "updatedAt": "2026-03-06T00:32:24.376Z"
+  },
+  "test_send_1772757144928": {
+    "userId": "test_send_1772757144928",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:25.100Z",
+    "updatedAt": "2026-03-06T00:32:25.100Z"
+  },
+  "test_tx_1772757145643": {
+    "userId": "test_tx_1772757145643",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:25.805Z",
+    "updatedAt": "2026-03-06T00:32:25.805Z"
+  },
+  "test_stamps_1772757146294": {
+    "userId": "test_stamps_1772757146294",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:26.464Z",
+    "updatedAt": "2026-03-06T00:32:26.464Z"
+  },
+  "api_wallet_1772757148812": {
+    "userId": "api_wallet_1772757148812",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:28.815Z",
+    "updatedAt": "2026-03-06T00:32:28.815Z"
+  },
+  "api_get_1772757148919": {
+    "userId": "api_get_1772757148919",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:28.925Z",
+    "updatedAt": "2026-03-06T00:32:28.925Z"
+  },
+  "api_topup_1772757148981": {
+    "userId": "api_topup_1772757148981",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:28.984Z",
+    "updatedAt": "2026-03-06T00:32:28.987Z"
+  },
+  "api_from_1772757149005": {
+    "userId": "api_from_1772757149005",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:29.008Z",
+    "updatedAt": "2026-03-06T00:32:29.016Z"
+  },
+  "api_to_1772757149006": {
+    "userId": "api_to_1772757149006",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:29.011Z",
+    "updatedAt": "2026-03-06T00:32:29.016Z"
+  },
+  "api_insuf_1772757149038": {
+    "userId": "api_insuf_1772757149038",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:29.040Z",
+    "updatedAt": "2026-03-06T00:32:29.040Z"
+  },
+  "api_recv2_1772757149038": {
+    "userId": "api_recv2_1772757149038",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:29.044Z",
+    "updatedAt": "2026-03-06T00:32:29.044Z"
+  },
+  "api_txs_1772757149069": {
+    "userId": "api_txs_1772757149069",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:29.072Z",
+    "updatedAt": "2026-03-06T00:32:29.072Z"
+  },
+  "seller_api_1772757149120": {
+    "userId": "seller_api_1772757149120",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:29.122Z",
+    "updatedAt": "2026-03-06T00:32:29.122Z"
+  },
+  "seller_get_1772757149185": {
+    "userId": "seller_get_1772757149185",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:29.187Z",
+    "updatedAt": "2026-03-06T00:32:29.187Z"
+  },
+  "seller_del_1772757149215": {
+    "userId": "seller_del_1772757149215",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:29.217Z",
+    "updatedAt": "2026-03-06T00:32:29.217Z"
+  },
+  "seller_1772757151475": {
+    "userId": "seller_1772757151475",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:32:31.800Z",
+    "updatedAt": "2026-03-06T00:32:31.800Z"
+  },
+  "seller_1772757381900": {
+    "userId": "seller_1772757381900",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:36:22.255Z",
+    "updatedAt": "2026-03-06T00:36:22.255Z"
+  },
+  "api_wallet_1772757430954": {
+    "userId": "api_wallet_1772757430954",
+    "userName": "API Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:10.964Z",
+    "updatedAt": "2026-03-06T00:37:10.964Z"
+  },
+  "api_get_1772757430994": {
+    "userId": "api_get_1772757430994",
+    "userName": "Getter User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:10.998Z",
+    "updatedAt": "2026-03-06T00:37:10.998Z"
+  },
+  "api_topup_1772757431031": {
+    "userId": "api_topup_1772757431031",
+    "userName": "Topup Test",
+    "balance": 500,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.034Z",
+    "updatedAt": "2026-03-06T00:37:11.037Z"
+  },
+  "api_from_1772757431047": {
+    "userId": "api_from_1772757431047",
+    "userName": "Sender",
+    "balance": 800,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.049Z",
+    "updatedAt": "2026-03-06T00:37:11.059Z"
+  },
+  "api_to_1772757431047": {
+    "userId": "api_to_1772757431047",
+    "userName": "Receiver",
+    "balance": 200,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.052Z",
+    "updatedAt": "2026-03-06T00:37:11.059Z"
+  },
+  "api_insuf_1772757431054": {
+    "userId": "api_insuf_1772757431054",
+    "userName": "Broke Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.057Z",
+    "updatedAt": "2026-03-06T00:37:11.057Z"
+  },
+  "api_recv2_1772757431054": {
+    "userId": "api_recv2_1772757431054",
+    "userName": "Receiver 2",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.060Z",
+    "updatedAt": "2026-03-06T00:37:11.060Z"
+  },
+  "api_txs_1772757431116": {
+    "userId": "api_txs_1772757431116",
+    "userName": "TX Lister",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.123Z",
+    "updatedAt": "2026-03-06T00:37:11.123Z"
+  },
+  "seller_api_1772757431160": {
+    "userId": "seller_api_1772757431160",
+    "userName": "API Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.162Z",
+    "updatedAt": "2026-03-06T00:37:11.162Z"
+  },
+  "seller_del_1772757431179": {
+    "userId": "seller_del_1772757431179",
+    "userName": "Del Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.181Z",
+    "updatedAt": "2026-03-06T00:37:11.181Z"
+  },
+  "seller_get_1772757431179": {
+    "userId": "seller_get_1772757431179",
+    "userName": "Get Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:11.182Z",
+    "updatedAt": "2026-03-06T00:37:11.182Z"
+  },
+  "seller_1772757436044": {
+    "userId": "seller_1772757436044",
+    "userName": "Market Seller",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:16.051Z",
+    "updatedAt": "2026-03-06T00:37:16.051Z"
+  },
+  "test_create_1772757437916": {
+    "userId": "test_create_1772757437916",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:18.043Z",
+    "updatedAt": "2026-03-06T00:37:18.043Z"
+  },
+  "test_id_1772757438334": {
+    "userId": "test_id_1772757438334",
+    "userName": "ID Tester",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:18.435Z",
+    "updatedAt": "2026-03-06T00:37:18.435Z"
+  },
+  "test_load_1772757438949": {
+    "userId": "test_load_1772757438949",
+    "userName": "Load Test User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:18.962Z",
+    "updatedAt": "2026-03-06T00:37:18.962Z"
+  },
+  "test_topup_1772757439073": {
+    "userId": "test_topup_1772757439073",
+    "userName": "Topup User",
+    "balance": 1000,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:19.207Z",
+    "updatedAt": "2026-03-06T00:37:19.315Z"
+  },
+  "test_send_1772757439583": {
+    "userId": "test_send_1772757439583",
+    "userName": "Sender",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:19.687Z",
+    "updatedAt": "2026-03-06T00:37:19.687Z"
+  },
+  "test_tx_1772757439884": {
+    "userId": "test_tx_1772757439884",
+    "userName": "TX User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:20.021Z",
+    "updatedAt": "2026-03-06T00:37:20.021Z"
+  },
+  "test_stamps_1772757440248": {
+    "userId": "test_stamps_1772757440248",
+    "userName": "Stamps User",
+    "balance": 0,
+    "stamps": [],
+    "createdAt": "2026-03-06T00:37:20.367Z",
+    "updatedAt": "2026-03-06T00:37:20.367Z"
   }
 }

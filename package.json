@@ -6,12 +6,19 @@
   "scripts": {
     "start": "node server.js",
     "build": "echo 'No build needed'",
-    "test": "echo 'Error: no test specified' && exit 1"
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report"
   },
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^4.22.1"
   },
   "author": "Stampcoin",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.4",
+    "typescript": "^5.9.3"
+  }
 }
