@@ -1,1 +1,19 @@
-{"name":"your-package-name","version":"1.0.0","description":"Your package description","scripts":{"test":"echo \"No tests yet\""},"dependencies":{}}
+{
+  "name": "stampcoin-platform",
+  "version": "1.0.0",
+  "description": "Stampcoin Platform - blockchain-powered digital stamps, wallet and marketplace",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest tests/*.test.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "hardhat": "^2.22.17",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0"
+  }
+}
