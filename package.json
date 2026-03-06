@@ -1,7 +1,7 @@
 {
-  "name": "stampcoin-platform",
+  "name": "stp",
   "version": "1.0.0",
-  "description": "Stampcoin Platform - blockchain-inspired digital stamps platform with wallet and marketplace features.",
+  "description": "Stampcoin Platform API server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,14 +9,9 @@
     "test": "echo \"No tests yet\" && exit 0"
   },
   "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^4.22.1"
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
   },
-  "author": "Stampcoin",
-  "license": "MIT",
-  "devDependencies": {
-    "@playwright/test": "^1.58.2",
-    "@types/node": "^25.3.4",
-    "typescript": "^5.9.3"
-  }
+  "author": "Azad Zedan",
+  "license": "ISC"
 }
