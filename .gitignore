@@ -48,3 +48,8 @@ playwright-report/
 .cache/
 tmp/
 temp/
+
+# Hardhat
+cache/
+artifacts/
+typechain-types/
