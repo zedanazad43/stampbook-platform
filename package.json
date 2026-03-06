@@ -1,12 +1,1 @@
-{
-  "name": "your-package-name",
-  "version": "1.0.0",
-  "description": "Your package description",
-  "scripts": {
-    "test": "echo \"No tests yet\""
-  },
-  "dependencies": {
-    // other dependencies
-    // Removed @modelcontextprotocol/server-git
-  }
-}
+{"name":"your-package-name","version":"1.0.0","description":"Your package description","scripts":{"test":"echo \"No tests yet\""},"dependencies":{}}
