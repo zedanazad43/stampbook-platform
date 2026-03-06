@@ -240,6 +240,88 @@ test.describe("API: Market", () => {
     expect(body.success).toBe(true);
   });
 
+  test("PUT /api/market/items/:itemId seller can update their item", async ({ request }) => {
+    const uid = `seller_upd_${Date.now()}`;
+    await request.post("/api/wallet/create", { data: { userId: uid, userName: "Update Seller" } });
+
+    const listRes = await request.post("/api/market/items", {
+      data: { sellerId: uid, name: "Original Name", price: 50, description: "Original desc" },
+    });
+    const listed = await listRes.json();
+
+    const response = await request.put(`/api/market/items/${listed.id}`, {
+      data: { userId: uid, name: "Updated Name", price: 75, description: "Updated desc" },
+    });
+    expect(response.status()).toBe(200);
+    const body = await response.json();
+    expect(body.name).toBe("Updated Name");
+    expect(body.price).toBe(75);
+    expect(body.description).toBe("Updated desc");
+    expect(body.sellerId).toBe(uid);
+  });
+
+  test("PUT /api/market/items/:itemId returns 403 for non-seller", async ({ request }) => {
+    const sellerId = `seller_403_${Date.now()}`;
+    const otherId = `other_403_${Date.now()}`;
+    await request.post("/api/wallet/create", { data: { userId: sellerId, userName: "Real Seller" } });
+    await request.post("/api/wallet/create", { data: { userId: otherId, userName: "Other User" } });
+
+    const listRes = await request.post("/api/market/items", {
+      data: { sellerId, name: "Seller Only Stamp", price: 30 },
+    });
+    const listed = await listRes.json();
+
+    const response = await request.put(`/api/market/items/${listed.id}`, {
+      data: { userId: otherId, price: 999 },
+    });
+    expect(response.status()).toBe(403);
+    const body = await response.json();
+    expect(body.error).toBeTruthy();
+  });
+
+  test("PUT /api/market/items/:itemId returns 400 when userId is missing", async ({ request }) => {
+    const uid = `seller_400a_${Date.now()}`;
+    await request.post("/api/wallet/create", { data: { userId: uid, userName: "Seller 400a" } });
+
+    const listRes = await request.post("/api/market/items", {
+      data: { sellerId: uid, name: "No UserID Stamp", price: 10 },
+    });
+    const listed = await listRes.json();
+
+    const response = await request.put(`/api/market/items/${listed.id}`, {
+      data: { price: 20 },
+    });
+    expect(response.status()).toBe(400);
+    const body = await response.json();
+    expect(body.error).toBeTruthy();
+  });
+
+  test("PUT /api/market/items/:itemId returns 400 when no updatable fields provided", async ({ request }) => {
+    const uid = `seller_400b_${Date.now()}`;
+    await request.post("/api/wallet/create", { data: { userId: uid, userName: "Seller 400b" } });
+
+    const listRes = await request.post("/api/market/items", {
+      data: { sellerId: uid, name: "No Fields Stamp", price: 10 },
+    });
+    const listed = await listRes.json();
+
+    const response = await request.put(`/api/market/items/${listed.id}`, {
+      data: { userId: uid },
+    });
+    expect(response.status()).toBe(400);
+    const body = await response.json();
+    expect(body.error).toBeTruthy();
+  });
+
+  test("PUT /api/market/items/:itemId returns 404 for non-existent item", async ({ request }) => {
+    const response = await request.put("/api/market/items/nonexistent_item_xyz_404", {
+      data: { userId: "anyuser", price: 50 },
+    });
+    expect(response.status()).toBe(404);
+    const body = await response.json();
+    expect(body.error).toBeTruthy();
+  });
+
   test("GET /api/market/items supports status filter", async ({ request }) => {
     const response = await request.get("/api/market/items?status=available");
     expect(response.status()).toBe(200);

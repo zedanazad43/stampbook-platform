@@ -172,6 +172,21 @@ app.post("/api/market/items/:itemId/buy", (req, res) => {
   }
 });
 
+app.put("/api/market/items/:itemId", (req, res) => {
+  try {
+    const { userId, name, price, description } = req.body || {};
+    if (!userId) return res.status(400).json({ error: "userId is required" });
+    const hasUpdate = name !== undefined || price !== undefined || description !== undefined;
+    if (!hasUpdate) return res.status(400).json({ error: "At least one updatable field (name, price, description) is required" });
+    const item = market.getMarketItem(req.params.itemId);
+    if (item.sellerId !== userId) return res.status(403).json({ error: "Only the seller can update this item" });
+    res.json(market.updateMarketItem(req.params.itemId, { name, price, description }));
+  } catch (e) {
+    if (e.message === "Market item not found") return res.status(404).json({ error: e.message });
+    res.status(400).json({ error: e.message });
+  }
+});
+
 app.delete("/api/market/items/:itemId", (req, res) => {
   try {
     const userId = (req.body && req.body.userId) || req.query.userId;
