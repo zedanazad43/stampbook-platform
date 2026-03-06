@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo 'Error: no test specified' && exit 1",
-    "build": "echo 'No build needed'"
+    "build": "echo 'No build needed'",
+    "test": "echo \"No tests yet\" && exit 0"
   },
   "dependencies": {
     "cors": "^2.8.5",
