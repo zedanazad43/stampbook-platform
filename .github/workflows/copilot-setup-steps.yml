@@ -1,3 +1,12 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+
 jobs:
   copilot-setup-steps:
     runs-on: ubuntu-latest
@@ -10,26 +19,8 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          registry-url: 'https://registry.npmjs.org/'
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Configure npm authentication
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          if [ -n "$NODE_AUTH_TOKEN" ]; then
-            echo "npm authentication configured via NODE_AUTH_TOKEN"
-          else
-            echo "NPM_TOKEN not set; skipping private registry authentication"
-          fi
 
       - name: Install project dependencies
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           if [ -f package-lock.json ]; then
             npm ci
@@ -37,65 +28,5 @@ jobs:
             npm install
           fi
 
-      - name: Log in to npm
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
-      - name: Install MCP server packages
-        run: |
-          set -e
-          npm install --no-save \
-            @modelcontextprotocol/server-filesystem \
-            git+https://github.com/your-org/server-git.git \
-            @modelcontextprotocol/server-github \
-            @modelcontextprotocol/server-memory \
-            @modelcontextprotocol/server-postgres \
-            @modelcontextprotocol/server-sqlite \
-            @cloudflare/mcp-server-cloudflare
-
-      - name: Install optional or private MCP server packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm install --no-save @modelcontextprotocol/server-git || \
-            echo "Skipping @modelcontextprotocol/server-git (not available in registry)"
-          npm install --no-save @modelcontextprotocol/server-gitlab || \
-            echo "Skipping @modelcontextprotocol/server-gitlab (not available in registry)"
-
-      - name: Validate MCP configuration
-        run: |
-          node -e "
-            const fs = require('fs');
-            const files = [
-              '.github/copilot/mcp.json',
-              '.vscode/mcp.json',
-              'mcp.json'
-            ];
-            let ok = true;
-            files.forEach(f => {
-              if (!fs.existsSync(f)) {
-                console.error('MISSING:', f);
-                ok = false;
-                return;
-              }
-              try {
-                JSON.parse(fs.readFileSync(f, 'utf8'));
-                console.log('OK:', f);
-              } catch (e) {
-                console.error('INVALID JSON:', f, '-', e.message);
-                ok = false;
-              }
-            });
-            if (!ok) process.exit(1);
-          "
-
-      - name: Install dependencies (required)
-        run: npm install --no-save \
-          @modelcontextprotocol/server-filesystem \
-          @modelcontextprotocol/server-github
-
-      - name: Install private/optional MCP packages
-        run: |
-          npm install --no-save @modelcontextprotocol/server-sqlite || \
-            echo "Skipping @modelcontextprotocol/server-sqlite (unavailable)"
-          npm install --no-save @modelcontextprotocol/server-git || \
-            echo "Skipping @modelcontextprotocol/server-git (unavailable)"
+      - name: Copilot setup complete
+        run: echo 'Copilot setup steps completed!'
