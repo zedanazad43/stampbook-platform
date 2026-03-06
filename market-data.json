@@ -21,6 +21,39 @@
       "imageUrl": "",
       "status": "available",
       "listedAt": "2026-03-01T23:34:42.118Z"
+    },
+    {
+      "id": "item_1772756737430_7vxgsvbbe",
+      "sellerId": "seller_api_1772756737420",
+      "name": "API Test Stamp",
+      "description": "Listed via API test",
+      "price": 50,
+      "type": "stamp",
+      "imageUrl": "",
+      "status": "available",
+      "listedAt": "2026-03-06T00:25:37.430Z"
+    },
+    {
+      "id": "item_1772756737459_xoefoi4sy",
+      "sellerId": "seller_get_1772756737455",
+      "name": "Get Test Stamp",
+      "description": "",
+      "price": 10,
+      "type": "stamp",
+      "imageUrl": "",
+      "status": "available",
+      "listedAt": "2026-03-06T00:25:37.459Z"
+    },
+    {
+      "id": "item_1772756742009_i6qzk6npc",
+      "sellerId": "seller_1772756741819",
+      "name": "Rare Stamp 1772756741826",
+      "description": "A rare digital stamp",
+      "price": 100,
+      "type": "stamp",
+      "imageUrl": "",
+      "status": "available",
+      "listedAt": "2026-03-06T00:25:42.009Z"
     }
   ],
   "transactions": []
