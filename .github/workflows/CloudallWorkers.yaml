@@ -1,1 +1,19 @@
-name: Cloudall Workers\n\n"on":\n  push:\n    branches:\n      - main\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - name: Checkout code\n        uses: actions/checkout@v2\n      - name: Install wrangler\n        run: npm install -g wrangler@4.71.0\n      - name: Check wrangler version\n        run: npx --yes --no-install wrangler --version\n
+name: Cloudall Workers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install wrangler
+        run: npm install -g wrangler@4.71.0
+      - name: Check wrangler version
+        run: npx --yes --no-install wrangler --version

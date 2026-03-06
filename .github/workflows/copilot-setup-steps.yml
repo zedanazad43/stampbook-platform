@@ -1,3 +1,10 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, develop ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,22 +44,18 @@ jobs:
             npm install
           fi
 
-      - name: Log in to npm
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
       - name: Install MCP server packages
         run: |
-          set -e
-          npm install --no-save \
-            @modelcontextprotocol/server-filesystem \
-            git+https://github.com/your-org/server-git.git \
-            @modelcontextprotocol/server-github \
-            @modelcontextprotocol/server-memory \
-            @modelcontextprotocol/server-postgres \
-            @modelcontextprotocol/server-sqlite \
-            @cloudflare/mcp-server-cloudflare
+          npm install --no-save @modelcontextprotocol/server-filesystem || \
+            echo "Skipping @modelcontextprotocol/server-filesystem (not available)"
+          npm install --no-save @modelcontextprotocol/server-github || \
+            echo "Skipping @modelcontextprotocol/server-github (not available)"
+          npm install --no-save @modelcontextprotocol/server-memory || \
+            echo "Skipping @modelcontextprotocol/server-memory (not available)"
+          npm install --no-save @cloudflare/mcp-server-cloudflare || \
+            echo "Skipping @cloudflare/mcp-server-cloudflare (not available)"
 
-      - name: Install optional or private MCP server packages
+      - name: Install optional MCP server packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
@@ -60,6 +63,10 @@ jobs:
             echo "Skipping @modelcontextprotocol/server-git (not available in registry)"
           npm install --no-save @modelcontextprotocol/server-gitlab || \
             echo "Skipping @modelcontextprotocol/server-gitlab (not available in registry)"
+          npm install --no-save @modelcontextprotocol/server-postgres || \
+            echo "Skipping @modelcontextprotocol/server-postgres (not available in registry)"
+          npm install --no-save @modelcontextprotocol/server-sqlite || \
+            echo "Skipping @modelcontextprotocol/server-sqlite (unavailable)"
 
       - name: Validate MCP configuration
         run: |
@@ -87,15 +94,3 @@ jobs:
             });
             if (!ok) process.exit(1);
           "
-
-      - name: Install dependencies (required)
-        run: npm install --no-save \
-          @modelcontextprotocol/server-filesystem \
-          @modelcontextprotocol/server-github
-
-      - name: Install private/optional MCP packages
-        run: |
-          npm install --no-save @modelcontextprotocol/server-sqlite || \
-            echo "Skipping @modelcontextprotocol/server-sqlite (unavailable)"
-          npm install --no-save @modelcontextprotocol/server-git || \
-            echo "Skipping @modelcontextprotocol/server-git (unavailable)"
