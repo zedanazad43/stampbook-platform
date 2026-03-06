@@ -1,10 +1,5 @@
-name: Copilot Setup Steps
-
-on:
-  workflow_dispatch:
-
 jobs:
-  copilot-setup-steps:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -14,7 +9,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org/'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Configure npm auth token
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Install dependencies (required)
+        run: npm install --no-save \
+          @modelcontextprotocol/server-filesystem \
+          @modelcontextprotocol/server-github
+
+      - name: Install private/optional MCP packages
+        run: |
+          npm install --no-save @modelcontextprotocol/server-sqlite || \
+            echo "Skipping @modelcontextprotocol/server-sqlite (unavailable)"
+          npm install --no-save @modelcontextprotocol/server-git || \
+            echo "Skipping @modelcontextprotocol/server-git (unavailable)"
