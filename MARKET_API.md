@@ -133,20 +133,21 @@ curl -X POST "http://localhost:8080/api/market/items" \
 
 **PUT** `/api/market/items/:itemId`
 
-Update an existing market item. Only the seller of the item may perform this operation.
+Update an existing market item (price, description, status, imageUrl). Only the original seller can update their listing.
 
 **Request Body:**
 ```json
 {
   "userId": "user123",
-  "name": "Updated Stamp Name",
   "price": 120,
-  "description": "Updated description"
+  "description": "Updated description",
+  "status": "available",
+  "imageUrl": "https://example.com/new-image.jpg"
 }
 ```
 
-- `userId` (required): Must match the item's `sellerId` (seller-only restriction).
-- At least one of `name`, `price`, or `description` must be provided.
+- `userId` (required): Must match the `sellerId` of the item.
+- At least one of `price`, `description`, `status`, or `imageUrl` must be provided.
 
 **Example Request:**
 ```bash
@@ -170,9 +171,9 @@ curl -X PUT "http://localhost:8080/api/market/items/item_1234567890_abc123" \
 }
 ```
 
-**Error Codes:**
-- `400` — Missing `userId`, or no updatable fields (`name`, `price`, `description`) provided.
-- `403` — The `userId` does not match the item's seller (seller-only restriction).
+**Error Responses:**
+- `400` — `userId` is missing or no updatable fields provided.
+- `403` — The requesting user is not the seller of this item.
 - `404` — Item not found.
 
 ---
