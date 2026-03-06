@@ -4,6 +4,7 @@ const path = require("path");
 const cors = require("cors");
 const wallet = require("./wallet");
 const market = require("./market");
+const blockchain = require("./blockchain");
 
 const app = express();
 
@@ -215,9 +216,76 @@ app.get("/api/token", (req, res) => {
       { label: "Team & Founders",       percent: 15, amount: 63150000 },
       { label: "Reserve",               percent: 10, amount: 42100000 }
     ],
-    contractAddress: "Pending mainnet deployment",
+    contractAddress: process.env.STP_CONTRACT_ADDRESS || "Pending mainnet deployment",
     network: "EVM-compatible"
   });
+});
+
+// --- Blockchain API ---
+
+/**
+ * GET /api/blockchain/info
+ * Returns BEP-20 token & blockchain platform metadata.
+ */
+app.get("/api/blockchain/info", (req, res) => {
+  try {
+    res.json(blockchain.getBlockchainInfo());
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+/**
+ * GET /api/blockchain/supply
+ * Returns current minted supply vs total supply cap.
+ */
+app.get("/api/blockchain/supply", (req, res) => {
+  try {
+    res.json(blockchain.getSupply());
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+/**
+ * POST /api/blockchain/mint
+ * Mint STP tokens to a given address (admin-protected).
+ * Body: { toAddress: string, amount: number }
+ */
+app.post("/api/blockchain/mint", requireToken, (req, res) => {
+  try {
+    const { toAddress, amount } = req.body || {};
+    if (!toAddress) return res.status(400).json({ error: "toAddress is required" });
+    if (amount === undefined || amount === null) return res.status(400).json({ error: "amount is required" });
+    const event = blockchain.mintTokens(toAddress, Number(amount));
+    res.json(event);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+/**
+ * GET /api/blockchain/balance/:address
+ * Returns the STP token balance for the given address.
+ */
+app.get("/api/blockchain/balance/:address", (req, res) => {
+  try {
+    res.json(blockchain.getBalance(req.params.address));
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+/**
+ * GET /api/blockchain/mint/events
+ * Returns all mint events (audit log), admin-protected.
+ */
+app.get("/api/blockchain/mint/events", requireToken, (req, res) => {
+  try {
+    res.json(blockchain.getMintEvents());
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 app.get("/sync", requireToken, async (req, res) => {
