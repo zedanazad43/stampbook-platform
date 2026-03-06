@@ -92,6 +92,28 @@ app.get("/api/wallet/:userId/transactions", (req, res) => {
   }
 });
 
+// Add stamp to wallet: protected by requireToken to prevent unauthorized stamp minting
+app.post("/api/wallet/:userId/stamps", requireToken, (req, res) => {
+  try {
+    const stamp = req.body;
+    if (!stamp || !stamp.name) return res.status(400).json({ error: "stamp name is required" });
+    const w = wallet.addStamp(req.params.userId, stamp);
+    res.json(w);
+  } catch (e) {
+    if (e.message === "Wallet not found") return res.status(404).json({ error: e.message });
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// List all wallets: token-protected admin endpoint
+app.get("/api/wallets", requireToken, (req, res) => {
+  try {
+    res.json(wallet.getAllWallets());
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Top-up endpoint: protected by requireToken to prevent unauthorized balance manipulation
 app.post("/api/wallet/:userId/topup", requireToken, (req, res) => {
   try {
@@ -157,6 +179,36 @@ app.delete("/api/market/items/:itemId", (req, res) => {
     res.json(market.removeMarketItem(req.params.itemId, userId));
   } catch (e) {
     res.status(400).json({ error: e.message });
+  }
+});
+
+app.put("/api/market/items/:itemId", (req, res) => {
+  try {
+    const { userId, price, description, status, imageUrl } = req.body || {};
+    if (!userId) return res.status(400).json({ error: "userId is required" });
+    const item = market.getMarketItem(req.params.itemId);
+    if (item.sellerId !== userId) return res.status(403).json({ error: "Only the seller can update this item" });
+    const updates = {};
+    if (price !== undefined) updates.price = price;
+    if (description !== undefined) updates.description = description;
+    if (status !== undefined) updates.status = status;
+    if (imageUrl !== undefined) updates.imageUrl = imageUrl;
+    if (Object.keys(updates).length === 0) return res.status(400).json({ error: "No updatable fields provided" });
+    res.json(market.updateMarketItem(req.params.itemId, updates));
+  } catch (e) {
+    if (e.message === "Market item not found") return res.status(404).json({ error: e.message });
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/market/transactions", (req, res) => {
+  try {
+    const filter = {};
+    if (req.query.buyerId) filter.buyerId = req.query.buyerId;
+    if (req.query.sellerId) filter.sellerId = req.query.sellerId;
+    res.json(market.getMarketTransactions(filter));
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 });
 

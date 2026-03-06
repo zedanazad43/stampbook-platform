@@ -91,6 +91,8 @@ Retrieve wallet information for a specific user.
 
 Retrieve all wallets in the system.
 
+**Authentication:** Requires `Authorization: Bearer <token>` header.
+
 **Response (200 OK):**
 ```json
 {
@@ -150,9 +152,11 @@ Add or subtract from wallet balance.
 
 ### 5. Add Stamp to Wallet |    
 
-**POST** `/api/wallets/:userId/stamps`
+**POST** `/api/wallet/:userId/stamps`
 
 Add a digital stamp to a user's wallet.
+
+**Authentication:** Requires `Authorization: Bearer <token>` header.
 
 **Request Body:**
 ```json

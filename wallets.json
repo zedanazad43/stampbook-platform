@@ -1910,5 +1910,20 @@
     "stamps": [],
     "createdAt": "2026-03-06T00:37:20.367Z",
     "updatedAt": "2026-03-06T00:37:20.367Z"
+  },
+  "testuser1": {
+    "userId": "testuser1",
+    "userName": "Test User",
+    "balance": 0,
+    "stamps": [
+      {
+        "id": "68501a09-7a9a-4286-b21b-d44aec295560",
+        "name": "Vintage Stamp",
+        "year": 1920,
+        "addedAt": "2026-03-06T02:33:08.579Z"
+      }
+    ],
+    "createdAt": "2026-03-06T02:33:08.569Z",
+    "updatedAt": "2026-03-06T02:33:08.579Z"
   }
 }
