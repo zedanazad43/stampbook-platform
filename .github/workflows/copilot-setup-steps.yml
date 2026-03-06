@@ -11,8 +11,43 @@ jobs:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org/'
 
-      - name: Configure npm auth token
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - name: Install MCP server packages
+        run: |
+          npm install --no-save \
+            @modelcontextprotocol/server-filesystem \
+            @modelcontextprotocol/server-github \
+            @modelcontextprotocol/server-gitlab \
+            @modelcontextprotocol/server-memory \
+            @modelcontextprotocol/server-postgres \
+            @modelcontextprotocol/server-sqlite \
+            @cloudflare/mcp-server-cloudflare
+
+      - name: Validate MCP configuration
+        run: |
+          node -e "
+            const fs = require('fs');
+            const files = [
+              '.github/copilot/mcp.json',
+              '.vscode/mcp.json',
+              'mcp.json'
+            ];
+            let ok = true;
+            files.forEach(f => {
+              if (!fs.existsSync(f)) {
+                console.error('MISSING:', f);
+                ok = false;
+                return;
+              }
+              try {
+                JSON.parse(fs.readFileSync(f, 'utf8'));
+                console.log('OK:', f);
+              } catch (e) {
+                console.error('INVALID JSON:', f, '-', e.message);
+                ok = false;
+              }
+            });
+            if (!ok) process.exit(1);
+          "
 
       - name: Install dependencies (required)
         run: npm install --no-save \
