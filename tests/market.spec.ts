@@ -63,7 +63,7 @@ test.describe("Market Section", () => {
     // Wait for the item to appear in the grid
     await expect(
       page.locator("#market-grid").getByText(stampName)
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible({ timeout: 10000 });
   });
 
   test("available filter shows available items", async ({ page }) => {

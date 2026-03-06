@@ -63,6 +63,7 @@ export class MarketPage {
     await this.stampPriceInput.fill(String(price));
     await this.stampDescInput.fill(description);
     await this.sellerIdInput.fill(sellerId);
+    // Wait for the POST to complete before returning; the UI will then refresh the grid
     const [response] = await Promise.all([
       this.page.waitForResponse(
         (resp) =>
@@ -75,10 +76,6 @@ export class MarketPage {
     if (!response.ok()) {
       throw new Error(`Stamp listing failed: ${await response.text()}`);
     }
-    // Wait for the market grid to refresh
-    await this.page.waitForResponse((resp) =>
-      resp.url().includes("/api/market/items") && resp.request().method() === "GET"
-    );
   }
 
   async applyFilter(filter: "all" | "available" | "sold") {
