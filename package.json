@@ -1,1 +1,24 @@
-{"name": "your-project-name","version": "1.0.0","description": "Your project description.","main": "index.js","scripts": {"test": "echo 'Error: no test specified' && exit 1"},"author": "Your Name","license": "ISC"}
+{
+  "name": "stampcoin-platform",
+  "version": "1.0.0",
+  "description": "Stampcoin Platform - blockchain-inspired digital stamps platform with wallet and marketplace features.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'No build needed'",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:report": "playwright show-report"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.1"
+  },
+  "author": "Stampcoin",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.4",
+    "typescript": "^5.9.3"
+  }
+}

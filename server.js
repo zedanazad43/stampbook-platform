@@ -6,11 +6,46 @@ const wallet = require("./wallet");
 const market = require("./market");
 
 const app = express();
-app.use(cors());
+
+// Restrict CORS to allowed origins (configure via ALLOWED_ORIGINS env var)
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
+  : ["http://localhost:8080", "http://localhost:3000"];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (same-origin, curl, mobile apps)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error("Not allowed by CORS"));
+  }
+}));
 app.use(express.json());
 
 // Serve frontend static files from /public
 app.use(express.static(path.join(__dirname, "public")));
+
+// --- Auth middleware ---
+const DATA_FILE = path.join(__dirname, "data.json");
+const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
+
+function requireToken(req, res, next) {
+  const auth = req.get("Authorization") || "";
+  const token = auth.replace(/^Bearer\s+/i, "");
+  if (!SYNC_TOKEN) {
+    if (process.env.NODE_ENV === "production") {
+      // In production, always configure SYNC_TOKEN; refuse access if missing
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    // In development allow unauthenticated access and warn
+    console.warn("SYNC_TOKEN not configured - authentication disabled (development mode)");
+    return next();
+  }
+  if (token !== SYNC_TOKEN) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  next();
+}
 
 // Health check endpoint (used by Docker and docker-compose healthchecks)
 app.get("/health", (req, res) => res.json({ status: "ok" }));
@@ -57,8 +92,8 @@ app.get("/api/wallet/:userId/transactions", (req, res) => {
   }
 });
 
-// Demo: add test STP balance
-app.post("/api/wallet/:userId/topup", (req, res) => {
+// Top-up endpoint: protected by requireToken to prevent unauthorized balance manipulation
+app.post("/api/wallet/:userId/topup", requireToken, (req, res) => {
   try {
     const amount = Number((req.body && req.body.amount) || 1000);
     const w = wallet.updateBalance(req.params.userId, amount);
@@ -125,9 +160,6 @@ app.delete("/api/market/items/:itemId", (req, res) => {
   }
 });
 
-const DATA_FILE = path.join(__dirname, "data.json");
-const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
-
 async function readData() {
   try {
     const raw = await fs.readFile(DATA_FILE, "utf8");
@@ -145,21 +177,6 @@ async function writeData(todos) {
     console.error("Write error:", e);
     return false;
   }
-}
-
-function requireToken(req, res, next) {
-  const auth = req.get("Authorization") || "";
-  const token = auth.replace(/^Bearer\s+/i, "");
-  // Allow unauthenticated access in development when SYNC_TOKEN is not set
-  // In production, always set SYNC_TOKEN environment variable
-  if (!SYNC_TOKEN) {
-    console.warn("SYNC_TOKEN not configured - authentication disabled (development mode)");
-    return next();
-  }
-  if (token !== SYNC_TOKEN) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  next();
 }
 
 // --- Token Info API ---

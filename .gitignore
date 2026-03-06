@@ -41,6 +41,8 @@ docker-compose.override.yml
 # Tests
 coverage/
 .nyc_output/
+test-results/
+playwright-report/
 
 # Misc
 .cache/
