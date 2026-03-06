@@ -1,5 +1,5 @@
 jobs:
-  build:
+  copilot-setup-steps:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
