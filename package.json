@@ -6,12 +6,18 @@
   "scripts": {
     "start": "node server.js",
     "build": "echo 'No build needed'",
-    "test": "echo 'Error: no test specified' && exit 1"
+    "test": "jest tests/"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^4.22.1"
   },
   "author": "Stampcoin",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
 }
