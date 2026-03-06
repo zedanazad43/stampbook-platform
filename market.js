@@ -112,6 +112,7 @@ function updateMarketItem(itemId, updates) {
   const item = marketData.items[itemIndex];
   
   // Allow updating specific fields
+  if (updates.name !== undefined) item.name = updates.name;
   if (updates.price !== undefined) item.price = updates.price;
   if (updates.description !== undefined) item.description = updates.description;
   if (updates.status !== undefined) item.status = updates.status;

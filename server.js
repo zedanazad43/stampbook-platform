@@ -6,11 +6,46 @@ const wallet = require("./wallet");
 const market = require("./market");
 
 const app = express();
-app.use(cors());
+
+// Restrict CORS to allowed origins (configure via ALLOWED_ORIGINS env var)
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
+  : ["http://localhost:8080", "http://localhost:3000"];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (same-origin, curl, mobile apps)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error("Not allowed by CORS"));
+  }
+}));
 app.use(express.json());
 
 // Serve frontend static files from /public
 app.use(express.static(path.join(__dirname, "public")));
+
+// --- Auth middleware ---
+const DATA_FILE = path.join(__dirname, "data.json");
+const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
+
+function requireToken(req, res, next) {
+  const auth = req.get("Authorization") || "";
+  const token = auth.replace(/^Bearer\s+/i, "");
+  if (!SYNC_TOKEN) {
+    if (process.env.NODE_ENV === "production") {
+      // In production, always configure SYNC_TOKEN; refuse access if missing
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    // In development allow unauthenticated access and warn
+    console.warn("SYNC_TOKEN not configured - authentication disabled (development mode)");
+    return next();
+  }
+  if (token !== SYNC_TOKEN) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  next();
+}
 
 // Health check endpoint (used by Docker and docker-compose healthchecks)
 app.get("/health", (req, res) => res.json({ status: "ok" }));
@@ -57,8 +92,8 @@ app.get("/api/wallet/:userId/transactions", (req, res) => {
   }
 });
 
-// Demo: add test STP balance
-app.post("/api/wallet/:userId/topup", (req, res) => {
+// Top-up endpoint: protected by requireToken to prevent unauthorized balance manipulation
+app.post("/api/wallet/:userId/topup", requireToken, (req, res) => {
   try {
     const amount = Number((req.body && req.body.amount) || 1000);
     const w = wallet.updateBalance(req.params.userId, amount);
@@ -115,6 +150,21 @@ app.post("/api/market/items/:itemId/buy", (req, res) => {
   }
 });
 
+app.put("/api/market/items/:itemId", (req, res) => {
+  try {
+    const { userId, name, price, description } = req.body || {};
+    if (!userId) return res.status(400).json({ error: "userId is required" });
+    const hasUpdate = name !== undefined || price !== undefined || description !== undefined;
+    if (!hasUpdate) return res.status(400).json({ error: "At least one updatable field (name, price, description) is required" });
+    const item = market.getMarketItem(req.params.itemId);
+    if (item.sellerId !== userId) return res.status(403).json({ error: "Only the seller can update this item" });
+    res.json(market.updateMarketItem(req.params.itemId, { name, price, description }));
+  } catch (e) {
+    if (e.message === "Market item not found") return res.status(404).json({ error: e.message });
+    res.status(400).json({ error: e.message });
+  }
+});
+
 app.delete("/api/market/items/:itemId", (req, res) => {
   try {
     const userId = (req.body && req.body.userId) || req.query.userId;
@@ -124,9 +174,6 @@ app.delete("/api/market/items/:itemId", (req, res) => {
     res.status(400).json({ error: e.message });
   }
 });
-
-const DATA_FILE = path.join(__dirname, "data.json");
-const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
 
 async function readData() {
   try {
@@ -145,21 +192,6 @@ async function writeData(todos) {
     console.error("Write error:", e);
     return false;
   }
-}
-
-function requireToken(req, res, next) {
-  const auth = req.get("Authorization") || "";
-  const token = auth.replace(/^Bearer\s+/i, "");
-  // Allow unauthenticated access in development when SYNC_TOKEN is not set
-  // In production, always set SYNC_TOKEN environment variable
-  if (!SYNC_TOKEN) {
-    console.warn("SYNC_TOKEN not configured - authentication disabled (development mode)");
-    return next();
-  }
-  if (token !== SYNC_TOKEN) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-  next();
 }
 
 // --- Token Info API ---
