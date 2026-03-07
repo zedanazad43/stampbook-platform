@@ -59,7 +59,7 @@ jobs:
           if [ -n "$RAILWAY_SERVICE_ID" ]; then
             EXTRA_ARGS+=(--service "$RAILWAY_SERVICE_ID")
           fi
-          if [ -n "$RAILWAY_PROJECT_ID" ]; then
+          if [ -n "$RAILWAY_PROJECT_ID" ] && [ -n "$RAILWAY_ENVIRONMENT" ]; then
             EXTRA_ARGS+=(--project "$RAILWAY_PROJECT_ID")
           fi
           if [ -n "$RAILWAY_ENVIRONMENT" ]; then
