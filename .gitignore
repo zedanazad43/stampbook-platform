@@ -3,7 +3,6 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
 
 # Environment variables
 .env
@@ -24,6 +23,7 @@ dist/
 build/
 .next/
 out/
+public/
 
 # Logs
 logs/
@@ -41,8 +41,22 @@ docker-compose.override.yml
 # Tests
 coverage/
 .nyc_output/
+test-results/
+playwright-report/
 
 # Misc
 .cache/
 tmp/
 temp/
+
+# Hardhat
+cache/
+artifacts/
+typechain-types/
+
+# Runtime data files (JSON persistence - dev only, not for production commits)
+wallets.json
+transactions.json
+market-data.json
+blockchain-state.json
+data.json

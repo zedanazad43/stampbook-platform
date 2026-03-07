@@ -1,12 +1,11 @@
 {
   "name": "stampcoin-platform",
-  "version": "2.0.0",
-  "description": "Stampcoin Digital Platform - Blockchain-based digital stamps platform with wallet and marketplace",
-  "main": "server.js",
-  "license": "MIT",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Stampcoin Platform - blockchain-powered digital stamps, wallet and marketplace",
+  "main": "index.js",
   "scripts": {
     "start": "node server.js",
+<<<<<<< HEAD
     "dev": "node server.js",
     "build": "mkdir -p public && echo 'Static site ready for deployment'",
     "test": "echo 'Tests can be configured'",
@@ -15,27 +14,17 @@
     "docker:run": "docker run -p 8080:8080 stampcoin-platform",
     "agent": "node src/ai-agent-expert/index.js",
     "agent-dev": "nodemon src/ai-agent-expert/index.js"
+=======
+    "test": "jest tests/*.test.js"
+>>>>>>> 56a771d62b71d5933a7297d2255270f53d6e616a
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
   },
-  "devDependencies": {},
-  "engines": {
-    "node": ">=16.x"
-  },
-  "keywords": [
-    "stampcoin",
-    "blockchain",
-    "digital-stamps",
-    "collectibles",
-    "marketplace",
-    "wallet",
-    "digital-currency"
-  ],
-  "author": "Azad Zedan",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zedanazad43/stp.git"
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.17",
+    "jest": "^30.2.0"
   }
 }
