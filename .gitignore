@@ -60,3 +60,9 @@ transactions.json
 market-data.json
 blockchain-state.json
 data.json
+
+# Accidental git worktree/submodule directories — never commit these
+git/
+git.worktrees/
+stampcoin-platform/
+stp/
