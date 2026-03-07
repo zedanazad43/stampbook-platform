@@ -23,7 +23,6 @@ dist/
 build/
 .next/
 out/
-public/
 
 # Logs
 logs/
@@ -60,3 +59,12 @@ transactions.json
 market-data.json
 blockchain-state.json
 data.json
+
+# Local dev / junk
+mcp.json
+package1.json
+*.ps1
+git.worktrees/
+stampcoin-platform
+stp
+.githubworkflows/

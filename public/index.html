@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stampcoin Platform (STP)</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background: #0a0e1a;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    a { color: #63b3ed; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #1a237e 0%, #0d47a1 60%, #01579b 100%);
+      padding: 70px 20px 50px;
+      text-align: center;
+    }
+    header .logo { font-size: 3rem; line-height: 1; }
+    header h1 { font-size: 2.4rem; font-weight: 700; margin-top: 12px; letter-spacing: -0.5px; }
+    header p  { font-size: 1.1rem; color: #90caf9; margin-top: 10px; max-width: 540px; margin-left: auto; margin-right: auto; }
+    .badge-row { margin-top: 18px; display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+    .badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .badge-gold   { background: #ffd600; color: #1a1a00; }
+    .badge-blue   { background: rgba(255,255,255,0.15); color: #e3f2fd; border: 1px solid rgba(255,255,255,0.25); }
+
+    /* ── Main content ────────────────────────────── */
+    main { max-width: 980px; margin: 0 auto; padding: 48px 20px 60px; }
+
+    /* Feature cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .card {
+      background: #111827;
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 26px;
+      transition: border-color .2s;
+    }
+    .card:hover { border-color: #3b82f6; }
+    .card-icon { font-size: 2rem; margin-bottom: 10px; }
+    .card h3 { color: #93c5fd; font-size: 1.05rem; margin-bottom: 8px; }
+    .card p  { color: #6b7280; font-size: 0.9rem; }
+
+    /* Token info box */
+    .token-box {
+      background: #111827;
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+    .token-box h2 { color: #fbbf24; font-size: 1.2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 12px;
+    }
+    .token-item {
+      background: #0d1526;
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .token-item label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+    .token-item span { font-size: 0.95rem; font-weight: 600; color: #e2e8f0; }
+
+    /* API section */
+    .api-box {
+      background: #111827;
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+    .api-box h2 { color: #93c5fd; font-size: 1.2rem; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .endpoint {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0d1526;
+      border-left: 3px solid #1d4ed8;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin: 7px 0;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.83rem;
+    }
+    .method {
+      min-width: 46px;
+      text-align: center;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+    .get    { background: #1e3a5f; color: #60a5fa; }
+    .post   { background: #14532d; color: #86efac; }
+    .put    { background: #451a03; color: #fdba74; }
+    .delete { background: #450a0a; color: #fca5a5; }
+    .endpoint-path { color: #c7d2fe; }
+    .endpoint-desc { color: #4b5563; margin-left: auto; font-size: 0.78rem; }
+
+    /* Distribution */
+    .dist-box {
+      background: #111827;
+      border: 1px solid #1e3a5f;
+      border-radius: 14px;
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+    .dist-box h2 { color: #a78bfa; font-size: 1.2rem; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .dist-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0;
+    }
+    .dist-label { min-width: 190px; font-size: 0.88rem; color: #9ca3af; }
+    .dist-bar-bg { flex: 1; background: #1e293b; border-radius: 4px; height: 8px; }
+    .dist-bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, #3b82f6, #8b5cf6); }
+    .dist-pct { min-width: 42px; text-align: right; font-size: 0.82rem; color: #60a5fa; font-weight: 600; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 28px 20px;
+      border-top: 1px solid #1e293b;
+      color: #374151;
+      font-size: 0.82rem;
+    }
+    footer .dot { display: inline-block; width: 7px; height: 7px; background: #22c55e; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+    footer span, footer a { margin: 0 6px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🏷️</div>
+  <h1>Stampcoin Platform</h1>
+  <p>Blockchain-powered digital stamps wallet &amp; marketplace on BNB Smart Chain</p>
+  <div class="badge-row">
+    <span class="badge badge-gold">STP Token</span>
+    <span class="badge badge-blue">BEP-20</span>
+    <span class="badge badge-blue">BSC Mainnet</span>
+    <span class="badge badge-blue">Total Supply: 421,000,000</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- Feature cards -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">💼</div>
+      <h3>Digital Wallet</h3>
+      <p>Create wallets, manage STP balances, transfer tokens peer-to-peer, and collect authenticated digital stamps.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🛒</div>
+      <h3>Marketplace</h3>
+      <p>List, browse, filter, and purchase unique digital stamps and collectibles from other users worldwide.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⛓️</div>
+      <h3>Blockchain</h3>
+      <p>BEP-20-compatible STP token supply tracking with minting events and address balance queries.</p>
+    </div>
+  </div>
+
+  <!-- Token info -->
+  <div class="token-box">
+    <h2>📊 STP Token Details</h2>
+    <div class="token-grid">
+      <div class="token-item"><label>Token Name</label><span>StampCoin</span></div>
+      <div class="token-item"><label>Symbol</label><span>STP</span></div>
+      <div class="token-item"><label>Total Supply</label><span>421,000,000</span></div>
+      <div class="token-item"><label>Decimals</label><span>18</span></div>
+      <div class="token-item"><label>ICO Price</label><span>$1.65 USD</span></div>
+      <div class="token-item"><label>Standard</label><span>BEP-20</span></div>
+      <div class="token-item"><label>Network</label><span>BNB Smart Chain</span></div>
+      <div class="token-item"><label>Chain ID</label><span>56 (BSC Mainnet)</span></div>
+      <div class="token-item"><label>Consensus</label><span>PoSA</span></div>
+      <div class="token-item"><label>Website</label><span><a href="https://ecostamp.net">ecostamp.net</a></span></div>
+    </div>
+  </div>
+
+  <!-- Token distribution -->
+  <div class="dist-box">
+    <h2>🥧 Token Distribution</h2>
+    <div class="dist-row"><span class="dist-label">Public ICO Sale</span><div class="dist-bar-bg"><div class="dist-bar" style="width:20%"></div></div><span class="dist-pct">20%</span></div>
+    <div class="dist-row"><span class="dist-label">Ecosystem &amp; Partners</span><div class="dist-bar-bg"><div class="dist-bar" style="width:20%"></div></div><span class="dist-pct">20%</span></div>
+    <div class="dist-row"><span class="dist-label">Community &amp; Rewards</span><div class="dist-bar-bg"><div class="dist-bar" style="width:20%"></div></div><span class="dist-pct">20%</span></div>
+    <div class="dist-row"><span class="dist-label">Liquidity Pool</span><div class="dist-bar-bg"><div class="dist-bar" style="width:15%"></div></div><span class="dist-pct">15%</span></div>
+    <div class="dist-row"><span class="dist-label">Team &amp; Founders</span><div class="dist-bar-bg"><div class="dist-bar" style="width:15%"></div></div><span class="dist-pct">15%</span></div>
+    <div class="dist-row"><span class="dist-label">Reserve</span><div class="dist-bar-bg"><div class="dist-bar" style="width:10%"></div></div><span class="dist-pct">10%</span></div>
+  </div>
+
+  <!-- API reference -->
+  <div class="api-box">
+    <h2>🔌 API Reference</h2>
+
+    <div class="endpoint"><span class="method post">POST</span><span class="endpoint-path">/api/wallet/create</span><span class="endpoint-desc">Create a new wallet</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="endpoint-path">/api/wallet/:userId</span><span class="endpoint-desc">Get wallet details</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="endpoint-path">/api/wallet/transfer</span><span class="endpoint-desc">Transfer STP between wallets</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="endpoint-path">/api/wallet/:userId/transactions</span><span class="endpoint-desc">Transaction history</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="endpoint-path">/api/wallet/:userId/stamps</span><span class="endpoint-desc">Add stamp 🔒</span></div>
+
+    <div class="endpoint"><span class="method get">GET</span><span class="endpoint-path">/api/market/items</span><span class="endpoint-desc">List market items</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="endpoint-path">/api/market/items</span><span class="endpoint-desc">List a new item</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="endpoint-path">/api/market/items/:itemId/buy</span><span class="endpoint-desc">Purchase an item</span></div>
+    <div class="endpoint"><span class="method delete">DEL</span><span class="endpoint-path">/api/market/items/:itemId</span><span class="endpoint-desc">Remove item (seller)</span></div>
+
+    <div class="endpoint"><span class="method get">GET</span><span class="endpoint-path">/api/blockchain/info</span><span class="endpoint-desc">Token metadata</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="endpoint-path">/api/blockchain/supply</span><span class="endpoint-desc">Supply stats</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="endpoint-path">/api/blockchain/mint</span><span class="endpoint-desc">Mint tokens 🔒</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="endpoint-path">/api/blockchain/balance/:address</span><span class="endpoint-desc">Address balance</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="endpoint-path">/api/token</span><span class="endpoint-desc">Full token info</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="endpoint-path">/health</span><span class="endpoint-desc">Server health check</span></div>
+  </div>
+
+</main>
+
+<footer>
+  <span><span class="dot"></span>API: <a href="/health">/health</a></span>
+  <span>·</span>
+  <span>Token: <a href="/api/token">/api/token</a></span>
+  <span>·</span>
+  <a href="https://github.com/zedanazad43/stp" target="_blank" rel="noopener">GitHub</a>
+  <span>·</span>
+  <a href="mailto:stampcoin.contact@gmail.com">stampcoin.contact@gmail.com</a>
+  <span>·</span>
+  <span>MIT License</span>
+</footer>
+
+</body>
+</html>
