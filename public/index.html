@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stampcoin Platform (STP)</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      padding: 1.5rem 2rem;
+      background: #161b22;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    header .logo { font-size: 1.6rem; font-weight: 700; color: #58a6ff; }
+    header .badge {
+      background: #1f6feb;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.05em;
+    }
+    .hero {
+      max-width: 820px;
+      width: 100%;
+      padding: 4rem 2rem 2rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      background: linear-gradient(90deg, #58a6ff, #3fb950);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: #8b949e;
+      max-width: 560px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+    .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.4rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: #238636; color: #fff; }
+    .btn-secondary { background: #21262d; color: #e6edf3; border: 1px solid #30363d; }
+    .grid {
+      max-width: 900px;
+      width: 100%;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.2rem;
+    }
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.4rem;
+    }
+    .card .icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: #e6edf3; }
+    .card p { font-size: 0.88rem; color: #8b949e; line-height: 1.6; }
+    .token-section {
+      max-width: 900px;
+      width: 100%;
+      padding: 0 2rem 2rem;
+    }
+    .token-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .token-stat { min-width: 150px; }
+    .token-stat .label { font-size: 0.75rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.06em; }
+    .token-stat .value { font-size: 1.2rem; font-weight: 700; color: #58a6ff; margin-top: 0.2rem; }
+    .api-section {
+      max-width: 900px;
+      width: 100%;
+      padding: 0 2rem 3rem;
+    }
+    .api-section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: #e6edf3; }
+    .endpoint-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .endpoint {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.85rem;
+    }
+    .method {
+      font-weight: 700;
+      min-width: 48px;
+      text-align: center;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+    .method.get { background: #0d4429; color: #3fb950; }
+    .method.post { background: #1b3a6b; color: #58a6ff; }
+    .method.put { background: #3d2400; color: #d29922; }
+    .method.delete { background: #4d1717; color: #f85149; }
+    .path { color: #e6edf3; }
+    .desc { color: #8b949e; font-size: 0.8rem; font-family: inherit; margin-left: auto; }
+    footer {
+      width: 100%;
+      padding: 1.2rem 2rem;
+      background: #161b22;
+      border-top: 1px solid #30363d;
+      text-align: center;
+      font-size: 0.82rem;
+      color: #8b949e;
+    }
+    footer a { color: #58a6ff; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo">⬡ StampCoin</span>
+    <span class="badge">STP</span>
+  </header>
+
+  <section class="hero">
+    <h1>Blockchain-Powered Digital Stamps</h1>
+    <p>StampCoin (STP) is a BEP-20 token platform for collecting, trading and investing in rare digital stamps — secured by BNB Smart Chain.</p>
+    <div class="btn-group">
+      <a class="btn btn-primary" href="/api/token">Token Info</a>
+      <a class="btn btn-secondary" href="/health">API Status</a>
+      <a class="btn btn-secondary" href="https://github.com/zedanazad43/stp" target="_blank" rel="noopener">GitHub →</a>
+    </div>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <div class="icon">💼</div>
+      <h3>Digital Wallet</h3>
+      <p>Create wallets, manage STP balances, add digital stamps and transfer assets peer-to-peer.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🏪</div>
+      <h3>Marketplace</h3>
+      <p>List, browse, and purchase rare digital stamps. Seller-only controls with full transaction history.</p>
+    </div>
+    <div class="card">
+      <div class="icon">⛓️</div>
+      <h3>BEP-20 Token</h3>
+      <p>STP token on BNB Smart Chain. Fixed supply of 421M tokens. Mint events audited on-chain.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔒</div>
+      <h3>Secure API</h3>
+      <p>Bearer token authentication for admin operations. CORS-protected. Production-ready.</p>
+    </div>
+  </div>
+
+  <section class="token-section">
+    <div class="token-card">
+      <div class="token-stat">
+        <div class="label">Token Name</div>
+        <div class="value">StampCoin</div>
+      </div>
+      <div class="token-stat">
+        <div class="label">Symbol</div>
+        <div class="value">STP</div>
+      </div>
+      <div class="token-stat">
+        <div class="label">Total Supply</div>
+        <div class="value">421,000,000</div>
+      </div>
+      <div class="token-stat">
+        <div class="label">ICO Price</div>
+        <div class="value">$1.65 USD</div>
+      </div>
+      <div class="token-stat">
+        <div class="label">Network</div>
+        <div class="value">BSC (BEP-20)</div>
+      </div>
+      <div class="token-stat">
+        <div class="label">Standard</div>
+        <div class="value">BEP-20</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="api-section">
+    <h2>API Endpoints</h2>
+    <div class="endpoint-list">
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/wallet/create</span>
+        <span class="desc">Create a wallet</span>
+      </div>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/wallet/:userId</span>
+        <span class="desc">Get wallet</span>
+      </div>
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/wallet/transfer</span>
+        <span class="desc">Transfer balance</span>
+      </div>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/market/items</span>
+        <span class="desc">Browse market</span>
+      </div>
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/market/items</span>
+        <span class="desc">List a stamp</span>
+      </div>
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/market/items/:itemId/buy</span>
+        <span class="desc">Purchase stamp</span>
+      </div>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/blockchain/info</span>
+        <span class="desc">Token metadata</span>
+      </div>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/token</span>
+        <span class="desc">STP token info &amp; distribution</span>
+      </div>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/health</span>
+        <span class="desc">API health check</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    StampCoin Platform &copy; 2025 &mdash;
+    <a href="https://github.com/zedanazad43/stp" target="_blank" rel="noopener">GitHub</a> &middot;
+    <a href="mailto:stampcoin.contact@gmail.com">Contact</a> &middot;
+    MIT License
+  </footer>
+</body>
+</html>

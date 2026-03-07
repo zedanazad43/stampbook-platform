@@ -23,7 +23,6 @@ dist/
 build/
 .next/
 out/
-public/
 
 # Logs
 logs/
@@ -60,3 +59,15 @@ transactions.json
 market-data.json
 blockchain-state.json
 data.json
+
+# Git worktrees / internal tooling artifacts
+git.worktrees/
+*.worktrees/
+
+# Stray files
+ersazadzOneDrive*
+package1.json
+all-agents.yml
+deploy-to-github-pages.ps1
+resolve-git-conflict.ps1
+solve-git-conflict-and-deploy.ps1
