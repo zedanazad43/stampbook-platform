@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,7 +26,7 @@ jobs:
 
       - name: Verify lockfile is up-to-date
         run: |
-          npm install --package-lock-only --ignore-scripts 2>/dev/null
+          npm install --package-lock-only --ignore-scripts
           if ! git diff --exit-code package-lock.json; then
             echo "package-lock.json is out of sync with package.json."
             echo "Run 'npm install' locally and commit the updated lockfile."

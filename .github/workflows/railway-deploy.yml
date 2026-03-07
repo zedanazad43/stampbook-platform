@@ -46,6 +46,7 @@ jobs:
 
       - name: Deploy to Railway
         if: steps.check-railway.outputs.deploy == 'true'
+        shell: bash
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}

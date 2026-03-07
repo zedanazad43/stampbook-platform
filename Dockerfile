@@ -9,11 +9,11 @@ COPY package*.json ./
 # Usage: docker build --secret id=npm_token,env=NPM_TOKEN .
 RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
     --mount=type=secret,id=npm_token,required=false \
+    (trap 'rm -f ~/.npmrc' EXIT; \
     if [ -f /run/secrets/npm_token ] && [ -s /run/secrets/npm_token ]; then \
       echo "//registry.npmjs.org/:_authToken=$(cat /run/secrets/npm_token)" > ~/.npmrc; \
     fi && \
-    npm install && \
-    rm -f ~/.npmrc
+    npm ci)
 
 COPY . .
 
