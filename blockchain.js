@@ -3,9 +3,6 @@
  *
  * Implements BEP-20-compatible token logic for the STP (StampCoin) token
  * on BNB Smart Chain (BSC) using Proof of Staked Authority (PoSA) consensus.
- *
- * This module provides server-side token supply tracking and minting logic
- * that mirrors the on-chain BEP-20 contract defined in contracts/STP.sol.
  */
 
 "use strict";
@@ -14,16 +11,11 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
-
-/** BEP-20 token parameters */
 const TOKEN = {
   name: "StampCoin",
   symbol: "STP",
   decimals: 18,
-  totalSupply: 421000000,    // Maximum total supply (hard cap)
+  totalSupply: 421000000,
   blockchain: "BNB Smart Chain",
   consensus: "Proof of Staked Authority (PoSA)",
   standard: "BEP-20",
@@ -33,14 +25,6 @@ const TOKEN = {
 
 const BLOCKCHAIN_FILE = path.join(__dirname, "blockchain-state.json");
 
-// ---------------------------------------------------------------------------
-// Persistence helpers
-// ---------------------------------------------------------------------------
-
-/**
- * Load blockchain state from disk, or return a fresh initial state.
- * @returns {object} Current blockchain state
- */
 function loadState() {
   try {
     if (fs.existsSync(BLOCKCHAIN_FILE)) {
@@ -57,11 +41,6 @@ function loadState() {
   };
 }
 
-/**
- * Persist blockchain state to disk.
- * @param {object} state - State to persist
- * @returns {boolean} true on success
- */
 function saveState(state) {
   try {
     fs.writeFileSync(BLOCKCHAIN_FILE, JSON.stringify(state, null, 2), "utf8");
@@ -72,12 +51,8 @@ function saveState(state) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Validation
-// ---------------------------------------------------------------------------
-
 /**
- * Validate a wallet/token address (non-empty, safe string, no prototype keys).
+ * Validate a wallet/token address.
  * @param {*} address - Value to validate
  * @throws {Error} if address is invalid
  */
@@ -93,13 +68,8 @@ function validateAddress(address) {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
-
 /**
  * Return static token/blockchain metadata.
- * @returns {object} Token and blockchain info
  */
 function getBlockchainInfo() {
   return {
@@ -110,7 +80,6 @@ function getBlockchainInfo() {
 
 /**
  * Return current token supply metrics.
- * @returns {object} Supply statistics
  */
 function getSupply() {
   const state = loadState();
@@ -125,15 +94,9 @@ function getSupply() {
 
 /**
  * Mint new STP tokens to a given address.
- *
- * Minting is controlled:
- * - amount must be a positive integer
- * - total minted supply must not exceed TOKEN.totalSupply (hard cap)
- *
- * @param {string} toAddress - Recipient address (wallet userId or hex address)
- * @param {number} amount    - Number of whole STP tokens to mint
+ * @param {string} toAddress - Recipient address
+ * @param {number} amount - Number of whole STP tokens to mint
  * @returns {object} Mint event record
- * @throws {Error} on validation failure or supply cap exceeded
  */
 function mintTokens(toAddress, amount) {
   validateAddress(toAddress);
@@ -151,11 +114,9 @@ function mintTokens(toAddress, amount) {
     );
   }
 
-  // Update balances
   state.balances[toAddress] = (state.balances[toAddress] || 0) + amount;
   state.mintedSupply += amount;
 
-  // Record mint event
   const event = {
     id: crypto.randomUUID(),
     type: "mint",

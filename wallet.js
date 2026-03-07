@@ -25,7 +25,6 @@ function validateUserId(userId) {
   }
 }
 
-
 /**
  * Initialize wallet storage files if they don't exist
  */
@@ -46,11 +45,9 @@ function readWallets() {
     const data = fs.readFileSync(WALLETS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    // Only return empty object if file doesn't exist
     if (error.code === 'ENOENT') {
       return {};
     }
-    // Re-throw other errors (invalid JSON, permissions, etc.)
     console.error('Error reading wallets:', error.message);
     throw error;
   }
@@ -77,11 +74,9 @@ function readTransactions() {
     const data = fs.readFileSync(TRANSACTIONS_FILE, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    // Only return empty array if file doesn't exist
     if (error.code === 'ENOENT') {
       return [];
     }
-    // Re-throw other errors (invalid JSON, permissions, etc.)
     console.error('Error reading transactions:', error.message);
     throw error;
   }
@@ -112,7 +107,7 @@ function createWallet(userId, userName) {
     throw new Error('Invalid userName');
   }
   const wallets = readWallets();
-  
+
   if (wallets[userId]) {
     throw new Error('Wallet already exists for this user');
   }
@@ -128,7 +123,7 @@ function createWallet(userId, userName) {
 
   wallets[userId] = wallet;
   writeWallets(wallets);
-  
+
   return wallet;
 }
 
@@ -162,7 +157,7 @@ function updateBalance(userId, amount) {
 
   const wallets = readWallets();
   const wallet = wallets[userId];
-  
+
   if (!wallet) {
     throw new Error('Wallet not found');
   }
@@ -174,10 +169,10 @@ function updateBalance(userId, amount) {
 
   wallet.balance = newBalance;
   wallet.updatedAt = new Date().toISOString();
-  
+
   wallets[userId] = wallet;
   writeWallets(wallets);
-  
+
   return wallet;
 }
 
@@ -191,7 +186,7 @@ function addStamp(userId, stamp) {
   validateUserId(userId);
   const wallets = readWallets();
   const wallet = wallets[userId];
-  
+
   if (!wallet) {
     throw new Error('Wallet not found');
   }
@@ -204,10 +199,10 @@ function addStamp(userId, stamp) {
 
   wallet.stamps.push(stampWithId);
   wallet.updatedAt = new Date().toISOString();
-  
+
   wallets[userId] = wallet;
   writeWallets(wallets);
-  
+
   return wallet;
 }
 
@@ -222,15 +217,14 @@ function addStamp(userId, stamp) {
 function transfer(fromUserId, toUserId, amount = 0, stampId = null) {
   validateUserId(fromUserId);
   validateUserId(toUserId);
-  // Validate that either amount or stampId is provided
   if (!stampId && (!amount || amount <= 0)) {
     throw new Error('Transfer amount must be a positive number when transferring balance');
   }
-  
+
   const wallets = readWallets();
   const fromWallet = wallets[fromUserId];
   const toWallet = wallets[toUserId];
-  
+
   if (!fromWallet || !toWallet) {
     throw new Error('One or both wallets not found');
   }
@@ -238,7 +232,6 @@ function transfer(fromUserId, toUserId, amount = 0, stampId = null) {
   const transactionId = crypto.randomUUID();
   const timestamp = new Date().toISOString();
 
-  // Transfer balance
   if (amount > 0) {
     if (fromWallet.balance < amount) {
       throw new Error('Insufficient balance');
@@ -247,7 +240,6 @@ function transfer(fromUserId, toUserId, amount = 0, stampId = null) {
     toWallet.balance += amount;
   }
 
-  // Transfer stamp
   if (stampId) {
     const stampIndex = fromWallet.stamps.findIndex(s => s.id === stampId);
     if (stampIndex === -1) {
@@ -260,15 +252,13 @@ function transfer(fromUserId, toUserId, amount = 0, stampId = null) {
     });
   }
 
-  // Update timestamps
   fromWallet.updatedAt = timestamp;
   toWallet.updatedAt = timestamp;
-  
+
   wallets[fromUserId] = fromWallet;
   wallets[toUserId] = toWallet;
   writeWallets(wallets);
 
-  // Record transaction
   const transaction = {
     id: transactionId,
     from: fromUserId,

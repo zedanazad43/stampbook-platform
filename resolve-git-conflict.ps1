@@ -1,38 +1,39 @@
-# Script to resolve git conflicts and push to GitHub
 
-Write-Host "Resolve Git Conflicts and Push to GitHub" -ForegroundColor Green
+# دليل لحل مشكلة الرفض عند دفع التغييرات إلى GitHub
+
+Write-Host "دليل لحل مشكلة الرفض عند دفع التغييرات إلى GitHub" -ForegroundColor Green
 Write-Host "========================================================" -ForegroundColor Green
 
-Write-Host "Problem: Merge conflicts prevent pushing to GitHub" -ForegroundColor Yellow
-Write-Host "Solution: Resolve conflicts locally then push" -ForegroundColor Yellow
+Write-Host "المشكلة: تم رفض التغييرات لأن فرعك محدث عن الفرع البعيد" -ForegroundColor Yellow
+Write-Host "الحل: دمج التغييرات البعيدة مع التغييرات المحلية" -ForegroundColor Yellow
 Write-Host ""
 
-Write-Host "Step 1: Pull latest changes" -ForegroundColor Yellow
+Write-Host "الخطوة 1: سحب التغييرات من المستودع البعيد" -ForegroundColor Yellow
 Write-Host "--------------------------------------------" -ForegroundColor Yellow
-Write-Host "Pull the latest changes from GitHub:"
+Write-Host "استخدم الأمر التالي لسحب التغييرات من GitHub:"
 Write-Host "git pull origin main"
 Write-Host ""
 
-Write-Host "Step 2: Resolve conflicts" -ForegroundColor Yellow
+Write-Host "الخطوة 2: حل أي تعارضات قد تحدث" -ForegroundColor Yellow
 Write-Host "----------------------------------------" -ForegroundColor Yellow
-Write-Host "For each conflicted file:"
-Write-Host "1. Open the conflicted file in your editor"
-Write-Host "2. Look for conflict markers (<<<<<<<, =======, >>>>>>>)"
-Write-Host "3. Edit the file to keep the desired changes"
-Write-Host "4. Stage the resolved file:"
+Write-Host "إذا ظهرت رسائل تعارض (conflict):"
+Write-Host "1. افتح الملفات المذكورة في رسالة التعارض"
+Write-Host "2. ابحث عن علامات التعارض (<<<<<<<, =======, >>>>>>>)"
+Write-3. حل التعارضات يدويًا وحفظ الملفات
+Write-4. أضف الملفات التي تم حل تعارضاتها:"
 Write-Host "   git add <file-name>"
-Write-Host "5. Complete the merge:"
+Write-5. أكمل عملية الـ merge:"
 Write-Host "   git commit"
 Write-Host ""
 
-Write-Host "Step 3: Push to GitHub" -ForegroundColor Yellow
+Write-Host "الخطوة 3: دفع التغييرات المدمجة إلى GitHub" -ForegroundColor Yellow
 Write-Host "------------------------------------------------" -ForegroundColor Yellow
-Write-Host "Push your resolved changes:"
+Write-Host "بعد حل أي تعارضات، قم بدفع التغييرات:"
 Write-Host "git push origin main"
 Write-Host ""
 
-Write-Host "Alternative: force push (use with caution):" -ForegroundColor Yellow
+Write-Host "بدلاً من ذلك، يمكنك استخدام force push (لكنه قد يسبب فقدان التغييرات البعيدة):" -ForegroundColor Yellow
 Write-Host "git push --force-with-lease origin main" -ForegroundColor White
 Write-Host ""
 
-Write-Host "Warning: force push will overwrite remote history" -ForegroundColor Yellow
+Write-Host "ملاحظة: force push يجب استخدامه بحذر فقط إذا كنت متأكدًا أن لا أحد آخر يعمل على نفس الفرع" -ForegroundColor Yellow

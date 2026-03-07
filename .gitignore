@@ -11,7 +11,6 @@ yarn-error.log*
 
 # IDE
 .vscode/
-!.vscode/mcp.json
 .idea/
 *.swp
 *.swo
@@ -24,6 +23,7 @@ dist/
 build/
 .next/
 out/
+public/
 
 # Logs
 logs/
@@ -53,3 +53,10 @@ temp/
 cache/
 artifacts/
 typechain-types/
+
+# Runtime data files (JSON persistence - dev only, not for production commits)
+wallets.json
+transactions.json
+market-data.json
+blockchain-state.json
+data.json

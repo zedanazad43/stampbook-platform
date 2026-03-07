@@ -71,17 +71,14 @@ function addMarketItem(sellerId, item) {
 function getAllMarketItems(filter = {}) {
   let items = [...marketData.items];
 
-  // Filter by status
   if (filter.status) {
     items = items.filter(item => item.status === filter.status);
   }
 
-  // Filter by type
   if (filter.type) {
     items = items.filter(item => item.type === filter.type);
   }
 
-  // Filter by seller
   if (filter.sellerId) {
     items = items.filter(item => item.sellerId === filter.sellerId);
   }
@@ -110,8 +107,7 @@ function updateMarketItem(itemId, updates) {
   }
 
   const item = marketData.items[itemIndex];
-  
-  // Allow updating specific fields
+
   if (updates.name !== undefined) item.name = updates.name;
   if (updates.price !== undefined) item.price = updates.price;
   if (updates.description !== undefined) item.description = updates.description;
@@ -137,10 +133,8 @@ function purchaseMarketItem(itemId, buyerId) {
     throw new Error("Cannot purchase your own item");
   }
 
-  // Mark item as sold
   updateMarketItem(itemId, { status: "sold" });
 
-  // Record transaction
   const transaction = {
     id: `txn_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
     itemId,
@@ -169,8 +163,7 @@ function removeMarketItem(itemId, userId) {
   }
 
   const item = marketData.items[itemIndex];
-  
-  // Only the seller can remove their item
+
   if (item.sellerId !== userId) {
     throw new Error("Only the seller can remove this item");
   }

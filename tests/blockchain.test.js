@@ -102,7 +102,6 @@ describe("blockchain module", () => {
     });
 
     test("throws when minting would exceed total supply cap", () => {
-      // Exhaust the cap first
       bc.mintTokens("user1", 421000000);
       expect(() => bc.mintTokens("user1", 1)).toThrow("exceed total supply cap");
     });
