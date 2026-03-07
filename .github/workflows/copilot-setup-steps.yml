@@ -11,7 +11,7 @@ jobs:
   copilot-setup-steps:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Ensures checkout has all needed permissions
+      contents: write   # <-- Changed from 'read' to 'write' for checkout
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
