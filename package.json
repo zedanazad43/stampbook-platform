@@ -13,8 +13,6 @@
     "docker:run": "docker run -p 8080:8080 stampcoin-platform",
     "agent": "node src/ai-agent-expert/index.js",
     "agent-dev": "nodemon src/ai-agent-expert/index.js"
-    "test": "jest tests/*.test.js"
- 56a771d62b71d5933a7297d2255270f53d6e616a
   },
   "dependencies": {
     "cors": "^2.8.6",
