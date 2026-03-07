@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensures full git history is available for git commands
       - uses: railwayapp/railway-action@v1
         with:
           railwayToken: ${{ secrets.RAILWAY_TOKEN }}
