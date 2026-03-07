@@ -5,7 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
+<<<<<<< HEAD
+    "dev": "node server.js",
+    "build": "mkdir -p public && echo 'Static site ready for deployment'",
+    "test": "echo 'Tests can be configured'",
+    "lint": "echo 'Linting can be configured'",
+    "docker:build": "docker build -t stampcoin-platform .",
+    "docker:run": "docker run -p 8080:8080 stampcoin-platform",
+    "agent": "node src/ai-agent-expert/index.js",
+    "agent-dev": "nodemon src/ai-agent-expert/index.js"
+=======
     "test": "jest tests/*.test.js"
+>>>>>>> 56a771d62b71d5933a7297d2255270f53d6e616a
   },
   "dependencies": {
     "cors": "^2.8.6",
