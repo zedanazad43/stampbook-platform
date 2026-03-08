@@ -17,19 +17,5 @@ services:
       #   value: your-sync-token-here
       # - key: BASE_URL
       #   value: https://your-service-name.onrender.com
-    healthCheck:
-      path: /health
-      interval: 30s
-      timeout: 3s
-      method: GET
-      retries: 3
-    dockerfilePath: Dockerfile
-    dockerContext: .
-    # Add persistence if needed
-    # persistentDisk:
-    #   sizeGB: 1
-    #   mountPath: /data
-    # Mount the AI Agent Expert directory
-    # persistentDisk:
-    #   sizeGB: 1
-    #   mountPath: /src
+    # healthCheckPath uses Render native Node.js health check (no dockerfilePath)
+    healthCheckPath: /health

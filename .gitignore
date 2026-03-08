@@ -59,3 +59,10 @@ transactions.json
 market-data.json
 blockchain-state.json
 data.json
+
+# Stray/temp files that should not be committed
+git.worktrees/
+.githubworkflows/
+mcp.json
+package1.json
+*.ps1
