@@ -19,10 +19,10 @@ Write-Host "----------------------------------------" -ForegroundColor Yellow
 Write-Host "إذا ظهرت رسائل تعارض (conflict):"
 Write-Host "1. افتح الملفات المذكورة في رسالة التعارض"
 Write-Host "2. ابحث عن علامات التعارض (<<<<<<<, =======, >>>>>>>)"
-Write-3. حل التعارضات يدويًا وحفظ الملفات
-Write-4. أضف الملفات التي تم حل تعارضاتها:"
+Write-Host "3. حل التعارضات يدويًا وحفظ الملفات"
+Write-Host "4. أضف الملفات التي تم حل تعارضاتها:"
 Write-Host "   git add <file-name>"
-Write-5. أكمل عملية الـ merge:"
+Write-Host "5. أكمل عملية الـ merge:"
 Write-Host "   git commit"
 Write-Host ""
 
