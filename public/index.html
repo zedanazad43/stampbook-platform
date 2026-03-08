@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" id="html-root">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -114,111 +114,231 @@
       color: #6e7681;
       font-size: 0.85rem;
     }
+    .lang-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s, border-color 0.2s;
+      z-index: 100;
+    }
+    .lang-toggle:hover { background: #30363d; border-color: #58a6ff; color: #58a6ff; }
+    [dir="rtl"] .lang-toggle { right: auto; left: 1rem; }
+    [dir="rtl"] body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; }
+    [dir="rtl"] .card { text-align: right; }
+    [dir="rtl"] .endpoints { text-align: right; }
+    [dir="rtl"] .endpoint { flex-direction: row-reverse; }
   </style>
 </head>
 <body>
+  <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">العربية</button>
   <div class="container">
     <div class="logo">🪙</div>
-    <h1>Stampcoin Platform</h1>
-    <p class="subtitle">A blockchain-inspired digital stamps platform with wallet &amp; marketplace features</p>
-    <span class="badge">STP Token — BEP-20 Compatible</span>
+    <h1 id="t-title">Stampcoin Platform</h1>
+    <p class="subtitle" id="t-subtitle">A blockchain-inspired digital stamps platform with wallet &amp; marketplace features</p>
+    <span class="badge" id="t-badge">STP Token — BEP-20 Compatible</span>
 
     <div class="cards">
       <div class="card">
         <div class="card-icon">👛</div>
-        <h3>Digital Wallet</h3>
-        <p>Create and manage wallets, transfer balances, and collect digital stamps.</p>
+        <h3 id="t-wallet-title">Digital Wallet</h3>
+        <p id="t-wallet-desc">Create and manage wallets, transfer balances, and collect digital stamps.</p>
       </div>
       <div class="card">
         <div class="card-icon">🏪</div>
-        <h3>Marketplace</h3>
-        <p>List, browse, buy, and sell digital stamp tokens on the open market.</p>
+        <h3 id="t-market-title">Marketplace</h3>
+        <p id="t-market-desc">List, browse, buy, and sell digital stamp tokens on the open market.</p>
       </div>
       <div class="card">
         <div class="card-icon">⛓️</div>
-        <h3>Blockchain</h3>
-        <p>BEP-20-compatible STP token supply tracking with mint audit logs.</p>
+        <h3 id="t-chain-title">Blockchain</h3>
+        <p id="t-chain-desc">BEP-20-compatible STP token supply tracking with mint audit logs.</p>
       </div>
     </div>
 
     <div class="endpoints">
-      <h2>API Endpoints</h2>
+      <h2 id="t-api-title">API Endpoints</h2>
       <div class="endpoint-group">
-        <h4>Wallet</h4>
+        <h4 id="t-grp-wallet">Wallet</h4>
         <div class="endpoint">
           <span class="method post">POST</span>
           <span class="path">/api/wallet/create</span>
-          <span class="desc">Create a new wallet</span>
+          <span class="desc" id="t-ep-create">Create a new wallet</span>
         </div>
         <div class="endpoint">
           <span class="method get">GET</span>
           <span class="path">/api/wallet/:userId</span>
-          <span class="desc">Get wallet details</span>
+          <span class="desc" id="t-ep-get">Get wallet details</span>
         </div>
         <div class="endpoint">
           <span class="method post">POST</span>
           <span class="path">/api/wallet/transfer</span>
-          <span class="desc">Transfer balance between wallets</span>
+          <span class="desc" id="t-ep-transfer">Transfer balance between wallets</span>
         </div>
         <div class="endpoint">
           <span class="method get">GET</span>
           <span class="path">/api/wallet/:userId/transactions</span>
-          <span class="desc">Get transaction history</span>
+          <span class="desc" id="t-ep-tx">Get transaction history</span>
         </div>
       </div>
       <div class="endpoint-group">
-        <h4>Market</h4>
+        <h4 id="t-grp-market">Market</h4>
         <div class="endpoint">
           <span class="method get">GET</span>
           <span class="path">/api/market/items</span>
-          <span class="desc">List all market items</span>
+          <span class="desc" id="t-ep-items">List all market items</span>
         </div>
         <div class="endpoint">
           <span class="method post">POST</span>
           <span class="path">/api/market/items</span>
-          <span class="desc">List a new item for sale</span>
+          <span class="desc" id="t-ep-list">List a new item for sale</span>
         </div>
         <div class="endpoint">
           <span class="method post">POST</span>
           <span class="path">/api/market/items/:itemId/buy</span>
-          <span class="desc">Purchase a market item</span>
+          <span class="desc" id="t-ep-buy">Purchase a market item</span>
         </div>
       </div>
       <div class="endpoint-group">
-        <h4>Blockchain</h4>
+        <h4 id="t-grp-chain">Blockchain</h4>
         <div class="endpoint">
           <span class="method get">GET</span>
           <span class="path">/api/blockchain/info</span>
-          <span class="desc">Get token metadata</span>
+          <span class="desc" id="t-ep-info">Get token metadata</span>
         </div>
         <div class="endpoint">
           <span class="method get">GET</span>
           <span class="path">/api/blockchain/supply</span>
-          <span class="desc">Get token supply stats</span>
+          <span class="desc" id="t-ep-supply">Get token supply stats</span>
         </div>
         <div class="endpoint">
           <span class="method post">POST</span>
           <span class="path">/api/blockchain/mint</span>
-          <span class="desc">Mint STP tokens (auth required)</span>
+          <span class="desc" id="t-ep-mint">Mint STP tokens (auth required)</span>
         </div>
       </div>
     </div>
 
     <div class="links">
       <a class="link" href="https://github.com/zedanazad43/stp" target="_blank" rel="noopener">
-        ⭐ GitHub Repository
+        ⭐ <span id="t-link-github">GitHub Repository</span>
       </a>
       <a class="link" href="https://github.com/zedanazad43/stp/blob/main/WALLET_API.md" target="_blank" rel="noopener">
-        📖 Wallet API Docs
+        📖 <span id="t-link-wallet">Wallet API Docs</span>
       </a>
       <a class="link" href="https://github.com/zedanazad43/stp/blob/main/MARKET_API.md" target="_blank" rel="noopener">
-        📖 Market API Docs
+        📖 <span id="t-link-market">Market API Docs</span>
       </a>
     </div>
 
     <footer>
-      <p>Stampcoin Platform &copy; 2024 &mdash; Powered by Node.js &amp; Express</p>
+      <p id="t-footer">Stampcoin Platform &copy; 2024 &mdash; Powered by Node.js &amp; Express</p>
     </footer>
   </div>
+
+  <script>
+    var translations = {
+      en: {
+        "html-dir": "ltr",
+        "html-lang": "en",
+        "lang-btn": "العربية",
+        "t-title": "Stampcoin Platform",
+        "t-subtitle": "A blockchain-inspired digital stamps platform with wallet &amp; marketplace features",
+        "t-badge": "STP Token — BEP-20 Compatible",
+        "t-wallet-title": "Digital Wallet",
+        "t-wallet-desc": "Create and manage wallets, transfer balances, and collect digital stamps.",
+        "t-market-title": "Marketplace",
+        "t-market-desc": "List, browse, buy, and sell digital stamp tokens on the open market.",
+        "t-chain-title": "Blockchain",
+        "t-chain-desc": "BEP-20-compatible STP token supply tracking with mint audit logs.",
+        "t-api-title": "API Endpoints",
+        "t-grp-wallet": "Wallet",
+        "t-ep-create": "Create a new wallet",
+        "t-ep-get": "Get wallet details",
+        "t-ep-transfer": "Transfer balance between wallets",
+        "t-ep-tx": "Get transaction history",
+        "t-grp-market": "Market",
+        "t-ep-items": "List all market items",
+        "t-ep-list": "List a new item for sale",
+        "t-ep-buy": "Purchase a market item",
+        "t-grp-chain": "Blockchain",
+        "t-ep-info": "Get token metadata",
+        "t-ep-supply": "Get token supply stats",
+        "t-ep-mint": "Mint STP tokens (auth required)",
+        "t-link-github": "GitHub Repository",
+        "t-link-wallet": "Wallet API Docs",
+        "t-link-market": "Market API Docs",
+        "t-footer": "Stampcoin Platform &copy; 2024 &mdash; Powered by Node.js &amp; Express"
+      },
+      ar: {
+        "html-dir": "rtl",
+        "html-lang": "ar",
+        "lang-btn": "English",
+        "t-title": "منصة ستامبكوين",
+        "t-subtitle": "منصة طوابع رقمية مستوحاة من تقنية البلوكشين مع ميزات المحفظة والسوق",
+        "t-badge": "رمز STP — متوافق مع BEP-20",
+        "t-wallet-title": "المحفظة الرقمية",
+        "t-wallet-desc": "إنشاء المحافظ وإدارتها، تحويل الأرصدة، وجمع الطوابع الرقمية.",
+        "t-market-title": "السوق",
+        "t-market-desc": "إدراج وتصفح وشراء وبيع رموز الطوابع الرقمية في السوق المفتوحة.",
+        "t-chain-title": "البلوكشين",
+        "t-chain-desc": "تتبع إمداد رمز STP المتوافق مع BEP-20 مع سجلات تدقيق الإصدار.",
+        "t-api-title": "نقاط نهاية الـ API",
+        "t-grp-wallet": "المحفظة",
+        "t-ep-create": "إنشاء محفظة جديدة",
+        "t-ep-get": "الحصول على تفاصيل المحفظة",
+        "t-ep-transfer": "تحويل الرصيد بين المحافظ",
+        "t-ep-tx": "الحصول على سجل المعاملات",
+        "t-grp-market": "السوق",
+        "t-ep-items": "عرض جميع عناصر السوق",
+        "t-ep-list": "إدراج عنصر جديد للبيع",
+        "t-ep-buy": "شراء عنصر من السوق",
+        "t-grp-chain": "البلوكشين",
+        "t-ep-info": "الحصول على بيانات الرمز",
+        "t-ep-supply": "الحصول على إحصاءات إمداد الرمز",
+        "t-ep-mint": "إصدار رموز STP (يتطلب مصادقة)",
+        "t-link-github": "مستودع GitHub",
+        "t-link-wallet": "وثائق API المحفظة",
+        "t-link-market": "وثائق API السوق",
+        "t-footer": "منصة ستامبكوين &copy; 2024 &mdash; مدعومة بـ Node.js و Express"
+      }
+    };
+
+    var htmlKeys = ["html-dir", "html-lang"];
+    var htmlKeys2 = ["t-subtitle", "t-badge", "t-footer"];
+
+    var currentLang = localStorage.getItem("stp-lang") || "en";
+
+    function toggleLang() {
+      currentLang = currentLang === "en" ? "ar" : "en";
+      localStorage.setItem("stp-lang", currentLang);
+      applyLang(currentLang);
+    }
+
+    function applyLang(lang) {
+      var t = translations[lang];
+      var root = document.getElementById("html-root");
+      root.setAttribute("dir", t["html-dir"]);
+      root.setAttribute("lang", t["html-lang"]);
+      Object.keys(t).forEach(function(id) {
+        if (htmlKeys.indexOf(id) !== -1) return;
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (htmlKeys2.indexOf(id) !== -1) {
+          el.innerHTML = t[id];
+        } else {
+          el.textContent = t[id];
+        }
+      });
+    }
+
+    applyLang(currentLang);
+  </script>
 </body>
 </html>
