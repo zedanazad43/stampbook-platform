@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stampcoin Platform</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f8fafc; color: #1e293b; }
+    header { background: #1e3a5f; color: #fff; padding: 2rem; text-align: center; }
+    header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    header p { opacity: 0.85; }
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    .card { background: #fff; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .card h2 { font-size: 1.1rem; margin-bottom: 0.75rem; color: #1e3a5f; }
+    .card p { font-size: 0.9rem; line-height: 1.6; color: #475569; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 2rem; }
+    th { background: #1e3a5f; color: #fff; padding: 0.75rem 1rem; text-align: left; font-size: 0.85rem; }
+    td { padding: 0.65rem 1rem; font-size: 0.85rem; border-bottom: 1px solid #e2e8f0; }
+    tr:last-child td { border-bottom: none; }
+    code { background: #f1f5f9; padding: 0.15rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.85rem; }
+    .badge { display: inline-block; background: #dbeafe; color: #1d4ed8; border-radius: 4px; padding: 0.1rem 0.45rem; font-size: 0.75rem; margin-left: 0.3rem; }
+    h2.section { margin: 2rem 0 1rem; font-size: 1.3rem; color: #1e3a5f; }
+    footer { text-align: center; padding: 2rem; font-size: 0.85rem; color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏷️ Stampcoin Platform</h1>
+    <p>Blockchain-inspired digital stamps — wallet, marketplace &amp; STP token</p>
+  </header>
+  <main>
+    <div class="cards">
+      <div class="card">
+        <h2>💼 Digital Wallet</h2>
+        <p>Create and manage digital wallets, transfer STP balances, and store your stamp collection securely.</p>
+      </div>
+      <div class="card">
+        <h2>🛒 Marketplace</h2>
+        <p>List, browse, and purchase digital stamps. Full transaction history with buyer and seller filtering.</p>
+      </div>
+      <div class="card">
+        <h2>⛓️ Blockchain</h2>
+        <p>BEP-20-compatible STP token on BNB Smart Chain. Track supply, mint events, and address balances.</p>
+      </div>
+    </div>
+
+    <h2 class="section">Wallet API</h2>
+    <table>
+      <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+      <tr><td><code>POST</code></td><td><code>/api/wallet/create</code></td><td>Create a new wallet</td></tr>
+      <tr><td><code>GET</code></td><td><code>/api/wallet/:userId</code></td><td>Get wallet by user ID</td></tr>
+      <tr><td><code>POST</code></td><td><code>/api/wallet/transfer</code></td><td>Transfer balance between wallets</td></tr>
+      <tr><td><code>GET</code></td><td><code>/api/wallet/:userId/transactions</code></td><td>Get transaction history</td></tr>
+      <tr><td><code>POST</code></td><td><code>/api/wallet/:userId/stamps</code></td><td>Add stamp <span class="badge">🔒 auth</span></td></tr>
+      <tr><td><code>GET</code></td><td><code>/api/wallets</code></td><td>List all wallets <span class="badge">🔒 auth</span></td></tr>
+      <tr><td><code>POST</code></td><td><code>/api/wallet/:userId/topup</code></td><td>Top up balance <span class="badge">🔒 auth</span></td></tr>
+    </table>
+
+    <h2 class="section">Market API</h2>
+    <table>
+      <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+      <tr><td><code>GET</code></td><td><code>/api/market/items</code></td><td>Get all items (supports <code>?status=</code>, <code>?type=</code>)</td></tr>
+      <tr><td><code>POST</code></td><td><code>/api/market/items</code></td><td>List a new item</td></tr>
+      <tr><td><code>GET</code></td><td><code>/api/market/items/:itemId</code></td><td>Get item by ID</td></tr>
+      <tr><td><code>PUT</code></td><td><code>/api/market/items/:itemId</code></td><td>Update item (seller only)</td></tr>
+      <tr><td><code>POST</code></td><td><code>/api/market/items/:itemId/buy</code></td><td>Purchase an item</td></tr>
+      <tr><td><code>DELETE</code></td><td><code>/api/market/items/:itemId</code></td><td>Remove item (seller only)</td></tr>
+      <tr><td><code>GET</code></td><td><code>/api/market/transactions</code></td><td>Get transaction history</td></tr>
+    </table>
+
+    <h2 class="section">Blockchain API</h2>
+    <table>
+      <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+      <tr><td><code>GET</code></td><td><code>/api/blockchain/info</code></td><td>Get token metadata</td></tr>
+      <tr><td><code>GET</code></td><td><code>/api/blockchain/supply</code></td><td>Get token supply stats</td></tr>
+      <tr><td><code>POST</code></td><td><code>/api/blockchain/mint</code></td><td>Mint STP tokens <span class="badge">🔒 auth</span></td></tr>
+      <tr><td><code>GET</code></td><td><code>/api/blockchain/balance/:address</code></td><td>Get address balance</td></tr>
+      <tr><td><code>GET</code></td><td><code>/api/blockchain/mint/events</code></td><td>Get mint audit log <span class="badge">🔒 auth</span></td></tr>
+    </table>
+  </main>
+  <footer>
+    Stampcoin Platform &mdash; MIT License &mdash;
+    <a href="https://github.com/zedanazad43/stp">GitHub</a>
+  </footer>
+</body>
+</html>
