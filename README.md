@@ -29,6 +29,7 @@ The server listens on port `8080` by default (configurable via `PORT` environmen
 
 - [WALLET_API.md](WALLET_API.md) — Digital Wallet API endpoints
 - [MARKET_API.md](MARKET_API.md) — Market Institution API endpoints
+- [BLOCKCHAIN_API.md](BLOCKCHAIN_API.md) — Blockchain & STP Token API endpoints
 
 ## Testing
 
