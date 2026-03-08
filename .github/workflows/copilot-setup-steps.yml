@@ -13,12 +13,7 @@ jobs:
     permissions:
       contents: write   # <-- Changed from 'read' to 'write' for checkout
     steps:
-      - name: Checkout repository
-        uses: - name: Checkout repository
-  uses: actions/checkout@v4
-  with:
-    token: ${{ secrets.GITHUB_TOKEN }}
-    fetch-depth: 0- name: Ensure main ref is available (for git diff/show)
+      fetch-depth: 0- name: Ensure main ref is available (for git diff/show)
   run: |
     git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
     git show-ref --verify --quiet refs/remotes/origin/main
