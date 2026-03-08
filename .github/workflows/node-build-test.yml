@@ -9,5 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Build and test complete
-        run: echo "Build and test complete"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - run: npm install
+      - run: npm test
