@@ -1,5 +1,5 @@
 const express = require("express");
-const fs = require("fs").promises;
+const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const wallet = require("./wallet");
@@ -26,21 +26,24 @@ app.use(express.static(path.join(__dirname, "public")));
 const DATA_FILE = path.join(__dirname, "data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
 
-<<<<<<< HEAD
-// Import AI Agent Expert
+// Import AI Agent Expert if available
+let aiAgentMounted = false;
 const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
 if (fs.existsSync(aiAgentPath)) {
-  // Dynamically import the AI Agent Expert to avoid issues if it doesn't exist
-  const aiAgent = require(aiAgentPath);
-  // Mount AI Agent Expert routes
-  app.use("/agent", aiAgent);
-  console.log("AI Agent Expert mounted successfully");
-} else {
-  console.warn("AI Agent Expert not found at:", aiAgentPath);
+  try {
+    const aiAgent = require(aiAgentPath);
+    if (aiAgent && typeof aiAgent === "function") {
+      app.use("/agent", aiAgent);
+      aiAgentMounted = true;
+      console.log("AI Agent Expert mounted successfully");
+    } else {
+      console.log("AI Agent Expert module loaded but not mounted (not a function)");
+    }
+  } catch (e) {
+    console.warn("Failed to load AI Agent Expert:", e.message);
+  }
 }
 
-// Original Stampcoin Platform routes
-=======
 function requireToken(req, res, next) {
   const auth = req.get("Authorization") || "";
   const token = auth.replace(/^Bearer\s+/i, "");
@@ -307,10 +310,9 @@ app.get("/api/blockchain/mint/events", requireToken, (req, res) => {
 });
 
 // --- Sync API ---
->>>>>>> 56a771d62b71d5933a7297d2255270f53d6e616a
 async function readData() {
   try {
-    const raw = await fs.readFile(DATA_FILE, "utf8");
+    const raw = await fs.promises.readFile(DATA_FILE, "utf8");
     return JSON.parse(raw);
   } catch (e) {
     console.error("Error reading data file:", e.message);
@@ -320,7 +322,7 @@ async function readData() {
 
 async function writeData(todos) {
   try {
-    await fs.writeFile(DATA_FILE, JSON.stringify(todos, null, 2), "utf8");
+    await fs.promises.writeFile(DATA_FILE, JSON.stringify(todos, null, 2), "utf8");
     return true;
   } catch (e) {
     console.error("Write error:", e);
@@ -343,7 +345,6 @@ app.post("/sync", requireToken, async (req, res) => {
   res.json({ ok: true });
 });
 
-<<<<<<< HEAD
 // AI Agent Expert integration endpoint
 app.get("/ai-agent-status", async (req, res) => {
   try {
@@ -362,22 +363,10 @@ app.get("/ai-agent-status", async (req, res) => {
   }
 });
 
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({
-    status: "ok",
-    timestamp: new Date().toISOString(),
-    service: "Stampcoin Platform",
-    version: "2.0.0"
-  });
-});
-
 const port = process.env.PORT || 10000;
-app.listen(port, '0.0.0.0', () => {
-=======
-const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
->>>>>>> 56a771d62b71d5933a7297d2255270f53d6e616a
   console.log(`Stampcoin Platform server listening on port ${port}`);
-  console.log(`AI Agent Expert available at: http://localhost:${port}/agent`);
+  if (aiAgentMounted) {
+    console.log(`AI Agent Expert available at: http://localhost:${port}/agent`);
+  }
 });
