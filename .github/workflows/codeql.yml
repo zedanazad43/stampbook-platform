@@ -2,7 +2,7 @@ name: CodeQL Security Analysis
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'copilot/**' ]
   pull_request:
     branches: [ main ]
   schedule:
@@ -28,6 +28,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
+          config-file: ./.github/codeql/codeql-config.yml
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
