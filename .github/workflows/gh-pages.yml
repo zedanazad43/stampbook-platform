@@ -1,0 +1,35 @@
+name: نشر تلقائي للموقع على GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. أخذ الكود
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. تثبيت Node.js (لو المشروع npm/react/vue)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # 3. تثبيت الحزم
+      - name: Install dependencies
+        run: npm install
+
+      # 4. بناء المشروع (لو react/vue/node)
+      - name: Build project
+        run: npm run build
+
+      # 5. نشر الناتج على GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
