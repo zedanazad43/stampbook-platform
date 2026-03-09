@@ -14,12 +14,18 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.COPILOT_TOKEN || github.token }}
+
       - name: Ensure main ref is available (for git diff/show)
         run: |
           git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
           git show-ref --verify --quiet refs/remotes/origin/main
           # اختياري: إنشاء ref محلي باسم main إذا كان شيء يتوقع refs/heads/main
-          git branch -f main refs/remotes/origin/main
+          git show-ref --quiet refs/heads/main || git branch -f main refs/remotes/origin/main
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
