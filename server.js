@@ -148,6 +148,7 @@ app.get("/api/market/items", (req, res) => {
     const filter = {};
     if (req.query.status) filter.status = req.query.status;
     if (req.query.type) filter.type = req.query.type;
+    if (req.query.sellerId) filter.sellerId = req.query.sellerId;
     res.json(market.getAllMarketItems(filter));
   } catch (e) {
     res.status(500).json({ error: e.message });

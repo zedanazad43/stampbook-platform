@@ -88,6 +88,12 @@ describe("market module", () => {
       const available = market.getAllMarketItems({ status: "available" });
       expect(available.length).toBe(1);
     });
+
+    test("filters by sellerId", () => {
+      const items = market.getAllMarketItems({ sellerId: "s1" });
+      expect(items.length).toBe(1);
+      expect(items[0].name).toBe("Stamp A");
+    });
   });
 
   // --- getMarketItem ---
