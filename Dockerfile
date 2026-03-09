@@ -17,5 +17,5 @@ RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 10000
 CMD ["node", "server.js"]
