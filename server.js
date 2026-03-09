@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs").promises;
+const fsSync = require("fs");
 const path = require("path");
 const cors = require("cors");
 const wallet = require("./wallet");
@@ -44,6 +45,16 @@ function requireToken(req, res, next) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   next();
+}
+
+// Mount AI Agent Expert routes
+const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
+if (fsSync.existsSync(aiAgentPath)) {
+  const aiAgent = require(aiAgentPath);
+  app.use("/agent", aiAgent);
+  console.log("AI Agent Expert mounted successfully");
+} else {
+  console.warn("AI Agent Expert not found at:", aiAgentPath);
 }
 
 // Health check endpoint
@@ -498,3 +509,4 @@ const port = process.env.PORT || 10000;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Stampcoin Platform server listening on port ${port}`);
 });
+
