@@ -59,10 +59,11 @@ jobs:
           if [ -n "$RAILWAY_SERVICE_ID" ]; then
             EXTRA_ARGS+=(--service "$RAILWAY_SERVICE_ID")
           fi
-          if [ -n "$RAILWAY_PROJECT_ID" ]; then
+          # Only pass --project and --environment together (both are required when using --project)
+          if [ -n "$RAILWAY_PROJECT_ID" ] && [ -n "$RAILWAY_ENVIRONMENT" ]; then
             EXTRA_ARGS+=(--project "$RAILWAY_PROJECT_ID")
-          fi
-          if [ -n "$RAILWAY_ENVIRONMENT" ]; then
+            EXTRA_ARGS+=(--environment "$RAILWAY_ENVIRONMENT")
+          elif [ -n "$RAILWAY_ENVIRONMENT" ]; then
             EXTRA_ARGS+=(--environment "$RAILWAY_ENVIRONMENT")
           fi
 
