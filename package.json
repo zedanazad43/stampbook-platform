@@ -10,17 +10,15 @@
     "test": "echo 'Tests can be configured'",
     "lint": "echo 'Linting can be configured'",
     "docker:build": "docker build -t stampcoin-platform .",
-    "docker:run": "docker run -p 8080:8080 stampcoin-platform",
+    "docker:run": "docker run -p 10000:10000 stampcoin-platform",
     "agent": "node src/ai-agent-expert/index.js",
-    "agent-dev": "nodemon src/ai-agent-expert/index.js"
+    "agent-dev": "node src/ai-agent-expert/index.js"
   },
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.17",
     "jest": "^30.2.0"
   }
 }

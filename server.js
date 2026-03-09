@@ -10,12 +10,16 @@ const app = express();
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
-  : ["http://localhost:8080", "http://localhost:3000"];
+  : ["http://localhost:8080", "http://localhost:3000", "http://localhost:10000"];
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
+    // In development mode, allow all origins for easier local testing
+    if (process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    }
     callback(new Error("Not allowed by CORS"));
   }
 }));
