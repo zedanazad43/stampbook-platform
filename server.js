@@ -473,7 +473,7 @@ app.get("/api/users/:userId", (req, res) => {
 // --- Sync API ---
 async function readData() {
   try {
-    const raw = await fs.promises.readFile(DATA_FILE, "utf8");
+    const raw = await fs.readFile(DATA_FILE, "utf8");
     return JSON.parse(raw);
   } catch (e) {
     console.error("Error reading data file:", e.message);
@@ -483,7 +483,7 @@ async function readData() {
 
 async function writeData(todos) {
   try {
-    await fs.promises.writeFile(DATA_FILE, JSON.stringify(todos, null, 2), "utf8");
+    await fs.writeFile(DATA_FILE, JSON.stringify(todos, null, 2), "utf8");
     return true;
   } catch (e) {
     console.error("Write error:", e);
@@ -506,7 +506,7 @@ app.post("/sync", requireToken, async (req, res) => {
   res.json({ ok: true });
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 10000;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Stampcoin Platform server listening on port ${port}`);
 });
