@@ -58,6 +58,38 @@ Tests live in `tests/` and use Jest with a mocked filesystem so no disk I/O occu
 5. Document the new endpoint in `WALLET_API.md` or `MARKET_API.md`
 6. Add unit tests in the appropriate test file
 
+## Merging Pull Requests via Command Line
+
+If the GitHub UI merge button is unavailable or you prefer the command line, use the steps below. This workflow requires that the `main` branch is **not** protected (no required status checks or merge restrictions).
+
+```bash
+# Step 1 — Fetch the latest state of the repository
+git fetch origin
+
+# Step 2 — Switch to the base branch and align it with the remote
+git checkout main
+git merge origin/main   # fast-forward to latest remote state
+
+# Step 3 — Merge the feature branch into main
+git merge <feature-branch-name>
+# e.g.: git merge copilot/add-frontend-platform-stamp-trading
+
+# Step 4 — Push the result
+git push origin main
+```
+
+### Example for PR #258
+
+```bash
+git fetch origin
+git checkout main
+git merge origin/main
+git merge copilot/add-frontend-platform-stamp-trading
+git push origin main
+```
+
+> **Note:** Always ensure `npm test` passes (all 54 tests) before pushing to `main`.
+
 ## Reporting Bugs
 
 Use the [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md) template when creating issues.
