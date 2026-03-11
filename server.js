@@ -1,157 +1,156 @@
-﻿'use strict';
+'use strict';
+
+/**
+ * Stampcoin Platform - single-file Express server (Fly.io friendly)
+ *
+ * Fixes:
+ * - Removes syntax hazards (no nested template strings for SQL)
+ * - Avoids runtime module pitfalls (uses require('fs').promises)
+ * - Starts fast and always listens on 0.0.0.0:PORT (Fly expects 8080)
+ * - Contact page + POST /contact with:
+ *   - spam protection (rate limit + honeypot)
+ *   - storage: Postgres if DATABASE_URL is set, otherwise JSON file fallback
+ */
 
 const express = require('express');
 const path = require('path');
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 
-let Pool;
+let Pool = null;
 try {
-  // pg is optional at runtime if DATABASE_URL isn't set, but we install it above.
   ({ Pool } = require('pg'));
-} catch (_) {
+} catch (e) {
+  // pg not installed => will use file fallback
   Pool = null;
 }
 
 const app = express();
 
 // --------------------
-// Basic middleware
+// Middleware
 // --------------------
-app.disable('x-powered-by');
-
-// JSON + urlencoded form support
 app.use(express.json({ limit: '200kb' }));
 app.use(express.urlencoded({ extended: false }));
-
-// CORS (adjust if needed)
-app.use((req, res, next) => {
-  res.setHeader('Vary', 'Origin');
-  next();
-});
 
 // --------------------
 // Health
 // --------------------
-app.get('/health', (req, res) => {
-  res.status(200).json({ ok: true });
-});
+app.get('/health', (req, res) => res.status(200).json({ ok: true }));
 
 // --------------------
-// Root mode toggle
+// Root behavior (toggle)
+//   ROOT_MODE=redirect (default) => / redirects to /contact
+//   ROOT_MODE=home               => / served by public/index.html (static)
 // --------------------
 const ROOT_MODE = String(process.env.ROOT_MODE || 'redirect').toLowerCase();
-// If redirect, register GET / before express.static so it overrides public/index.html
 if (ROOT_MODE === 'redirect') {
   app.get('/', (req, res) => res.redirect(302, '/contact'));
 }
 
-// Extra redirect endpoint (always available)
+// Always-available redirect tester
 app.get('/go-contact', (req, res) => res.redirect(302, '/contact'));
 
 // --------------------
-// Spam protection (simple, in-memory)
+// Spam protection
 // --------------------
-// NOTE: in-memory means per-machine; fine as a basic protection.
-const RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_RATE_WINDOW_MS || 900000);
-const RATE_LIMIT_MAX = Number(process.env.CONTACT_RATE_MAX || 10);
-const rateMap = new Map(); // ip => { count, resetAt }
+const RATE_WINDOW_MS = Number(process.env.CONTACT_RATE_WINDOW_MS || 15 * 60 * 1000); // 15 min
+const RATE_MAX = Number(process.env.CONTACT_RATE_MAX || 10);
+
+const rateMap = new Map(); // ip -> {count, resetAt}
 
 function getClientIp(req) {
-  // Fly provides this header
-  const flyIp = req.headers['fly-client-ip'];
-  if (flyIp) return String(flyIp);
-  // fallback
-  return req.ip || 'unknown';
+  return String(req.headers['fly-client-ip'] || req.ip || 'unknown');
 }
 
-function rateLimitContact(req, res, next) {
+function rateLimit(req, res, next) {
   const ip = getClientIp(req);
   const now = Date.now();
 
-  const cur = rateMap.get(ip);
-  if (!cur || now >= cur.resetAt) {
-    rateMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+  const item = rateMap.get(ip);
+  if (!item || now >= item.resetAt) {
+    rateMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
     return next();
   }
 
-  if (cur.count >= RATE_LIMIT_MAX) {
+  if (item.count >= RATE_MAX) {
     return res.status(429).send('Too many requests. Please try again later.');
   }
 
-  cur.count += 1;
+  item.count += 1;
   return next();
 }
 
 // --------------------
-// Storage: Postgres preferred, filesystem fallback
+// Storage: Postgres (preferred) or JSON file fallback
 // --------------------
-const DATABASE_URL = process.env.DATABASE_URL || '';
+const DATABASE_URL = process.env.DATABASE_URL ? String(process.env.DATABASE_URL) : '';
 const CONTACT_MESSAGES_FILE = path.join(__dirname, 'contact-messages.json');
 
 let pgPool = null;
 if (DATABASE_URL && Pool) {
-  pgPool = new Pool({
-    connectionString: DATABASE_URL,
-    // Fly Postgres typically requires SSL; pg handles many cases automatically,
-    // but if you hit SSL errors, uncomment:
-    // ssl: { rejectUnauthorized: false }
-  });
+  try {
+    pgPool = new Pool({
+      connectionString: DATABASE_URL,
+      // If you get SSL errors on Fly Postgres, uncomment:
+      // ssl: { rejectUnauthorized: false },
+    });
+  } catch (e) {
+    console.error('Failed to init pg pool:', e);
+    pgPool = null;
+  }
 }
 
 async function ensureContactTable() {
   if (!pgPool) return;
 
-  const sql = `
-    CREATE TABLE IF NOT EXISTS contact_messages (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      email TEXT NOT NULL,
-      message TEXT NOT NULL,
-      created_at TIMESTAMPTZ NOT NULL,
-      ip TEXT,
-      user_agent TEXT
-    );
-  `;
+  const sql =
+    'CREATE TABLE IF NOT EXISTS contact_messages (' +
+    'id TEXT PRIMARY KEY,' +
+    'name TEXT NOT NULL,' +
+    'email TEXT NOT NULL,' +
+    'message TEXT NOT NULL,' +
+    'created_at TIMESTAMPTZ NOT NULL,' +
+    'ip TEXT,' +
+    'user_agent TEXT' +
+    ');';
 
   await pgPool.query(sql);
 }
-// ensure table in background (do not block startup)
-ensureContactTable().catch(err => {
-  console.error('ensureContactTable error:', err && err.message ? err.message : err);
+
+// Run in background; never crash app on DB issues
+ensureContactTable().catch((e) => {
+  console.error('ensureContactTable error:', e && e.message ? e.message : e);
 });
 
-async function readContactMessagesFile() {
+async function readMessagesFile() {
   try {
     const raw = await fs.readFile(CONTACT_MESSAGES_FILE, 'utf8');
     const data = JSON.parse(raw);
     return Array.isArray(data) ? data : [];
   } catch (e) {
     if (e && e.code === 'ENOENT') return [];
-    console.error('readContactMessagesFile error:', e && e.message ? e.message : e);
+    console.error('readMessagesFile error:', e);
     return [];
   }
 }
 
-async function appendContactMessageFile(entry) {
-  const existing = await readContactMessagesFile();
+async function appendMessageFile(entry) {
+  const existing = await readMessagesFile();
   existing.push(entry);
   await fs.writeFile(CONTACT_MESSAGES_FILE, JSON.stringify(existing, null, 2), 'utf8');
 }
 
-async function storeContactMessage(entry) {
-  // Prefer Postgres if configured
+async function storeMessage(entry) {
   if (pgPool) {
     await pgPool.query(
-      INSERT INTO contact_messages (id, name, email, message, created_at, ip, user_agent)
-       VALUES (,,,,,,),
+      'INSERT INTO contact_messages (id, name, email, message, created_at, ip, user_agent) VALUES ($1,$2,$3,$4,$5,$6,$7)',
       [entry.id, entry.name, entry.email, entry.message, entry.createdAt, entry.ip, entry.userAgent]
     );
-    return { backend: 'postgres' };
+    return 'postgres';
   }
 
-  // Fallback: local file (may be lost on redeploy/restart)
-  await appendContactMessageFile(entry);
-  return { backend: 'file' };
+  await appendMessageFile(entry);
+  return 'file';
 }
 
 // --------------------
@@ -160,9 +159,10 @@ async function storeContactMessage(entry) {
 app.get('/contact', (req, res) => {
   const contactEmail = process.env.CONTACT_EMAIL || 'stampcoin.contact@gmail.com';
   const repoUrl = process.env.GITHUB_REPO_URL || 'https://github.com/zedanazad43/stp';
+  const storageHint = pgPool ? 'Postgres (DATABASE_URL set)' : 'Local file fallback (no DATABASE_URL)';
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.status(200).send(<!doctype html>
+  res.status(200).send(`<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -207,8 +207,9 @@ app.get('/contact', (req, res) => {
       <div class="card">
         <h2 style="margin:0 0 10px;">Send a message</h2>
         <p>Anti-spam: rate limit + hidden honeypot field.</p>
+
         <form method="post" action="/contact">
-          <!-- Honeypot (bots often fill this) -->
+          <!-- Honeypot -->
           <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
             <label for="company">Company</label>
             <input id="company" name="company" autocomplete="off" />
@@ -229,32 +230,30 @@ app.get('/contact', (req, res) => {
           <div style="margin-top:12px;">
             <button type="submit">Send</button>
           </div>
-          <div class="hint">If you submit too many times, you'll get HTTP 429 for a while.</div>
+
+          <div class="hint">Storage: ${storageHint}</div>
         </form>
       </div>
 
       <div class="card">
         <h2 style="margin:0 0 10px;">Other contacts</h2>
-        <p><strong>Email:</strong> <a href="mailto:"></a></p>
-        <p><strong>GitHub:</strong> <a href=""></a></p>
-        <p class="hint"><strong>Storage:</strong> .</p>
+        <p><strong>Email:</strong> <a href="mailto:${contactEmail}">${contactEmail}</a></p>
+        <p><strong>GitHub:</strong> <a href="${repoUrl}">${repoUrl}</a></p>
       </div>
     </div>
   </div>
 </body>
-</html>);
+</html>`);
 });
 
 // --------------------
-// Contact form (POST)
+// Contact submit (POST)
 // --------------------
-app.post('/contact', rateLimitContact, async (req, res) => {
+app.post('/contact', rateLimit, async (req, res) => {
   try {
-    // Honeypot: if filled, treat as bot and pretend success (do not store)
-    const honeypot = (req.body && req.body.company) ? String(req.body.company).trim() : '';
-    if (honeypot) {
-      return res.status(200).send('OK');
-    }
+    // Honeypot check: if filled, silently accept but don't store
+    const honeypot = req.body && req.body.company ? String(req.body.company).trim() : '';
+    if (honeypot) return res.status(200).send('OK');
 
     const name = req.body && req.body.name ? String(req.body.name).trim() : '';
     const email = req.body && req.body.email ? String(req.body.email).trim() : '';
@@ -274,39 +273,41 @@ app.post('/contact', rateLimitContact, async (req, res) => {
       userAgent: req.headers['user-agent'] ? String(req.headers['user-agent']) : null,
     };
 
-    const result = await storeContactMessage(entry);
-    console.log('CONTACT_MESSAGE:', entry, 'stored_in:', result.backend);
+    let backend = 'unknown';
+    try {
+      backend = await storeMessage(entry);
+    } catch (e) {
+      // Never crash; store failures are 500 for this request only
+      console.error('storeMessage error:', e && e.message ? e.message : e);
+      return res.status(500).send('Failed to store message');
+    }
+
+    console.log('CONTACT_MESSAGE:', entry, 'stored_in:', backend);
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    return res.status(200).send(
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Message sent</title>
-</head>
+    return res.status(200).send(`<!doctype html>
+<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Message sent</title></head>
 <body style="font-family:system-ui;margin:40px;max-width:720px">
   <h1>Message sent</h1>
   <p>Thanks, we received your message.</p>
   <p><a href="/contact">Back to Contact</a> | <a href="/">Home</a></p>
-</body>
-</html>);
+</body></html>`);
   } catch (e) {
     console.error('POST /contact error:', e);
-    return res.status(500).send('Failed to store message');
+    return res.status(500).send('Server error');
   }
 });
 
 // --------------------
-// Static files
+// Static
 // --------------------
 app.use(express.static(path.join(__dirname, 'public')));
 
 // --------------------
-// Start server
+// Start (Fly expects 0.0.0.0:8080)
 // --------------------
 const port = Number(process.env.PORT || 8080);
 app.listen(port, '0.0.0.0', () => {
-  console.log(Stampcoin Platform server listening on port );
+  console.log(`Stampcoin Platform server listening on port ${port}`);
 });
