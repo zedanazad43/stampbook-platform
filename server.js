@@ -4,12 +4,14 @@
  * Stampcoin Platform - single-file Express server (Fly.io friendly)
  *
  * Fixes:
- * - Removes syntax hazards (no nested template strings for SQL)
- * - Avoids runtime module pitfalls (uses require('fs').promises)
  * - Starts fast and always listens on 0.0.0.0:PORT (Fly expects 8080)
  * - Contact page + POST /contact with:
  *   - spam protection (rate limit + honeypot)
  *   - storage: Postgres if DATABASE_URL is set, otherwise JSON file fallback
+ *
+ * NOTE:
+ * - This version removes the broken duplicated pgPool block and the stray comma that caused:
+ *   SyntaxError: Unexpected token ','
  */
 
 const express = require('express');
@@ -90,12 +92,10 @@ let pgPool = null;
 if (DATABASE_URL && Pool) {
   try {
     pgPool = new Pool({
-  connectionString: DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
-      ,
-      // If you get SSL errors on Fly Postgres, uncomment:
-      // ssl: { rejectUnauthorized: false },
+      connectionString: DATABASE_URL,
+      // Fly Postgres often requires SSL. If this causes issues for internal connections,
+      // remove this ssl block and retry.
+      ssl: { rejectUnauthorized: false }
     });
   } catch (e) {
     console.error('Failed to init pg pool:', e);
@@ -273,14 +273,13 @@ app.post('/contact', rateLimit, async (req, res) => {
       message,
       createdAt: new Date().toISOString(),
       ip: getClientIp(req),
-      userAgent: req.headers['user-agent'] ? String(req.headers['user-agent']) : null,
+      userAgent: req.headers['user-agent'] ? String(req.headers['user-agent']) : null
     };
 
     let backend = 'unknown';
     try {
       backend = await storeMessage(entry);
     } catch (e) {
-      // Never crash; store failures are 500 for this request only
       console.error('storeMessage error:', e && e.message ? e.message : e);
       return res.status(500).send('Failed to store message');
     }
