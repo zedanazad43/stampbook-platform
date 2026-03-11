@@ -25,7 +25,161 @@ app.use(cors({
 }));
 app.use(express.json());
 // Redirect home to /contact (must be before express.static so it overrides public/index.html)
-app.get("/", (req, res) => res.redirect(302, "/contact"));
+app.get("/", (req, res) => res.redirect(302, "/contact"));// --------------------
+// Contact page + form
+// --------------------
+
+// Where contact messages will be stored (simple JSON file; for production use a DB)
+const CONTACT_MESSAGES_FILE = path.join(__dirname, "contact-messages.json");
+
+// helper: read existing messages
+async function readContactMessages() {
+  try {
+    const raw = await fs.readFile(CONTACT_MESSAGES_FILE, "utf8");
+    const data = JSON.parse(raw);
+    return Array.isArray(data) ? data : [];
+  } catch (e) {
+    // file doesn't exist yet => no messages
+    if (e && (e.code === "ENOENT" || String(e.message).includes("ENOENT"))) return [];
+    console.error("readContactMessages error:", e.message || e);
+    return [];
+  }
+}
+
+// helper: append a message
+async function appendContactMessage(message) {
+  const existing = await readContactMessages();
+  existing.push(message);
+  await fs.writeFile(CONTACT_MESSAGES_FILE, JSON.stringify(existing, null, 2), "utf8");
+}
+
+// Pretty contact page (GET)
+app.get("/contact", (req, res) => {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.status(200).send(`
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact | Stampcoin Platform</title>
+  <style>
+    :root { --bg:#0b1220; --card:#111a2e; --text:#e5e7eb; --muted:#9ca3af; --accent:#60a5fa; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background: radial-gradient(1200px 800px at 20% 10%, #1b2a52, var(--bg)); color: var(--text); }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 40px 18px; }
+    .top { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .card { background: rgba(17,26,46,.92); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    h1 { margin: 0 0 10px; font-size: 28px; }
+    p { margin: 10px 0; color: var(--muted); }
+    .grid { display:grid; grid-template-columns: 1fr; gap: 14px; margin-top: 14px; }
+    @media (min-width: 860px) { .grid { grid-template-columns: 1fr 1fr; } }
+    label { display:block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    input, textarea { width:100%; box-sizing:border-box; padding: 12px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,.10); background: rgba(0,0,0,.18); color: var(--text); outline: none; }
+    textarea { min-height: 120px; resize: vertical; }
+    button { cursor:pointer; padding: 12px 14px; border: 0; border-radius: 12px; background: linear-gradient(90deg, #60a5fa, #a78bfa); color: #0b1220; font-weight: 700; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; }
+    .pill { display:inline-block; padding: 6px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.10); background: rgba(0,0,0,.18); color: var(--text); font-size: 13px; }
+    .ok { color:#34d399; }
+    .err { color:#fca5a5; }
+    code { background: rgba(0,0,0,.25); padding: 2px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>Contact</h1>
+        <p>Get in touch with the Stampcoin Platform team.</p>
+      </div>
+      <div class="row">
+        <a class="pill" href="/">Home</a>
+        <a class="pill" href="/health">Health</a>
+        <a class="pill" href="/go-contact">Redirect test</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2 style="margin:0 0 10px;">Send a message</h2>
+        <p>Messages are stored server-side (JSON) and also printed to logs. Later we can integrate email.</p>
+        <form method="post" action="/contact">
+          <div style="margin-top:12px;">
+            <label for="name">Name</label>
+            <input id="name" name="name" placeholder="Your name" required />
+          </div>
+          <div style="margin-top:12px;">
+            <label for="email">Email</label>
+            <input id="email" name="email" placeholder="you@example.com" type="email" required />
+          </div>
+          <div style="margin-top:12px;">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Write your message..." required></textarea>
+          </div>
+          <div style="margin-top:12px;">
+            <button type="submit">Send</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 style="margin:0 0 10px;">Other contacts</h2>
+        <p><strong>Email:</strong> <a href="mailto:stampcoin.contact@gmail.com">stampcoin.contact@gmail.com</a></p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/zedanazad43/stp">zedanazad43/stp</a></p>
+        <p class="pill">Tip: check <code>/api/token</code> for token metadata.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `);
+});
+
+// Parse simple HTML form posts
+app.use(express.urlencoded({ extended: false }));
+
+// Contact form submit (POST)
+app.post("/contact", async (req, res) => {
+  try {
+    const { name, email, message } = req.body || {};
+    if (!name || !email || !message) {
+      return res.status(400).send("Missing name/email/message");
+    }
+
+    const entry = {
+      id: "msg_" + Date.now(),
+      name: String(name).trim(),
+      email: String(email).trim(),
+      message: String(message).trim(),
+      createdAt: new Date().toISOString(),
+      ip: req.headers["fly-client-ip"] || req.ip || null,
+      userAgent: req.headers["user-agent"] || null,
+    };
+
+    await appendContactMessage(entry);
+    console.log("CONTACT_MESSAGE:", entry);
+
+    // Simple success page
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    return res.status(200).send(`
+      <!doctype html>
+      <html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+      <title>Message sent</title></head>
+      <body style="font-family:system-ui;margin:40px;max-width:720px">
+        <h1>Message sent</h1>
+        <p class="ok">Thanks, we received your message.</p>
+        <p><a href="/contact">Back to Contact</a> | <a href="/">Home</a></p>
+      </body></html>
+    `);
+  } catch (e) {
+    console.error("POST /contact error:", e);
+    return res.status(500).send("Failed to store message");
+  }
+});
+
+// Optional redirect endpoint (so / can stay Home)
+app.get("/go-contact", (req, res) => res.redirect(302, "/contact"));
 app.use(express.static(path.join(__dirname, "public")));
 
 const DATA_FILE = path.join(__dirname, "data.json");
