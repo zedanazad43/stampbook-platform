@@ -24,7 +24,8 @@ app.use(cors({
   }
 }));
 app.use(express.json());
-
+// Redirect home to /contact (must be before express.static so it overrides public/index.html)
+app.get("/", (req, res) => res.redirect(302, "/contact"));
 app.use(express.static(path.join(__dirname, "public")));
 
 const DATA_FILE = path.join(__dirname, "data.json");
