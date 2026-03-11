@@ -9,42 +9,26 @@ const blockchain = require("./blockchain");
 const app = express();
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
+  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
   : ["http://localhost:8080", "http://localhost:3000", "http://localhost:10000"];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    // In development mode, allow all origins for easier local testing
-    if (process.env.NODE_ENV !== "production") {
-      return callback(null, true);
-    }
-    callback(new Error("Not allowed by CORS"));
-  }
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      // In development mode, allow all origins for easier local testing
+      if (process.env.NODE_ENV !== "production") {
+        return callback(null, true);
+      }
+      callback(new Error("Not allowed by CORS"));
+    },
+  })
+);
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "public")));
-// Simple Contact page (GET)
-app.get("/contact", (req, res) => {
-  res.setHeader("Content-Type", "text/html; charset=utf-8");
-  res.status(200).send(`
-    <!doctype html>
-    <html lang="en">
-      <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <title>Contact | Stampcoin Platform</title>
-      </head>
-      <body>
-        <h1>Contact</h1>
-        <p>Stampcoin Platform is running.</p>
-        <p><a href="/health">Health</a></p>
-      </body>
-    </html>
-  `);
-});
+
 const DATA_FILE = path.join(__dirname, "data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
 
@@ -64,16 +48,54 @@ function requireToken(req, res, next) {
   next();
 }
 
+// --------------------
+// Public pages
+// --------------------
+
+// Simple Contact page (GET)
+app.get("/contact", (req, res) => {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.status(200).send(`
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Contact | Stampcoin Platform</title>
+        <style>
+          body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:40px;max-width:720px}
+          a{color:#2563eb}
+          .card{border:1px solid #e5e7eb;border-radius:12px;padding:18px}
+          code{background:#f3f4f6;padding:2px 6px;border-radius:6px}
+        </style>
+      </head>
+      <body>
+        <h1>Contact</h1>
+        <div class="card">
+          <p>Stampcoin Platform is running.</p>
+          <p>Health: <a href="/health">/health</a></p>
+        </div>
+      </body>
+    </html>
+  `);
+});
+
+// Redirect home to contact
+app.get("/", (req, res) => res.redirect("/contact"));
+
 // Health check endpoint
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
-// --- Wallet API ---
+// --------------------
+// Wallet API
+// --------------------
 
 // Create wallet
 app.post("/api/wallet/create", (req, res) => {
   try {
     const { userId, userName } = req.body;
-    if (!userId || !userName) return res.status(400).json({ error: "userId and userName are required" });
+    if (!userId || !userName)
+      return res.status(400).json({ error: "userId and userName are required" });
     const w = wallet.createWallet(userId, userName);
     res.json(w);
   } catch (e) {
@@ -96,7 +118,10 @@ app.get("/api/wallet/:userId", (req, res) => {
 app.post("/api/wallet/transfer", (req, res) => {
   try {
     const { fromUserId, toUserId, amount } = req.body;
-    if (!fromUserId || !toUserId || !amount) return res.status(400).json({ error: "fromUserId, toUserId, and amount are required" });
+    if (!fromUserId || !toUserId || !amount)
+      return res
+        .status(400)
+        .json({ error: "fromUserId, toUserId, and amount are required" });
     const tx = wallet.transfer(fromUserId, toUserId, Number(amount));
     res.json(tx);
   } catch (e) {
@@ -147,7 +172,9 @@ app.post("/api/wallet/:userId/topup", requireToken, (req, res) => {
   }
 });
 
-// --- Market API ---
+// --------------------
+// Market API
+// --------------------
 
 // Get all market items (with optional filters)
 app.get("/api/market/items", (req, res) => {
@@ -188,13 +215,15 @@ app.put("/api/market/items/:itemId", (req, res) => {
     const { userId, price, description, status, imageUrl } = req.body || {};
     if (!userId) return res.status(400).json({ error: "userId is required" });
     const item = market.getMarketItem(req.params.itemId);
-    if (item.sellerId !== userId) return res.status(403).json({ error: "Only the seller can update this item" });
+    if (item.sellerId !== userId)
+      return res.status(403).json({ error: "Only the seller can update this item" });
     const updates = {};
     if (price !== undefined) updates.price = price;
     if (description !== undefined) updates.description = description;
     if (status !== undefined) updates.status = status;
     if (imageUrl !== undefined) updates.imageUrl = imageUrl;
-    if (Object.keys(updates).length === 0) return res.status(400).json({ error: "No updatable fields provided" });
+    if (Object.keys(updates).length === 0)
+      return res.status(400).json({ error: "No updatable fields provided" });
     res.json(market.updateMarketItem(req.params.itemId, updates));
   } catch (e) {
     if (e.message === "Market item not found") return res.status(404).json({ error: e.message });
@@ -241,7 +270,9 @@ app.get("/api/market/transactions", (req, res) => {
   }
 });
 
-// --- Token Info API ---
+// --------------------
+// Token Info API
+// --------------------
 app.get("/api/token", (req, res) => {
   res.json({
     name: "StampCoin",
@@ -255,19 +286,21 @@ app.get("/api/token", (req, res) => {
     github: "https://github.com/zedanazad43/stp",
     contact: "stampcoin.contact@gmail.com",
     distribution: [
-      { label: "Public ICO Sale",       percent: 20, amount: 84200000 },
-      { label: "Ecosystem & Partners",  percent: 20, amount: 84200000 },
-      { label: "Community & Rewards",   percent: 20, amount: 84200000 },
-      { label: "Liquidity Pool",        percent: 15, amount: 63150000 },
-      { label: "Team & Founders",       percent: 15, amount: 63150000 },
-      { label: "Reserve",               percent: 10, amount: 42100000 }
+      { label: "Public ICO Sale", percent: 20, amount: 84200000 },
+      { label: "Ecosystem & Partners", percent: 20, amount: 84200000 },
+      { label: "Community & Rewards", percent: 20, amount: 84200000 },
+      { label: "Liquidity Pool", percent: 15, amount: 63150000 },
+      { label: "Team & Founders", percent: 15, amount: 63150000 },
+      { label: "Reserve", percent: 10, amount: 42100000 },
     ],
     contractAddress: process.env.STP_CONTRACT_ADDRESS || "Pending mainnet deployment",
-    network: "EVM-compatible"
+    network: "EVM-compatible",
   });
 });
 
-// --- Blockchain API ---
+// --------------------
+// Blockchain API
+// --------------------
 
 app.get("/api/blockchain/info", (req, res) => {
   try {
@@ -313,15 +346,16 @@ app.get("/api/blockchain/mint/events", requireToken, (req, res) => {
   }
 });
 
-// --- Auctions API (in-memory — data resets on server restart) ---
-// For production, replace with a persistent data store (e.g., database or JSON file).
+// --------------------
+// Auctions API (in-memory — resets on restart)
+// --------------------
 const auctions = new Map();
 
 app.get("/api/auctions", (req, res) => {
   try {
-    const list = Array.from(auctions.values()).filter(a => a.status !== "cancelled");
+    const list = Array.from(auctions.values()).filter((a) => a.status !== "cancelled");
     const { status } = req.query;
-    res.json(status ? list.filter(a => a.status === status) : list);
+    res.json(status ? list.filter((a) => a.status === status) : list);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -377,142 +411,4 @@ app.post("/api/auctions/:id/bid", (req, res) => {
     if (Number(amount) <= auction.currentBid) {
       return res.status(400).json({ error: `Bid must be greater than current bid of ${auction.currentBid}` });
     }
-    const bid = { bidderId, amount: Number(amount), timestamp: new Date().toISOString() };
-    auction.bids.push(bid);
-    auction.currentBid = Number(amount);
-    res.json({ auction, bid });
-  } catch (e) {
-    res.status(400).json({ error: e.message });
-  }
-});
-
-// --- NFT Stamps API (in-memory — data resets on server restart) ---
-// For production, replace with a persistent data store (e.g., database or JSON file).
-const nftStamps = new Map();
-
-app.get("/api/nft/stamps", (req, res) => {
-  try {
-    const list = Array.from(nftStamps.values());
-    const { ownerId } = req.query;
-    res.json(ownerId ? list.filter(s => s.ownerId === ownerId) : list);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-app.post("/api/nft/mint", (req, res) => {
-  try {
-    const { ownerId, name, country, year, description, rarity, imageUrl } = req.body;
-    if (!ownerId || !name) return res.status(400).json({ error: "ownerId and name are required" });
-    const tokenId = "STP-" + Date.now().toString(36).toUpperCase();
-    const stamp = {
-      tokenId,
-      ownerId,
-      name,
-      country: country || "",
-      year: year || null,
-      description: description || "",
-      rarity: rarity || "common",
-      imageUrl: imageUrl || null,
-      mintedAt: new Date().toISOString(),
-      status: "minted",
-      mintCost: 50,
-    };
-    nftStamps.set(tokenId, stamp);
-    res.status(201).json(stamp);
-  } catch (e) {
-    res.status(400).json({ error: e.message });
-  }
-});
-
-app.get("/api/nft/stamps/:tokenId", (req, res) => {
-  try {
-    const stamp = nftStamps.get(req.params.tokenId);
-    if (!stamp) return res.status(404).json({ error: "NFT stamp not found" });
-    res.json(stamp);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// --- Users / Registration API (in-memory — data resets on server restart) ---
-// For production, replace with a persistent data store (e.g., database or JSON file).
-const users = new Map();
-
-app.post("/api/users/register", (req, res) => {
-  try {
-    const { userId, userName, email } = req.body;
-    if (!userId || !userName) return res.status(400).json({ error: "userId and userName are required" });
-    if (users.has(userId)) return res.status(409).json({ error: "User already registered" });
-    const user = {
-      userId,
-      userName,
-      email: email || null,
-      registeredAt: new Date().toISOString(),
-      role: "user",
-    };
-    users.set(userId, user);
-    // Also create wallet for the user
-    let walletData = null;
-    try { walletData = wallet.createWallet(userId, userName); } catch (e) {
-      // Wallet may already exist for this userId — that is acceptable
-      if (!e.message.includes("already exists")) {
-        console.error("Wallet creation error during registration:", e.message);
-      }
-    }
-    res.status(201).json({ user, wallet: walletData });
-  } catch (e) {
-    res.status(400).json({ error: e.message });
-  }
-});
-
-app.get("/api/users/:userId", (req, res) => {
-  try {
-    const user = users.get(req.params.userId);
-    if (!user) return res.status(404).json({ error: "User not found" });
-    res.json(user);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// --- Sync API ---
-async function readData() {
-  try {
-    const raw = await fs.readFile(DATA_FILE, "utf8");
-    return JSON.parse(raw);
-  } catch (e) {
-    console.error("Error reading data file:", e.message);
-    return [];
-  }
-}
-
-async function writeData(todos) {
-  try {
-    await fs.writeFile(DATA_FILE, JSON.stringify(todos, null, 2), "utf8");
-    return true;
-  } catch (e) {
-    console.error("Write error:", e);
-    return false;
-  }
-}
-
-app.get("/sync", requireToken, async (req, res) => {
-  const todos = await readData();
-  res.json({ todos });
-});
-
-app.post("/sync", requireToken, async (req, res) => {
-  const payload = req.body;
-  if (!payload || !Array.isArray(payload.todos)) {
-    return res.status(400).json({ error: "Invalid payload, expected { todos: [...] }" });
-  }
-  const ok = await writeData(payload.todos);
-  if (!ok) return res.status(500).json({ error: "Failed to store data" });
-  res.json({ ok: true });
-});
-
-const port = process.env.PORT || 10000;
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Stampcoin Platform server listening on port ${port}`);
-});
+    const bid = { bidderId, amount: Number(amount*
