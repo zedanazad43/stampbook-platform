@@ -91,9 +91,7 @@ const CONTACT_MESSAGES_FILE = path.join(__dirname, 'contact-messages.json');
 let pgPool = null;
 if (DATABASE_URL && Pool) {
   try {
-    pgPool = new Pool({
-      connectionString: DATABASE_URL,
-      // Fly Postgres often requires SSL. If this causes issues for internal connections,
+     // Fly Postgres often requires SSL. If this causes issues for internal connections,
       // remove this ssl block and retry.
       ssl: { rejectUnauthorized: false }
     });
