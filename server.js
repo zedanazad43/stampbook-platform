@@ -90,7 +90,10 @@ let pgPool = null;
 if (DATABASE_URL && Pool) {
   try {
     pgPool = new Pool({
-      connectionString: DATABASE_URL,
+  connectionString: DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+});
+      ,
       // If you get SSL errors on Fly Postgres, uncomment:
       // ssl: { rejectUnauthorized: false },
     });
