@@ -26,7 +26,25 @@ app.use(cors({
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "public")));
-
+// Simple Contact page (GET)
+app.get("/contact", (req, res) => {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.status(200).send(`
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Contact | Stampcoin Platform</title>
+      </head>
+      <body>
+        <h1>Contact</h1>
+        <p>Stampcoin Platform is running.</p>
+        <p><a href="/health">Health</a></p>
+      </body>
+    </html>
+  `);
+});
 const DATA_FILE = path.join(__dirname, "data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
 
