@@ -345,6 +345,169 @@ app.get("/api/blockchain/mint/events", requireToken, (req, res) => {
   }
 });
 
+// --- Auctions API (in-memory — data resets on server restart) ---
+// For production, replace with a persistent data store (e.g., database or JSON file).
+const auctions = new Map();
+
+app.get("/api/auctions", (req, res) => {
+  try {
+    const list = Array.from(auctions.values()).filter(a => a.status !== "cancelled");
+    const { status } = req.query;
+    res.json(status ? list.filter(a => a.status === status) : list);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/auctions", (req, res) => {
+  try {
+    const { sellerId, stampName, description, startingBid, durationHours } = req.body;
+    if (!sellerId || !stampName || !startingBid) {
+      return res.status(400).json({ error: "sellerId, stampName, and startingBid are required" });
+    }
+    const id = "auction_" + Date.now();
+    const auction = {
+      id,
+      sellerId,
+      stampName,
+      description: description || "",
+      currentBid: Number(startingBid),
+      startingBid: Number(startingBid),
+      bids: [],
+      status: "active",
+      endsAt: Date.now() + (Number(durationHours) || 24) * 3600 * 1000,
+      createdAt: new Date().toISOString(),
+    };
+    auctions.set(id, auction);
+    res.status(201).json(auction);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/auctions/:id", (req, res) => {
+  try {
+    const auction = auctions.get(req.params.id);
+    if (!auction) return res.status(404).json({ error: "Auction not found" });
+    res.json(auction);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/auctions/:id/bid", (req, res) => {
+  try {
+    const auction = auctions.get(req.params.id);
+    if (!auction) return res.status(404).json({ error: "Auction not found" });
+    if (auction.status !== "active") return res.status(400).json({ error: "Auction is not active" });
+    if (Date.now() > auction.endsAt) {
+      auction.status = "ended";
+      return res.status(400).json({ error: "Auction has ended" });
+    }
+    const { bidderId, amount } = req.body;
+    if (!bidderId || !amount) return res.status(400).json({ error: "bidderId and amount are required" });
+    if (Number(amount) <= auction.currentBid) {
+      return res.status(400).json({ error: `Bid must be greater than current bid of ${auction.currentBid}` });
+    }
+    const bid = { bidderId, amount: Number(amount), timestamp: new Date().toISOString() };
+    auction.bids.push(bid);
+    auction.currentBid = Number(amount);
+    res.json({ auction, bid });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// --- NFT Stamps API (in-memory — data resets on server restart) ---
+// For production, replace with a persistent data store (e.g., database or JSON file).
+const nftStamps = new Map();
+
+app.get("/api/nft/stamps", (req, res) => {
+  try {
+    const list = Array.from(nftStamps.values());
+    const { ownerId } = req.query;
+    res.json(ownerId ? list.filter(s => s.ownerId === ownerId) : list);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/nft/mint", (req, res) => {
+  try {
+    const { ownerId, name, country, year, description, rarity, imageUrl } = req.body;
+    if (!ownerId || !name) return res.status(400).json({ error: "ownerId and name are required" });
+    const tokenId = "STP-" + Date.now().toString(36).toUpperCase();
+    const stamp = {
+      tokenId,
+      ownerId,
+      name,
+      country: country || "",
+      year: year || null,
+      description: description || "",
+      rarity: rarity || "common",
+      imageUrl: imageUrl || null,
+      mintedAt: new Date().toISOString(),
+      status: "minted",
+      mintCost: 50,
+    };
+    nftStamps.set(tokenId, stamp);
+    res.status(201).json(stamp);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/nft/stamps/:tokenId", (req, res) => {
+  try {
+    const stamp = nftStamps.get(req.params.tokenId);
+    if (!stamp) return res.status(404).json({ error: "NFT stamp not found" });
+    res.json(stamp);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// --- Users / Registration API (in-memory — data resets on server restart) ---
+// For production, replace with a persistent data store (e.g., database or JSON file).
+const users = new Map();
+
+app.post("/api/users/register", (req, res) => {
+  try {
+    const { userId, userName, email } = req.body;
+    if (!userId || !userName) return res.status(400).json({ error: "userId and userName are required" });
+    if (users.has(userId)) return res.status(409).json({ error: "User already registered" });
+    const user = {
+      userId,
+      userName,
+      email: email || null,
+      registeredAt: new Date().toISOString(),
+      role: "user",
+    };
+    users.set(userId, user);
+    // Also create wallet for the user
+    let walletData = null;
+    try { walletData = wallet.createWallet(userId, userName); } catch (e) {
+      // Wallet may already exist for this userId — that is acceptable
+      if (!e.message.includes("already exists")) {
+        console.error("Wallet creation error during registration:", e.message);
+      }
+    }
+    res.status(201).json({ user, wallet: walletData });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/users/:userId", (req, res) => {
+  try {
+    const user = users.get(req.params.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // --- Sync API ---
 async function readData() {
   try {

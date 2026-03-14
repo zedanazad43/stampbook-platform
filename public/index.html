@@ -1,224 +1,858 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl" x-data="stampApp()" x-init="init()">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stampcoin Platform (STP)</title>
+  <title>Stampcoin (STP) — منصة تداول الطوابع البريدية الرقمية</title>
+  <meta name="description" content="منصة Stampcoin لتداول الطوابع البريدية الرقمية NFT والمزادات ومحفظة STP." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✉</text></svg>" />
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"><\/script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"><\/script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0d1117;
-      color: #c9d1d9;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    .container {
-      max-width: 800px;
-      width: 100%;
-      text-align: center;
-    }
-    .logo {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      color: #f0f6fc;
-      margin-bottom: 0.5rem;
-    }
-    .subtitle {
-      font-size: 1.2rem;
-      color: #8b949e;
-      margin-bottom: 2rem;
-    }
-    .badge {
-      display: inline-block;
-      background: #238636;
-      color: #fff;
-      padding: 0.3rem 0.8rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      margin-bottom: 2.5rem;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-    .card {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: left;
-    }
-    .card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
-    .card h3 { color: #f0f6fc; font-size: 1.1rem; margin-bottom: 0.5rem; }
-    .card p { color: #8b949e; font-size: 0.9rem; line-height: 1.5; }
-    .endpoints {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      padding: 1.5rem;
-      text-align: left;
-      margin-bottom: 2.5rem;
-    }
-    .endpoints h2 { color: #f0f6fc; margin-bottom: 1rem; }
-    .endpoint-group { margin-bottom: 1rem; }
-    .endpoint-group h4 { color: #58a6ff; margin-bottom: 0.5rem; }
-    .endpoint {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.4rem 0;
-      border-bottom: 1px solid #21262d;
-    }
-    .endpoint:last-child { border-bottom: none; }
-    .method {
-      font-weight: 700;
-      font-size: 0.8rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      min-width: 46px;
-      text-align: center;
-    }
-    .get { background: #0d6efd22; color: #58a6ff; }
-    .post { background: #19872222; color: #3fb950; }
-    .put { background: #9a6e0022; color: #d29922; }
-    .delete { background: #da363322; color: #f85149; }
-    .path { font-family: monospace; font-size: 0.85rem; color: #c9d1d9; }
-    .desc { color: #8b949e; font-size: 0.8rem; }
-    .links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #21262d;
-      border: 1px solid #30363d;
-      color: #c9d1d9;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .link:hover { background: #30363d; border-color: #58a6ff; color: #58a6ff; }
-    footer {
-      margin-top: 3rem;
-      color: #6e7681;
-      font-size: 0.85rem;
-    }
+    [x-cloak]{display:none!important}
+    body{font-family:'Cairo','Segoe UI',sans-serif}
+    .gradient-text{background:linear-gradient(135deg,#f59e0b 0%,#fbbf24 50%,#d97706 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero-bg{background:radial-gradient(ellipse at 20% 50%,rgba(139,92,246,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(245,158,11,.1) 0%,transparent 50%),linear-gradient(180deg,#0a0f1e 0%,#0f172a 100%)}
+    .nav-glass{background:rgba(10,15,30,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(245,158,11,.15)}
+    .stamp-card{background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);border:1px solid rgba(245,158,11,.2);transition:all .3s ease}
+    .stamp-card:hover{border-color:rgba(245,158,11,.6);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.4),0 0 30px rgba(245,158,11,.15)}
+    .glow-gold{text-shadow:0 0 20px rgba(245,158,11,.6)}
+    .glow-box-gold{box-shadow:0 0 30px rgba(245,158,11,.2),0 0 60px rgba(245,158,11,.08)}
+    .glow-box-purple{box-shadow:0 0 30px rgba(139,92,246,.2),0 0 60px rgba(139,92,246,.08)}
+    .nft-shine{background:linear-gradient(135deg,#1e293b 0%,#2d1f6e 50%,#1e293b 100%);border:1px solid rgba(139,92,246,.4)}
+    .timer-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:4px 10px;font-family:'Courier New',monospace}
+    .modal-overlay{background:rgba(0,0,0,.8);backdrop-filter:blur(4px)}
+    .tab-active{background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(245,158,11,.05));border-color:rgba(245,158,11,.6);color:#f59e0b}
+    @keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+    @keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(245,158,11,.3)}50%{box-shadow:0 0 40px rgba(245,158,11,.6)}}
+    @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .floating{animation:float 4s ease-in-out infinite}
+    .pulse-glow{animation:pulse-glow 2s ease-in-out infinite}
+    .marquee-track{animation:marquee 30s linear infinite}
+    .perforated{position:relative}
+    .perforated::before,.perforated::after{content:'';position:absolute;left:0;right:0;height:12px;background:radial-gradient(circle at 50% 100%,transparent 6px,#0f172a 6px);background-size:18px 12px}
+    .perforated::before{top:-11px;transform:rotate(180deg)}
+    .perforated::after{bottom:-11px}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#0a0f1e}
+    ::-webkit-scrollbar-thumb{background:rgba(245,158,11,.4);border-radius:3px}
   </style>
 </head>
-<body>
-  <div class="container">
-    <div class="logo">🪙</div>
-    <h1>Stampcoin Platform</h1>
-    <p class="subtitle">A blockchain-inspired digital stamps platform with wallet &amp; marketplace features</p>
-    <span class="badge">STP Token — BEP-20 Compatible</span>
+<body class="bg-slate-950 text-slate-100 min-h-screen" x-cloak>
 
-    <div class="cards">
-      <div class="card">
-        <div class="card-icon">👛</div>
-        <h3>Digital Wallet</h3>
-        <p>Create and manage wallets, transfer balances, and collect digital stamps.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🏪</div>
-        <h3>Marketplace</h3>
-        <p>List, browse, buy, and sell digital stamp tokens on the open market.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">⛓️</div>
-        <h3>Blockchain</h3>
-        <p>BEP-20-compatible STP token supply tracking with mint audit logs.</p>
-      </div>
+<!-- NAV -->
+<nav class="nav-glass fixed top-0 left-0 right-0 z-50 px-4 lg:px-8">
+  <div class="max-w-7xl mx-auto flex items-center justify-between h-16">
+    <a href="#home" class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-900 font-black text-lg pulse-glow">&#9993;</div>
+      <div><span class="font-black text-xl gradient-text">Stampcoin</span><span class="text-amber-400/60 text-xs block -mt-1">STP Platform</span></div>
+    </a>
+    <div class="hidden md:flex items-center gap-1">
+      <template x-for="item in navItems" :key="item.id">
+        <button @click="scrollTo(item.id)" :class="activeSection===item.id?'text-amber-400 bg-amber-400/10':'text-slate-400 hover:text-amber-400 hover:bg-amber-400/5'" class="px-3 py-2 rounded-lg text-sm font-medium transition-all" x-text="item.label"></button>
+      </template>
     </div>
-
-    <div class="endpoints">
-      <h2>API Endpoints</h2>
-      <div class="endpoint-group">
-        <h4>Wallet</h4>
-        <div class="endpoint">
-          <span class="method post">POST</span>
-          <span class="path">/api/wallet/create</span>
-          <span class="desc">Create a new wallet</span>
-        </div>
-        <div class="endpoint">
-          <span class="method get">GET</span>
-          <span class="path">/api/wallet/:userId</span>
-          <span class="desc">Get wallet details</span>
-        </div>
-        <div class="endpoint">
-          <span class="method post">POST</span>
-          <span class="path">/api/wallet/transfer</span>
-          <span class="desc">Transfer balance between wallets</span>
-        </div>
-        <div class="endpoint">
-          <span class="method get">GET</span>
-          <span class="path">/api/wallet/:userId/transactions</span>
-          <span class="desc">Get transaction history</span>
-        </div>
+    <div class="flex items-center gap-3">
+      <div x-show="walletConnected" class="hidden sm:flex items-center gap-2 bg-amber-400/10 border border-amber-400/30 rounded-full px-4 py-1.5">
+        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+        <span class="text-amber-400 text-sm font-mono" x-text="(wallet.balance||0).toLocaleString()+' STP'"></span>
       </div>
-      <div class="endpoint-group">
-        <h4>Market</h4>
-        <div class="endpoint">
-          <span class="method get">GET</span>
-          <span class="path">/api/market/items</span>
-          <span class="desc">List all market items</span>
-        </div>
-        <div class="endpoint">
-          <span class="method post">POST</span>
-          <span class="path">/api/market/items</span>
-          <span class="desc">List a new item for sale</span>
-        </div>
-        <div class="endpoint">
-          <span class="method post">POST</span>
-          <span class="path">/api/market/items/:itemId/buy</span>
-          <span class="desc">Purchase a market item</span>
-        </div>
-      </div>
-      <div class="endpoint-group">
-        <h4>Blockchain</h4>
-        <div class="endpoint">
-          <span class="method get">GET</span>
-          <span class="path">/api/blockchain/info</span>
-          <span class="desc">Get token metadata</span>
-        </div>
-        <div class="endpoint">
-          <span class="method get">GET</span>
-          <span class="path">/api/blockchain/supply</span>
-          <span class="desc">Get token supply stats</span>
-        </div>
-        <div class="endpoint">
-          <span class="method post">POST</span>
-          <span class="path">/api/blockchain/mint</span>
-          <span class="desc">Mint STP tokens (auth required)</span>
-        </div>
-      </div>
+      <button @click="walletConnected?disconnectWallet():showWalletModal=true" :class="walletConnected?'bg-slate-700 hover:bg-slate-600':'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500'" class="px-4 py-2 rounded-full text-sm font-bold text-white transition-all shadow-lg" x-text="walletConnected?'🔓 '+((wallet.userId||'')).substring(0,8)+'...':'🔗 ربط المحفظة'"></button>
+      <button @click="mobileMenu=!mobileMenu" class="md:hidden text-slate-400 hover:text-amber-400 p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
     </div>
-
-    <div class="links">
-      <a class="link" href="https://github.com/zedanazad43/stp" target="_blank" rel="noopener">
-        ⭐ GitHub Repository
-      </a>
-      <a class="link" href="https://github.com/zedanazad43/stp/blob/main/WALLET_API.md" target="_blank" rel="noopener">
-        📖 Wallet API Docs
-      </a>
-      <a class="link" href="https://github.com/zedanazad43/stp/blob/main/MARKET_API.md" target="_blank" rel="noopener">
-        📖 Market API Docs
-      </a>
-    </div>
-
-    <footer>
-      <p>Stampcoin Platform &copy; 2024 &mdash; Powered by Node.js &amp; Express</p>
-    </footer>
   </div>
+  <div x-show="mobileMenu" x-transition class="md:hidden bg-slate-900/95 border-t border-amber-400/20 py-3 px-4">
+    <template x-for="item in navItems" :key="item.id">
+      <button @click="scrollTo(item.id);mobileMenu=false" class="block w-full text-right py-3 px-4 text-slate-300 hover:text-amber-400 hover:bg-amber-400/5 rounded-lg transition-colors text-sm font-medium" x-text="item.label"></button>
+    </template>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="fixed top-16 left-0 right-0 z-40 bg-slate-900/90 border-b border-amber-400/10 py-2 overflow-hidden">
+  <div class="flex whitespace-nowrap marquee-track">
+    <template x-for="i in 2" :key="i">
+      <div class="flex gap-8 pr-8">
+        <template x-for="coin in tickers" :key="coin.symbol+i">
+          <span class="text-xs font-mono">
+            <span class="text-amber-400 font-bold" x-text="coin.symbol"></span>
+            <span class="text-slate-300 mx-1" x-text="coin.price"></span>
+            <span :class="coin.change>=0?'text-green-400':'text-red-400'" x-text="(coin.change>=0?'+':'')+coin.change+'%'"></span>
+          </span>
+        </template>
+      </div>
+    </template>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="home" class="hero-bg min-h-screen pt-36 pb-20 px-4 flex items-center">
+  <div class="max-w-7xl mx-auto w-full">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="text-right">
+        <div class="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/30 rounded-full px-4 py-2 text-amber-400 text-sm font-medium mb-6">
+          <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+          منصة الطوابع البريدية الرقمية الأولى عالمياً
+        </div>
+        <h1 class="text-5xl lg:text-7xl font-black mb-6 leading-tight">
+          <span class="gradient-text glow-gold">Stampcoin</span><br/>
+          <span class="text-white">منصة تداول</span><br/>
+          <span class="text-slate-400 text-4xl lg:text-5xl">الطوابع الرقمية</span>
+        </h1>
+        <p class="text-slate-400 text-lg mb-8 leading-relaxed">حوّل طوابعك البريدية النادرة إلى <strong class="text-amber-400">NFTs</strong> وتداولها في أكبر سوق رقمي. استثمر في <strong class="text-purple-400">رمز STP</strong> واكتشف قيمة التراث البريدي.</p>
+        <div class="flex flex-wrap gap-4 justify-end">
+          <button @click="scrollTo('market')" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-bold px-8 py-4 rounded-full text-lg transition-all shadow-xl hover:-translate-y-1">&#127823; استكشف السوق</button>
+          <button @click="scrollTo('nft-mint')" class="border border-purple-500/50 hover:border-purple-400 text-purple-400 hover:text-purple-300 font-bold px-8 py-4 rounded-full text-lg transition-all hover:-translate-y-1">&#127912; توثيق طابعك</button>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mt-12 pt-8 border-t border-slate-800">
+          <template x-for="stat in heroStats" :key="stat.label">
+            <div class="text-right">
+              <div class="text-2xl lg:text-3xl font-black gradient-text" x-text="stat.value"></div>
+              <div class="text-slate-500 text-sm" x-text="stat.label"></div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="relative flex justify-center items-center h-80 lg:h-96">
+        <div class="floating mx-8">
+          <div class="perforated w-56 h-72 bg-gradient-to-br from-slate-800 to-slate-900 rounded-sm glow-box-gold flex flex-col items-center justify-center p-6">
+            <div class="text-6xl mb-4">&#127963;</div>
+            <div class="text-amber-400 text-xl font-bold text-center">Stampcoin</div>
+            <div class="text-slate-400 text-sm mt-1">DIGITAL HERITAGE</div>
+            <div class="mt-4 border-t border-amber-400/20 pt-3 w-full text-center"><span class="text-amber-400/60 text-xs font-mono">#STP-0001</span></div>
+            <div class="text-slate-600 text-xs font-mono mt-2">100 STP</div>
+          </div>
+        </div>
+        <div class="absolute top-4 right-4 bg-purple-600/20 border border-purple-500/40 rounded-xl p-3 text-center floating" style="animation-delay:1s">
+          <div class="text-2xl">&#127912;</div><div class="text-purple-400 text-xs font-bold mt-1">NFT</div><div class="text-slate-400 text-xs">Verified</div>
+        </div>
+        <div class="absolute bottom-8 left-4 bg-amber-400/10 border border-amber-400/30 rounded-xl p-3 floating" style="animation-delay:2s">
+          <div class="text-amber-400 text-xl font-black">+28%</div><div class="text-slate-400 text-xs">24h Change</div>
+        </div>
+        <div class="absolute top-16 left-0 bg-red-400/10 border border-red-400/30 rounded-xl p-3 floating" style="animation-delay:.5s">
+          <div class="text-red-400 text-sm font-bold">&#128308; Live Auction</div><div class="text-slate-400 text-xs">3 Active Bids</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section id="market" class="bg-gradient-to-b from-slate-900 to-slate-950 py-20 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl lg:text-5xl font-black mb-4"><span class="gradient-text">سوق الطوابع</span> الرقمية</h2>
+      <p class="text-slate-400 text-lg">اكتشف واشترِ وبع الطوابع البريدية النادرة كـ NFTs</p>
+    </div>
+    <div class="flex flex-wrap gap-3 justify-center mb-8">
+      <template x-for="filter in marketFilters" :key="filter">
+        <button @click="activeMarketFilter=filter" :class="activeMarketFilter===filter?'tab-active border':'bg-slate-800/50 border border-slate-700 text-slate-400 hover:border-amber-400/40 hover:text-amber-400'" class="px-5 py-2.5 rounded-full text-sm font-medium transition-all" x-text="filter"></button>
+      </template>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-4 mb-8">
+      <div class="flex-1 relative">
+        <input type="text" placeholder="ابحث عن طابع..." x-model="marketSearch" class="w-full bg-slate-800/60 border border-slate-700 rounded-xl px-4 py-3 pr-10 text-slate-100 focus:outline-none focus:border-amber-400/50 placeholder-slate-500 text-right" />
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">&#128269;</span>
+      </div>
+      <select x-model="marketSort" class="bg-slate-800/60 border border-slate-700 rounded-xl px-4 py-3 text-slate-300 focus:outline-none">
+        <option value="newest">الأحدث</option>
+        <option value="price_asc">السعر: من الأقل</option>
+        <option value="price_desc">السعر: من الأعلى</option>
+        <option value="popular">الأكثر شعبية</option>
+      </select>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <template x-for="item in filteredMarketItems" :key="item.id">
+        <div class="stamp-card rounded-2xl overflow-hidden cursor-pointer" @click="selectedStamp=item">
+          <div class="relative pt-[100%] bg-gradient-to-br from-slate-700 to-slate-800 overflow-hidden">
+            <div class="absolute inset-0 flex items-center justify-center"><span class="text-5xl" x-text="item.emoji"></span></div>
+            <div class="absolute top-2 right-2"><span x-show="item.isNft" class="bg-purple-600/90 text-white text-xs px-2 py-0.5 rounded-full font-bold">NFT</span></div>
+            <div class="absolute top-2 left-2">
+              <span x-show="item.rarity==='نادر'" class="bg-amber-500/90 text-white text-xs px-2 py-0.5 rounded-full font-bold">نادر</span>
+              <span x-show="item.rarity==='نادر جداً'" class="bg-red-500/90 text-white text-xs px-2 py-0.5 rounded-full font-bold">نادر جداً</span>
+            </div>
+          </div>
+          <div class="p-3">
+            <div class="text-white font-bold text-sm mb-1 truncate text-right" x-text="item.name"></div>
+            <div class="text-slate-500 text-xs mb-2 text-right" x-text="item.country+' · '+item.year"></div>
+            <div class="flex items-center justify-between">
+              <button @click.stop="buyStamp(item)" class="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-500 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">شراء</button>
+              <div class="text-right">
+                <div class="text-amber-400 font-black text-sm" x-text="item.price.toLocaleString()+' STP'"></div>
+                <div class="text-slate-500 text-xs" x-text="'$'+item.priceUsd"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="text-center mt-8">
+      <button @click="showToast('📦 تم تحميل المزيد من الطوابع','info')" class="border border-amber-400/30 hover:border-amber-400 text-amber-400 px-8 py-3 rounded-full font-medium transition-all hover:-translate-y-1">تحميل المزيد</button>
+    </div>
+  </div>
+</section>
+
+<!-- AUCTIONS -->
+<section id="auctions" class="py-20 px-4 bg-slate-900">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl lg:text-5xl font-black mb-4">&#128308; <span class="gradient-text">المزادات</span> الحية</h2>
+      <p class="text-slate-400 text-lg">تنافس على امتلاك أندر الطوابع البريدية في العالم</p>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <template x-for="auction in auctions" :key="auction.id">
+        <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl overflow-hidden hover:border-red-500/40 transition-all duration-300 hover:-translate-y-1">
+          <div class="relative bg-gradient-to-br from-slate-800 to-slate-900 p-6 text-center">
+            <div class="text-6xl mb-3" x-text="auction.emoji"></div>
+            <div class="absolute top-3 left-3 flex items-center gap-1 bg-red-500/20 border border-red-500/40 rounded-full px-2 py-0.5">
+              <div class="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></div>
+              <span class="text-red-400 text-xs font-bold">LIVE</span>
+            </div>
+            <div x-show="auction.verified" class="absolute top-3 right-3 bg-green-500/20 border border-green-500/40 rounded-full px-2 py-0.5 text-green-400 text-xs">&#10003; موثق</div>
+          </div>
+          <div class="p-5">
+            <h3 class="text-white font-bold text-lg mb-1 text-right" x-text="auction.name"></h3>
+            <p class="text-slate-500 text-sm mb-4 text-right" x-text="auction.description"></p>
+            <div class="grid grid-cols-2 gap-3 mb-4">
+              <div class="bg-slate-800/50 rounded-xl p-3 text-center">
+                <div class="text-slate-500 text-xs mb-1">السعر الحالي</div>
+                <div class="text-amber-400 font-black" x-text="auction.currentBid.toLocaleString()+' STP'"></div>
+              </div>
+              <div class="bg-slate-800/50 rounded-xl p-3 text-center">
+                <div class="text-slate-500 text-xs mb-1">المزايدون</div>
+                <div class="text-white font-bold" x-text="auction.bidCount+' مزايد'"></div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="timer-box text-red-400 font-bold text-sm" x-text="getTimer(auction.endsAt)"></span>
+              <span class="text-slate-500 text-sm">ينتهي خلال</span>
+            </div>
+            <div class="flex gap-2">
+              <button @click="placeBid(auction)" class="flex-1 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-bold py-3 rounded-xl transition-all">&#128296; زايد الآن</button>
+              <button @click="showToast('👁️ تمت إضافة المزاد للمتابعة','info')" class="bg-slate-800 hover:bg-slate-700 text-slate-400 px-3 rounded-xl transition-colors">&#128065;</button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="mt-12 text-center">
+      <div class="inline-flex items-center gap-4 bg-slate-800/50 border border-amber-400/20 rounded-2xl p-6 flex-wrap justify-center">
+        <span class="text-4xl">&#127942;</span>
+        <div class="text-right"><div class="text-white font-bold text-lg">لديك طابع نادر؟</div><div class="text-slate-400 text-sm">ضعه في المزاد وابدأ المنافسة</div></div>
+        <button @click="showToast('✅ ميزة إنشاء المزاد قريباً!','info')" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-6 py-3 rounded-xl transition-all">إنشاء مزاد</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WALLET -->
+<section id="wallet" class="bg-gradient-to-b from-slate-950 to-slate-900 py-20 px-4">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl lg:text-5xl font-black mb-4">&#128188; <span class="gradient-text">محفظة</span> STP/NFT</h2>
+      <p class="text-slate-400 text-lg">أدر رصيدك وطوابعك الرقمية في مكان واحد</p>
+    </div>
+    <div x-show="!walletConnected" class="text-center py-16">
+      <div class="text-8xl mb-6">&#128272;</div>
+      <h3 class="text-2xl font-bold text-white mb-3">ربط المحفظة مطلوب</h3>
+      <p class="text-slate-400 mb-6">ربط محفظتك لعرض رصيدك وطوابعك الرقمية</p>
+      <button @click="showWalletModal=true" class="bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold px-10 py-4 rounded-full text-lg hover:-translate-y-1 transition-all">&#128279; ربط المحفظة الآن</button>
+    </div>
+    <div x-show="walletConnected">
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-400/20 rounded-2xl p-6 glow-box-gold">
+          <div class="text-amber-400/60 text-sm mb-2 text-right">رصيد STP</div>
+          <div class="text-amber-400 font-black text-3xl text-right" x-text="(wallet.balance||0).toLocaleString()"></div>
+          <div class="text-slate-500 text-sm text-right mt-1" x-text="'≈ $'+(((wallet.balance||0)*0.0042).toFixed(2))"></div>
+        </div>
+        <div class="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border border-purple-400/20 rounded-2xl p-6 glow-box-purple">
+          <div class="text-purple-400/60 text-sm mb-2 text-right">طوابع NFT</div>
+          <div class="text-purple-400 font-black text-3xl text-right" x-text="(wallet.stamps||[]).length"></div>
+          <div class="text-slate-500 text-sm text-right mt-1">طابع رقمي موثق</div>
+        </div>
+        <div class="bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-400/20 rounded-2xl p-6">
+          <div class="text-green-400/60 text-sm mb-2 text-right">إجمالي القيمة</div>
+          <div class="text-green-400 font-black text-3xl text-right" x-text="'$'+(((wallet.balance||0)*0.0042+(wallet.stamps||[]).length*12).toFixed(2))"></div>
+          <div class="text-slate-500 text-sm text-right mt-1">USD تقريباً</div>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-4 gap-4 mb-8">
+        <button @click="showTransferModal=true" class="bg-slate-800/60 border border-slate-700 hover:border-amber-400/40 rounded-xl p-4 text-center transition-all hover:-translate-y-1 group">
+          <div class="text-2xl mb-2">&#128100;</div><div class="text-slate-300 group-hover:text-amber-400 text-sm font-medium transition-colors">إرسال</div>
+        </button>
+        <button @click="showToast('📥 عنوانك: '+wallet.userId,'info')" class="bg-slate-800/60 border border-slate-700 hover:border-green-400/40 rounded-xl p-4 text-center transition-all hover:-translate-y-1 group">
+          <div class="text-2xl mb-2">&#128229;</div><div class="text-slate-300 group-hover:text-green-400 text-sm font-medium transition-colors">استقبال</div>
+        </button>
+        <button @click="scrollTo('market')" class="bg-slate-800/60 border border-slate-700 hover:border-purple-400/40 rounded-xl p-4 text-center transition-all hover:-translate-y-1 group">
+          <div class="text-2xl mb-2">&#128717;</div><div class="text-slate-300 group-hover:text-purple-400 text-sm font-medium transition-colors">تداول</div>
+        </button>
+        <button @click="scrollTo('nft-mint')" class="bg-slate-800/60 border border-slate-700 hover:border-amber-400/40 rounded-xl p-4 text-center transition-all hover:-translate-y-1 group">
+          <div class="text-2xl mb-2">&#127912;</div><div class="text-slate-300 group-hover:text-amber-400 text-sm font-medium transition-colors">توثيق NFT</div>
+        </button>
+      </div>
+      <div class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-6 mb-6">
+        <h3 class="text-white font-bold text-lg mb-4 text-right">طوابعي الرقمية</h3>
+        <div x-show="(wallet.stamps||[]).length===0" class="text-center py-8 text-slate-500">لا توجد طوابع حتى الآن — اشترِ أو وثّق طابعك الأول!</div>
+        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+          <template x-for="stamp in (wallet.stamps||[])" :key="stamp.stampId">
+            <div class="nft-shine rounded-xl p-3 text-center cursor-pointer hover:scale-105 transition-transform">
+              <div class="text-3xl mb-1">&#127991;</div>
+              <div class="text-purple-400 text-xs font-mono truncate" x-text="'#'+stamp.stampId"></div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-6">
+        <h3 class="text-white font-bold text-lg mb-4 text-right">سجل المعاملات</h3>
+        <div class="space-y-3">
+          <template x-for="tx in transactions.slice(0,5)" :key="tx.id">
+            <div class="flex items-center justify-between bg-slate-800/40 rounded-xl p-3">
+              <div class="text-right">
+                <div class="text-white text-sm font-medium" x-text="tx.type==='transfer_out'?'📤 إرسال':tx.type==='transfer_in'?'📥 استقبال':'💼 '+tx.type"></div>
+                <div class="text-slate-500 text-xs" x-text="new Date(tx.timestamp).toLocaleString('ar')"></div>
+              </div>
+              <div :class="tx.type==='transfer_out'?'text-red-400':'text-green-400'" class="font-bold" x-text="(tx.type==='transfer_out'?'-':'+')+tx.amount+' STP'"></div>
+            </div>
+          </template>
+          <div x-show="transactions.length===0" class="text-center py-4 text-slate-500">لا توجد معاملات بعد</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHIVE -->
+<section id="archive" class="py-20 px-4 bg-slate-950">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl lg:text-5xl font-black mb-4">&#128218; <span class="gradient-text">أرشيف</span> الطوابع التاريخية</h2>
+      <p class="text-slate-400 text-lg">قاعدة بيانات شاملة للطوابع البريدية التاريخية الموثقة</p>
+    </div>
+    <div class="flex flex-col md:flex-row gap-4 mb-8">
+      <div class="flex-1 relative">
+        <input type="text" placeholder="ابحث في الأرشيف..." x-model="archiveSearch" class="w-full bg-slate-800/60 border border-slate-700 rounded-xl px-4 py-3 pr-10 text-slate-100 focus:outline-none focus:border-amber-400/50 placeholder-slate-500 text-right" />
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">&#128269;</span>
+      </div>
+      <select x-model="archiveCountry" class="bg-slate-800/60 border border-slate-700 rounded-xl px-4 py-3 text-slate-300 focus:outline-none">
+        <option value="">كل الدول</option>
+        <option value="مصر">مصر</option>
+        <option value="السعودية">السعودية</option>
+        <option value="الإمارات">الإمارات</option>
+        <option value="المملكة المتحدة">المملكة المتحدة</option>
+        <option value="أمريكا">أمريكا</option>
+        <option value="ألمانيا">ألمانيا</option>
+      </select>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <template x-for="stamp in filteredArchive" :key="stamp.id">
+        <div class="bg-slate-900/80 border border-slate-700/50 rounded-xl overflow-hidden hover:border-amber-400/30 transition-all cursor-pointer group" @click="selectedStamp={...stamp,price:Math.floor(Math.random()*50000)+1000,priceUsd:'42.00',rarity:'نادر',isNft:stamp.hasNft}">
+          <div class="pt-[100%] relative bg-gradient-to-br from-slate-800 to-slate-900">
+            <div class="absolute inset-0 flex items-center justify-center text-4xl" x-text="stamp.emoji"></div>
+            <div x-show="stamp.hasNft" class="absolute bottom-1 right-1 bg-purple-600/80 text-white text-xs px-1.5 py-0.5 rounded font-bold">NFT</div>
+          </div>
+          <div class="p-2">
+            <div class="text-white text-xs font-medium truncate text-right group-hover:text-amber-400 transition-colors" x-text="stamp.name"></div>
+            <div class="text-slate-500 text-xs text-right" x-text="stamp.country+' '+stamp.year"></div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="text-center mt-8 text-slate-500 text-sm" x-text="'عرض '+filteredArchive.length+' من أصل '+archiveItems.length+' طابع'"></div>
+  </div>
+</section>
+
+<!-- NFT MINT -->
+<section id="nft-mint" class="bg-gradient-to-b from-slate-900 to-slate-950 py-20 px-4">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl lg:text-5xl font-black mb-4">&#127912; <span class="gradient-text">توثيق</span> وتحويل الطابع إلى NFT</h2>
+      <p class="text-slate-400 text-lg">احفظ طابعك البريدي النادر على البلوكتشين كـ NFT موثق وغير قابل للتزوير</p>
+    </div>
+    <div class="bg-slate-900/80 border border-purple-400/20 rounded-3xl p-8 glow-box-purple">
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-white font-bold text-xl mb-6 text-right">رفع صورة الطابع</h3>
+          <div @dragover.prevent="dragOver=true" @dragleave="dragOver=false" @drop.prevent="handleDrop($event)" :class="dragOver?'border-purple-400 bg-purple-400/5':'border-slate-600 hover:border-purple-400/60'" class="border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all mb-4" @click="$refs.fileInput.click()">
+            <div x-show="!nftPreview"><div class="text-5xl mb-3">&#128247;</div><p class="text-slate-400 mb-2">اسحب الصورة أو انقر للرفع</p><p class="text-slate-600 text-sm">PNG, JPG, WebP حتى 10MB</p></div>
+            <img x-show="nftPreview" :src="nftPreview" class="max-h-40 mx-auto rounded-xl" />
+            <input type="file" x-ref="fileInput" @change="handleFileSelect($event)" accept="image/*" class="hidden" />
+          </div>
+          <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 text-right">
+            <div class="text-slate-400 text-sm mb-2 font-medium">مزايا التوثيق</div>
+            <ul class="text-slate-500 text-sm space-y-1">
+              <li>&#10003; ملكية موثقة لا يمكن إنكارها</li>
+              <li>&#10003; سجل تاريخي شفاف على البلوكتشين</li>
+              <li>&#10003; قابلية التداول في السوق المفتوح</li>
+              <li>&#10003; شهادة أصالة رقمية</li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-white font-bold text-xl mb-6 text-right">بيانات الطابع</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="text-slate-400 text-sm block mb-1.5 text-right">اسم الطابع *</label>
+              <input type="text" x-model="nftForm.name" placeholder="مثال: طابع الهلال الأحمر ١٩٤٥" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-400/50 text-right placeholder-slate-600" />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-slate-400 text-sm block mb-1.5 text-right">الدولة</label>
+                <input type="text" x-model="nftForm.country" placeholder="مصر" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-400/50 text-right placeholder-slate-600" />
+              </div>
+              <div>
+                <label class="text-slate-400 text-sm block mb-1.5 text-right">السنة</label>
+                <input type="number" x-model="nftForm.year" placeholder="1945" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-400/50 text-right placeholder-slate-600" />
+              </div>
+            </div>
+            <div>
+              <label class="text-slate-400 text-sm block mb-1.5 text-right">الوصف</label>
+              <textarea x-model="nftForm.description" rows="3" placeholder="اكتب وصفاً تفصيلياً للطابع..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-400/50 resize-none text-right placeholder-slate-600"></textarea>
+            </div>
+            <div>
+              <label class="text-slate-400 text-sm block mb-1.5 text-right">الندرة</label>
+              <select x-model="nftForm.rarity" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-400/50 text-right">
+                <option value="عادي">عادي</option>
+                <option value="نادر">نادر</option>
+                <option value="نادر جداً">نادر جداً</option>
+                <option value="فريد">فريد من نوعه</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 text-center">
+        <div class="flex justify-center gap-4 flex-wrap mb-6">
+          <div class="bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-400"><span class="text-amber-400 font-bold">50 STP</span> رسوم التوثيق</div>
+          <div class="bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-400"><span class="text-purple-400 font-bold">~5 دقائق</span> وقت المعالجة</div>
+        </div>
+        <button @click="mintNFT()" :disabled="nftMinting||!nftForm.name" :class="nftMinting||!nftForm.name?'opacity-50 cursor-not-allowed':'hover:from-purple-500 hover:to-purple-400 hover:-translate-y-1'" class="bg-gradient-to-r from-purple-600 to-purple-500 text-white font-bold px-12 py-4 rounded-full text-lg transition-all shadow-xl">
+          <span x-show="!nftMinting">&#127912; توثيق كـ NFT الآن</span>
+          <span x-show="nftMinting" class="flex items-center gap-2 justify-center">
+            <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+            جاري التوثيق...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="py-20 px-4 bg-slate-900">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl lg:text-5xl font-black mb-4">&#128202; <span class="gradient-text">لوحة التحكم</span></h2>
+      <p class="text-slate-400 text-lg">إحصائيات المنصة والسوق في الوقت الفعلي</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <template x-for="stat in dashStats" :key="stat.label">
+        <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-6 hover:border-amber-400/30 transition-all">
+          <div class="flex items-start justify-between mb-3">
+            <span :class="stat.trend>0?'text-green-400 bg-green-400/10':'text-red-400 bg-red-400/10'" class="text-xs font-bold px-2 py-1 rounded-full" x-text="(stat.trend>0?'▲ +':'▼ ')+stat.trend+'%'"></span>
+            <span class="text-2xl" x-text="stat.icon"></span>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl lg:text-3xl font-black text-white" x-text="stat.value"></div>
+            <div class="text-slate-500 text-sm mt-1" x-text="stat.label"></div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+      <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-6">
+        <h3 class="text-white font-bold text-lg mb-6 text-right">حجم التداول (آخر 7 أيام)</h3>
+        <canvas id="volumeChart" height="200"></canvas>
+      </div>
+      <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-6">
+        <h3 class="text-white font-bold text-lg mb-6 text-right">توزيع أنواع الطوابع</h3>
+        <canvas id="distributionChart" height="200"></canvas>
+      </div>
+    </div>
+    <div class="bg-slate-900/80 border border-slate-700/50 rounded-2xl p-6">
+      <h3 class="text-white font-bold text-lg mb-4 text-right">أعلى الطوابع قيمةً</h3>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead><tr class="text-slate-500 text-sm border-b border-slate-800"><th class="text-right pb-3 pr-4">#</th><th class="text-right pb-3">الطابع</th><th class="text-right pb-3">السعر</th><th class="text-right pb-3">التغيير</th><th class="text-right pb-3">الحجم</th></tr></thead>
+          <tbody>
+            <template x-for="(item,idx) in topStamps" :key="item.id">
+              <tr class="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                <td class="py-3 pr-4 text-slate-500 text-sm" x-text="idx+1"></td>
+                <td class="py-3"><div class="flex items-center gap-3 flex-row-reverse"><span class="text-xl" x-text="item.emoji"></span><div class="text-right"><div class="text-white text-sm font-medium" x-text="item.name"></div><div class="text-slate-500 text-xs" x-text="item.country"></div></div></div></td>
+                <td class="py-3 text-amber-400 font-bold text-sm text-right" x-text="item.price.toLocaleString()+' STP'"></td>
+                <td class="py-3 text-sm text-right" :class="item.change>=0?'text-green-400':'text-red-400'" x-text="(item.change>=0?'+':'')+item.change+'%'"></td>
+                <td class="py-3 text-slate-400 text-sm text-right" x-text="item.volume.toLocaleString()+' STP'"></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-slate-950 border-t border-slate-800 py-16 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-4 gap-8 mb-10">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-900 font-black text-lg">&#9993;</div>
+          <span class="font-black text-xl gradient-text">Stampcoin Platform</span>
+        </div>
+        <p class="text-slate-500 text-sm leading-relaxed mb-4">منصة عالمية لتداول الطوابع البريدية الرقمية NFT وتوثيقها على البلوكتشين، مع محفظة STP متكاملة وسوق حي.</p>
+        <div class="flex gap-3">
+          <a href="https://github.com/zedanazad43/stp" target="_blank" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center text-slate-400 hover:text-white transition-colors text-sm font-bold">GH</a>
+          <a href="/WALLET_API.md" class="w-9 h-9 bg-slate-800 hover:bg-slate-700 rounded-lg flex items-center justify-center text-slate-400 hover:text-white transition-colors text-xs">API</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-4 text-right">الخدمات</h4>
+        <ul class="space-y-2 text-right">
+          <li><a href="#market" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">سوق الطوابع</a></li>
+          <li><a href="#auctions" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">المزادات الحية</a></li>
+          <li><a href="#nft-mint" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">توثيق NFT</a></li>
+          <li><a href="#wallet" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">محفظة STP</a></li>
+          <li><a href="#archive" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">أرشيف الطوابع</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-bold mb-4 text-right">الموارد</h4>
+        <ul class="space-y-2 text-right">
+          <li><a href="/WALLET_API.md" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">وثائق Wallet API</a></li>
+          <li><a href="/MARKET_API.md" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">وثائق Market API</a></li>
+          <li><a href="https://github.com/zedanazad43/stp" target="_blank" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">GitHub Repository</a></li>
+          <li><a href="/api/blockchain/info" class="text-slate-500 hover:text-amber-400 text-sm transition-colors">Blockchain API</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-slate-600 text-sm">&#169; 2025 Stampcoin Platform · جميع الحقوق محفوظة</p>
+      <div class="flex items-center gap-2 text-slate-600 text-sm">
+        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+        <span>API Online · Block #<span x-text="displayBlockNumber"></span></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div x-show="showWalletModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" @click.self="showWalletModal=false">
+  <div class="bg-slate-900 border border-amber-400/20 rounded-2xl p-8 w-full max-w-md glow-box-gold">
+    <h3 class="text-white font-bold text-2xl mb-2 text-right">ربط المحفظة</h3>
+    <p class="text-slate-400 text-sm mb-6 text-right">أدخل معرف المستخدم أو أنشئ محفظة جديدة</p>
+    <div class="space-y-4">
+      <div>
+        <label class="text-slate-400 text-sm block mb-1.5 text-right">معرف المستخدم *</label>
+        <input type="text" x-model="connectForm.userId" placeholder="user_12345" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400/50 text-right placeholder-slate-600" />
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1.5 text-right">الاسم (لإنشاء محفظة جديدة)</label>
+        <input type="text" x-model="connectForm.userName" placeholder="اسمك الكامل" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400/50 text-right placeholder-slate-600" />
+      </div>
+      <button @click="connectWallet()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-bold py-4 rounded-xl transition-all">&#128279; ربط / إنشاء محفظة</button>
+      <p x-show="walletError" class="text-red-400 text-sm text-center" x-text="walletError"></p>
+    </div>
+  </div>
+</div>
+
+<div x-show="selectedStamp" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" @click.self="selectedStamp=null">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 w-full max-w-lg" x-show="selectedStamp">
+    <div class="flex items-start justify-between mb-4">
+      <button @click="selectedStamp=null" class="text-slate-500 hover:text-white transition-colors">&#10005;</button>
+      <div class="text-right"><h3 class="text-white font-bold text-xl" x-text="selectedStamp?.name"></h3><p class="text-slate-400 text-sm" x-text="(selectedStamp?.country||'')+' · '+(selectedStamp?.year||'')" ></p></div>
+    </div>
+    <div class="text-center text-8xl py-8 bg-slate-800/50 rounded-xl mb-6" x-text="selectedStamp?.emoji"></div>
+    <div class="grid grid-cols-3 gap-4 mb-6 text-center">
+      <div class="bg-slate-800/50 rounded-xl p-3"><div class="text-slate-500 text-xs mb-1">السعر</div><div class="text-amber-400 font-bold" x-text="(selectedStamp?.price||0).toLocaleString()+' STP'"></div></div>
+      <div class="bg-slate-800/50 rounded-xl p-3"><div class="text-slate-500 text-xs mb-1">الندرة</div><div class="text-white font-bold text-sm" x-text="selectedStamp?.rarity||'عادي'"></div></div>
+      <div class="bg-slate-800/50 rounded-xl p-3"><div class="text-slate-500 text-xs mb-1">NFT</div><div class="font-bold text-sm" x-text="selectedStamp?.isNft||selectedStamp?.hasNft?'✅ موثق':'⬜ غير موثق'"></div></div>
+    </div>
+    <button @click="buyStamp(selectedStamp);selectedStamp=null" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 rounded-xl transition-all hover:-translate-y-1">&#128717; شراء الطابع</button>
+  </div>
+</div>
+
+<div x-show="showTransferModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" @click.self="showTransferModal=false">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 w-full max-w-md">
+    <h3 class="text-white font-bold text-xl mb-6 text-right">إرسال STP</h3>
+    <div class="space-y-4">
+      <div><label class="text-slate-400 text-sm block mb-1.5 text-right">معرف المستلم</label><input type="text" x-model="transferForm.to" placeholder="user_xxxxx" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400/50 text-right placeholder-slate-600" /></div>
+      <div><label class="text-slate-400 text-sm block mb-1.5 text-right">الكمية (STP)</label><input type="number" x-model="transferForm.amount" placeholder="100" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400/50 text-right placeholder-slate-600" /></div>
+      <button @click="doTransfer()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-4 rounded-xl transition-all">&#128100; إرسال</button>
+      <p x-show="transferMessage" class="text-sm text-center" :class="transferSuccess?'text-green-400':'text-red-400'" x-text="transferMessage"></p>
+    </div>
+  </div>
+</div>
+
+<div x-show="toast.show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+  class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-800 border rounded-xl px-6 py-3 shadow-2xl flex items-center gap-3"
+  :class="toast.type==='success'?'border-green-400/40':toast.type==='error'?'border-red-400/40':'border-amber-400/40'">
+  <span x-text="toast.icon"></span>
+  <span class="text-white text-sm font-medium" x-text="toast.message"></span>
+</div>
+
+<script>
+const API_BASE = window.location.origin;
+function stampApp() {
+  return {
+    activeSection:'home',mobileMenu:false,walletConnected:false,wallet:{},transactions:[],
+    showWalletModal:false,showTransferModal:false,selectedStamp:null,
+    connectForm:{userId:'',userName:''},walletError:'',
+    transferForm:{to:'',amount:''},transferMessage:'',transferSuccess:false,
+    activeMarketFilter:'الكل',marketSearch:'',marketSort:'newest',
+    archiveSearch:'',archiveCountry:'',
+    dragOver:false,nftPreview:null,nftForm:{name:'',country:'',year:'',description:'',rarity:'عادي'},nftMinting:false,
+    displayBlockNumber:Math.floor(Math.random()*9999999+18000000),
+    _timerTick:0,
+    toast:{show:false,message:'',type:'success',icon:'✅'},
+    navItems:[
+      {id:'home',label:'🏠 الرئيسية'},
+      {id:'market',label:'🏪 السوق'},
+      {id:'auctions',label:'🔴 المزادات'},
+      {id:'wallet',label:'💼 المحفظة'},
+      {id:'archive',label:'📚 الأرشيف'},
+      {id:'nft-mint',label:'🎨 توثيق NFT'},
+      {id:'dashboard',label:'📊 الإحصائيات'},
+    ],
+    tickers:[
+      {symbol:'STP/USDT',price:'$0.0042',change:12.3},
+      {symbol:'STP/BTC',price:'0.000000068',change:8.7},
+      {symbol:'NFT-PENNY-BLACK',price:'50,000 STP',change:28.5},
+      {symbol:'NFT-INVERTED-JENNY',price:'120,000 STP',change:-3.2},
+      {symbol:'NFT-BASEL-DOVE',price:'85,000 STP',change:15.1},
+      {symbol:'NFT-EGYPT-1866',price:'12,000 STP',change:5.4},
+      {symbol:'STP/ETH',price:'0.0000015',change:9.2},
+    ],
+    heroStats:[{value:'50K+',label:'طابع رقمي'},{value:'$2.4M',label:'حجم التداول'},{value:'12K+',label:'مستخدم نشط'}],
+    marketFilters:['الكل','NFT','نادر','مصري','بريطاني','أمريكي','تاريخي'],
+    marketItems:[
+      {id:1,name:'Black Penny 1840',country:'المملكة المتحدة',year:1840,price:50000,priceUsd:'210.00',emoji:'🏛️',rarity:'نادر جداً',isNft:true,type:'NFT',likes:342},
+      {id:2,name:'Inverted Jenny 1918',country:'أمريكا',year:1918,price:120000,priceUsd:'504.00',emoji:'✈️',rarity:'نادر جداً',isNft:true,type:'NFT',likes:521},
+      {id:3,name:'الهلال الأحمر المصري',country:'مصر',year:1945,price:12000,priceUsd:'50.40',emoji:'🌙',rarity:'نادر',isNft:true,type:'مصري',likes:189},
+      {id:4,name:'Basel Dove 1845',country:'سويسرا',year:1845,price:85000,priceUsd:'357.00',emoji:'🕊️',rarity:'نادر جداً',isNft:true,type:'NFT',likes:412},
+      {id:5,name:'طابع الملك فاروق',country:'مصر',year:1937,price:8500,priceUsd:'35.70',emoji:'👑',rarity:'نادر',isNft:false,type:'مصري',likes:156},
+      {id:6,name:'Penny Red 1841',country:'المملكة المتحدة',year:1841,price:25000,priceUsd:'105.00',emoji:'🔴',rarity:'نادر',isNft:true,type:'بريطاني',likes:234},
+      {id:7,name:'طابع الجمهورية العربية',country:'مصر',year:1958,price:4200,priceUsd:'17.64',emoji:'🦅',rarity:'عادي',isNft:false,type:'مصري',likes:89},
+      {id:8,name:'Express Mail 1885',country:'أمريكا',year:1885,price:35000,priceUsd:'147.00',emoji:'📮',rarity:'نادر',isNft:true,type:'أمريكي',likes:267},
+      {id:9,name:'طابع المنارة',country:'الإمارات',year:1972,price:3100,priceUsd:'13.02',emoji:'🗼',rarity:'عادي',isNft:false,type:'خليجي',likes:45},
+      {id:10,name:'Zeppelin 1928',country:'ألمانيا',year:1928,price:18000,priceUsd:'75.60',emoji:'🎈',rarity:'نادر',isNft:true,type:'تاريخي',likes:198},
+      {id:11,name:'Olympic Games 1896',country:'اليونان',year:1896,price:42000,priceUsd:'176.40',emoji:'🏅',rarity:'نادر جداً',isNft:true,type:'NFT',likes:378},
+      {id:12,name:'Moon Landing 1969',country:'أمريكا',year:1969,price:6800,priceUsd:'28.56',emoji:'🌕',rarity:'عادي',isNft:false,type:'أمريكي',likes:134},
+      {id:13,name:'طابع الكعبة المشرفة',country:'السعودية',year:1980,price:9200,priceUsd:'38.64',emoji:'🕋',rarity:'نادر',isNft:true,type:'خليجي',likes:213},
+      {id:14,name:'Titanic Memorial 1912',country:'المملكة المتحدة',year:1912,price:32000,priceUsd:'134.40',emoji:'🚢',rarity:'نادر',isNft:true,type:'بريطاني',likes:289},
+      {id:15,name:'طابع النيل الأزرق',country:'مصر',year:1879,price:67000,priceUsd:'281.40',emoji:'🏺',rarity:'نادر جداً',isNft:true,type:'مصري',likes:456},
+    ],
+    auctions:[
+      {id:'a1',name:'Black Penny الأصلي ١٨٤٠',description:'أول طابع بريدي في التاريخ - نسخة أصلية موثقة',emoji:'🏛️',currentBid:95000,minBid:100000,bidCount:23,endsAt:Date.now()+7200000,verified:true},
+      {id:'a2',name:'Inverted Jenny نادرة',description:'طابع الطيارة المقلوبة الأمريكي ١٩١٨ - من أندر طوابع العالم',emoji:'✈️',currentBid:215000,minBid:220000,bidCount:45,endsAt:Date.now()+3600000,verified:true},
+      {id:'a3',name:'مجموعة طوابع مصر الملكية',description:'مجموعة نادرة من عهد الملك فاروق - ١٣ طابعاً أصلياً موثقاً',emoji:'👑',currentBid:45000,minBid:47000,bidCount:12,endsAt:Date.now()+14400000,verified:true},
+    ],
+    archiveItems:[
+      {id:1,name:'Black Penny',country:'المملكة المتحدة',year:1840,emoji:'🏛️',hasNft:true},
+      {id:2,name:'Inverted Jenny',country:'أمريكا',year:1918,emoji:'✈️',hasNft:true},
+      {id:3,name:'Basel Dove',country:'سويسرا',year:1845,emoji:'🕊️',hasNft:true},
+      {id:4,name:'الهلال الأحمر',country:'مصر',year:1945,emoji:'🌙',hasNft:true},
+      {id:5,name:'Olympic Athens',country:'اليونان',year:1896,emoji:'🏅',hasNft:true},
+      {id:6,name:'طابع الملك فاروق',country:'مصر',year:1937,emoji:'👑',hasNft:false},
+      {id:7,name:'Penny Red',country:'المملكة المتحدة',year:1841,emoji:'🔴',hasNft:true},
+      {id:8,name:'Zeppelin',country:'ألمانيا',year:1928,emoji:'🎈',hasNft:true},
+      {id:9,name:'Moon Landing',country:'أمريكا',year:1969,emoji:'🌕',hasNft:false},
+      {id:10,name:'طابع الكعبة',country:'السعودية',year:1980,emoji:'🕋',hasNft:true},
+      {id:11,name:'Titanic Memorial',country:'المملكة المتحدة',year:1912,emoji:'🚢',hasNft:true},
+      {id:12,name:'طابع النيل الأزرق',country:'مصر',year:1879,emoji:'🏺',hasNft:true},
+      {id:13,name:'طابع المنارة',country:'الإمارات',year:1972,emoji:'🗼',hasNft:false},
+      {id:14,name:'Eiffel Tower',country:'فرنسا',year:1889,emoji:'🗼',hasNft:true},
+      {id:15,name:'Gandhi Memorial',country:'الهند',year:1948,emoji:'✌️',hasNft:true},
+      {id:16,name:'Chinese Dragon',country:'الصين',year:1878,emoji:'🐉',hasNft:true},
+      {id:17,name:'طابع برج الإيفل',country:'فرنسا',year:1889,emoji:'🗼',hasNft:true},
+      {id:18,name:'Titanic 1912',country:'المملكة المتحدة',year:1912,emoji:'🚢',hasNft:false},
+    ],
+    dashStats:[
+      {label:'إجمالي الطوابع المتداولة',value:'142,891',trend:8.3,icon:'🏷️'},
+      {label:'حجم التداول اليومي',value:'$48,920',trend:12.7,icon:'💹'},
+      {label:'NFTs المُوثقة',value:'28,450',trend:23.4,icon:'🎨'},
+      {label:'المستخدمون النشطون',value:'12,340',trend:-2.1,icon:'👤'},
+    ],
+    topStamps:[
+      {id:1,name:'Black Penny 1840',country:'المملكة المتحدة',price:50000,change:28.5,volume:234000,emoji:'🏛️'},
+      {id:2,name:'Inverted Jenny',country:'أمريكا',price:120000,change:-3.2,volume:189000,emoji:'✈️'},
+      {id:3,name:'طابع النيل الأزرق',country:'مصر',price:67000,change:15.1,volume:156000,emoji:'🏺'},
+      {id:4,name:'Basel Dove',country:'سويسرا',price:85000,change:9.8,volume:143000,emoji:'🕊️'},
+      {id:5,name:'Olympic Athens 1896',country:'اليونان',price:42000,change:5.4,volume:98000,emoji:'🏅'},
+    ],
+    get filteredMarketItems(){
+      let items=this.marketItems;
+      if(this.activeMarketFilter!=='الكل'){
+        if(this.activeMarketFilter==='NFT') items=items.filter(i=>i.isNft);
+        else if(this.activeMarketFilter==='نادر') items=items.filter(i=>i.rarity!=='عادي');
+        else items=items.filter(i=>i.type===this.activeMarketFilter||i.country.includes(this.activeMarketFilter));
+      }
+      if(this.marketSearch){const q=this.marketSearch.toLowerCase();items=items.filter(i=>i.name.toLowerCase().includes(q)||i.country.includes(this.marketSearch));}
+      if(this.marketSort==='price_asc') items=[...items].sort((a,b)=>a.price-b.price);
+      else if(this.marketSort==='price_desc') items=[...items].sort((a,b)=>b.price-a.price);
+      else if(this.marketSort==='popular') items=[...items].sort((a,b)=>b.likes-a.likes);
+      return items;
+    },
+    get filteredArchive(){
+      let items=this.archiveItems;
+      if(this.archiveSearch){const q=this.archiveSearch.toLowerCase();items=items.filter(i=>i.name.toLowerCase().includes(q)||i.country.includes(this.archiveSearch));}
+      if(this.archiveCountry) items=items.filter(i=>i.country===this.archiveCountry);
+      return items;
+    },
+    init(){
+      this.loadWalletFromStorage();
+      this.setupScrollSpy();
+      this.$nextTick(()=>{this.initCharts();this.startAuctionTimers();});
+    },
+    scrollTo(id){
+      this.activeSection=id;
+      const el=document.getElementById(id);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+      this.mobileMenu=false;
+    },
+    setupScrollSpy(){
+      const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)this.activeSection=e.target.id;});},{threshold:0.3});
+      document.querySelectorAll('section[id]').forEach(s=>obs.observe(s));
+    },
+    getTimer(endsAt){
+      // _timerTick is referenced to make Alpine.js re-evaluate this expression each second
+      void this._timerTick;
+      const diff=Math.max(0,endsAt-Date.now());
+      const h=Math.floor(diff/3600000);
+      const m=Math.floor((diff%3600000)/60000);
+      const s=Math.floor((diff%60000)/1000);
+      return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    },
+    startAuctionTimers(){
+      // Increment display block number each second
+      setInterval(()=>{this.displayBlockNumber++;},1000);
+      // Force timer display refresh every second (only re-renders timer text)
+      setInterval(()=>{this._timerTick=Date.now();},1000);
+    },
+    loadWalletFromStorage(){
+      try{const s=localStorage.getItem('stp_wallet');if(s){const w=JSON.parse(s);this.wallet=w;this.walletConnected=true;this.loadTransactions(w.userId);}}catch(e){}
+    },
+    async connectWallet(){
+      this.walletError='';
+      if(!this.connectForm.userId){this.walletError='الرجاء إدخال معرف المستخدم';return;}
+      try{
+        let res=await fetch(API_BASE+'/api/wallet/'+this.connectForm.userId);
+        if(res.status===404){
+          if(!this.connectForm.userName){this.walletError='الرجاء إدخال الاسم لإنشاء محفظة جديدة';return;}
+          res=await fetch(API_BASE+'/api/wallet/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:this.connectForm.userId,userName:this.connectForm.userName})});
+        }
+        const data=await res.json();
+        if(data.error){this.walletError=data.error;return;}
+        this.wallet=data;this.walletConnected=true;
+        localStorage.setItem('stp_wallet',JSON.stringify(data));
+        this.showWalletModal=false;
+        this.loadTransactions(data.userId);
+        this.showToast('✅ تم ربط المحفظة بنجاح','success');
+      }catch(e){this.walletError='خطأ في الاتصال بالخادم';}
+    },
+    disconnectWallet(){
+      this.walletConnected=false;this.wallet={};this.transactions=[];
+      localStorage.removeItem('stp_wallet');
+      this.showToast('🔓 تم قطع اتصال المحفظة','info');
+    },
+    async loadTransactions(userId){
+      try{const res=await fetch(API_BASE+'/api/wallet/'+userId+'/transactions');const data=await res.json();this.transactions=Array.isArray(data)?data:[];}catch(e){}
+    },
+    async buyStamp(item){
+      if(!this.walletConnected){this.showWalletModal=true;return;}
+      if((this.wallet.balance||0)<item.price){this.showToast('❌ رصيد غير كافٍ لشراء هذا الطابع','error');return;}
+      // Call market API if item has a server-side ID, otherwise show demo message
+      try{
+        if(item.serverId){
+          const res=await fetch(API_BASE+'/api/market/items/'+item.serverId+'/buy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({buyerId:this.wallet.userId})});
+          const data=await res.json();
+          if(data.error){this.showToast('❌ '+data.error,'error');return;}
+        }
+        this.wallet.balance=Math.max(0,(this.wallet.balance||0)-item.price);
+        localStorage.setItem('stp_wallet',JSON.stringify(this.wallet));
+        this.showToast('✅ تم شراء "'+item.name+'" بنجاح!','success');
+      }catch(e){this.showToast('✅ تم شراء "'+item.name+'" بنجاح! (وضع عرض)','success');}
+    },
+    async placeBid(auction){
+      if(!this.walletConnected){this.showWalletModal=true;return;}
+      const bid=auction.minBid;
+      if((this.wallet.balance||0)<bid){this.showToast('❌ رصيد غير كافٍ للمزايدة','error');return;}
+      try{
+        if(auction.serverId){
+          const res=await fetch(API_BASE+'/api/auctions/'+auction.serverId+'/bid',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bidderId:this.wallet.userId,amount:bid})});
+          const data=await res.json();
+          if(data.error){this.showToast('❌ '+data.error,'error');return;}
+        }
+        auction.currentBid=bid;
+        auction.minBid=bid+Math.ceil(bid*0.05);
+        auction.bidCount++;
+        this.showToast('🔨 تم تسجيل مزايدتك بـ '+bid.toLocaleString()+' STP','success');
+      }catch(e){
+        auction.currentBid=bid;auction.minBid=bid+Math.ceil(bid*0.05);auction.bidCount++;
+        this.showToast('🔨 تم تسجيل مزايدتك بـ '+bid.toLocaleString()+' STP','success');
+      }
+    },
+    async doTransfer(){
+      this.transferMessage='';
+      if(!this.transferForm.to||!this.transferForm.amount){this.transferMessage='الرجاء ملء جميع الحقول';this.transferSuccess=false;return;}
+      try{
+        const res=await fetch(API_BASE+'/api/wallet/transfer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fromUserId:this.wallet.userId,toUserId:this.transferForm.to,amount:Number(this.transferForm.amount)})});
+        const data=await res.json();
+        if(data.error){this.transferMessage=data.error;this.transferSuccess=false;}
+        else{this.transferMessage='✅ تم الإرسال بنجاح!';this.transferSuccess=true;this.wallet.balance-=Number(this.transferForm.amount);this.loadTransactions(this.wallet.userId);setTimeout(()=>{this.showTransferModal=false;this.transferMessage='';},1500);}
+      }catch(e){this.transferMessage='خطأ في الاتصال';this.transferSuccess=false;}
+    },
+    handleFileSelect(event){const f=event.target.files[0];if(f){const r=new FileReader();r.onload=e=>{this.nftPreview=e.target.result;};r.readAsDataURL(f);}},
+    handleDrop(event){this.dragOver=false;const f=event.dataTransfer.files[0];if(f&&f.type.startsWith('image/')){const r=new FileReader();r.onload=e=>{this.nftPreview=e.target.result;};r.readAsDataURL(f);}},
+    async mintNFT(){
+      if(!this.walletConnected){this.showWalletModal=true;return;}
+      if(!this.nftForm.name)return;
+      this.nftMinting=true;
+      try{
+        // Call backend NFT mint API
+        const res=await fetch(API_BASE+'/api/nft/mint',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ownerId:this.wallet.userId,name:this.nftForm.name,country:this.nftForm.country,year:this.nftForm.year?Number(this.nftForm.year):null,description:this.nftForm.description,rarity:this.nftForm.rarity})
+        });
+        const data=await res.json();
+        if(data.error){this.showToast('❌ '+data.error,'error');return;}
+        const stampId=data.tokenId||('STP-'+Date.now().toString(36).toUpperCase());
+        if(!this.wallet.stamps)this.wallet.stamps=[];
+        this.wallet.stamps.push({stampId,...this.nftForm});
+        this.wallet.balance=Math.max(0,(this.wallet.balance||0)-50);
+        localStorage.setItem('stp_wallet',JSON.stringify(this.wallet));
+        this.showToast('🎨 تم توثيق الطابع كـ NFT! معرف: '+stampId,'success');
+        this.nftForm={name:'',country:'',year:'',description:'',rarity:'عادي'};
+        this.nftPreview=null;
+      }catch(e){
+        // Fallback: mint locally if server unreachable
+        const stampId='STP-'+Date.now().toString(36).toUpperCase();
+        if(!this.wallet.stamps)this.wallet.stamps=[];
+        this.wallet.stamps.push({stampId,...this.nftForm});
+        this.wallet.balance=Math.max(0,(this.wallet.balance||0)-50);
+        localStorage.setItem('stp_wallet',JSON.stringify(this.wallet));
+        this.showToast('🎨 تم توثيق الطابع! معرف: '+stampId,'success');
+        this.nftForm={name:'',country:'',year:'',description:'',rarity:'عادي'};
+        this.nftPreview=null;
+      }
+      finally{this.nftMinting=false;}
+    },
+    showToast(message,type='success'){
+      const icons={success:'✅',error:'❌',info:'ℹ️'};
+      this.toast={show:true,message,type,icon:icons[type]||'✅'};
+      setTimeout(()=>{this.toast.show=false;},3500);
+    },
+    initCharts(){
+      const vCtx=document.getElementById('volumeChart');
+      if(vCtx){new Chart(vCtx,{type:'bar',data:{labels:['السبت','الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'],datasets:[{label:'حجم التداول (STP)',data:[1200000,980000,1450000,1100000,1650000,2100000,1890000],backgroundColor:'rgba(245,158,11,.3)',borderColor:'rgba(245,158,11,.8)',borderWidth:2,borderRadius:8}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'#1e293b'}},y:{ticks:{color:'#64748b',callback:v=>(v/1000)+'K'},grid:{color:'#1e293b'}}}}});}
+      const dCtx=document.getElementById('distributionChart');
+      if(dCtx){new Chart(dCtx,{type:'doughnut',data:{labels:['NFT موثق','نادر','عادي','تاريخي'],datasets:[{data:[35,25,30,10],backgroundColor:['rgba(139,92,246,.8)','rgba(245,158,11,.8)','rgba(100,116,139,.8)','rgba(59,130,246,.8)'],borderWidth:2,borderColor:'#0f172a'}]},options:{responsive:true,cutout:'70%',plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:16,font:{size:12}}}}}});}
+    },
+  };
+}
+<\/script>
 </body>
 </html>
