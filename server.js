@@ -5,12 +5,37 @@ const cors = require("cors");
 const wallet = require("./wallet");
 const market = require("./market");
 const blockchain = require("./blockchain");
+const { dataDir, resolveDataFile } = require("./storage-paths");
 
 const app = express();
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
-  : ["http://localhost:8080", "http://localhost:3000", "http://localhost:10000"];
+function normalizeUrl(value) {
+  if (!value) return "";
+  return value.trim().replace(/\/$/, "");
+}
+
+function getHostname(value) {
+  if (!value) return "";
+  try {
+    return new URL(value).hostname.toLowerCase();
+  } catch (error) {
+    return value.trim().toLowerCase();
+  }
+}
+
+const baseUrl = normalizeUrl(process.env.BASE_URL);
+const canonicalHost = getHostname(process.env.CANONICAL_HOST || baseUrl);
+const canonicalOrigin = baseUrl || (canonicalHost ? `https://${canonicalHost}` : "");
+
+app.set("trust proxy", true);
+
+const allowedOrigins = [
+  "http://localhost:8080",
+  "http://localhost:3000",
+  "http://localhost:10000",
+  ...((process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim()).filter(Boolean)),
+  ...(canonicalOrigin ? [canonicalOrigin] : [])
+].filter((origin, index, list) => list.indexOf(origin) === index);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -25,9 +50,25 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV !== "production" || !canonicalHost) {
+    return next();
+  }
+
+  const requestHost = (req.hostname || "").toLowerCase();
+  if (!requestHost || requestHost === canonicalHost) {
+    return next();
+  }
+
+  const forwardedProto = req.get("x-forwarded-proto");
+  const requestProtocol = (forwardedProto || req.protocol || "https").split(",")[0].trim();
+  const redirectTarget = `${canonicalOrigin.replace(/^https?:\/\//, `${requestProtocol}://`)}${req.originalUrl}`;
+  return res.redirect(308, redirectTarget);
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
-const DATA_FILE = path.join(__dirname, "data.json");
+const DATA_FILE = resolveDataFile("data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
 
 function requireToken(req, res, next) {
@@ -47,7 +88,16 @@ function requireToken(req, res, next) {
 }
 
 // Health check endpoint
-app.get("/health", (req, res) => res.json({ status: "ok" }));
+app.get("/health", (req, res) => res.json({ status: "ok", baseUrl: canonicalOrigin || null }));
+
+app.get("/api/site", (req, res) => {
+  res.json({
+    baseUrl: canonicalOrigin || `${req.protocol}://${req.get("host")}`,
+    canonicalHost: canonicalHost || req.hostname,
+    allowedOrigins,
+    dataDir
+  });
+});
 
 // --- Wallet API ---
 
@@ -332,6 +382,15 @@ app.post("/sync", requireToken, async (req, res) => {
 });
 
 const port = process.env.PORT || 10000;
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Stampcoin Platform server listening on port ${port}`);
-});
+
+function startServer() {
+  return app.listen(port, "0.0.0.0", () => {
+    console.log(`Stampcoin Platform server listening on port ${port}`);
+  });
+}
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { app, startServer, allowedOrigins, canonicalOrigin, canonicalHost };

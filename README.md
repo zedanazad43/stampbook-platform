@@ -23,7 +23,7 @@ npm install
 npm start
 ```
 
-The server listens on port `8080` by default (configurable via `PORT` environment variable).
+The server listens on port `10000` by default (configurable via `PORT` environment variable).
 
 ## API Documentation
 
@@ -41,8 +41,9 @@ All tests use Jest with mocked file system (no disk I/O during tests).
 ## Key API Endpoints
 
 ### Wallet
+
 | Method | Path | Description |
-|--------|------|-------------|
+| ------ | ---- | ----------- |
 | POST | `/api/wallet/create` | Create a new wallet |
 | GET | `/api/wallet/:userId` | Get wallet by user ID |
 | POST | `/api/wallet/transfer` | Transfer balance between wallets |
@@ -51,8 +52,9 @@ All tests use Jest with mocked file system (no disk I/O during tests).
 | GET | `/api/wallets` | List all wallets (🔒 auth required) |
 
 ### Market
+
 | Method | Path | Description |
-|--------|------|-------------|
+| ------ | ---- | ----------- |
 | GET | `/api/market/items` | Get all items (supports filtering) |
 | POST | `/api/market/items` | List a new item |
 | GET | `/api/market/items/:itemId` | Get item by ID |
@@ -64,11 +66,54 @@ All tests use Jest with mocked file system (no disk I/O during tests).
 ## Environment Variables
 
 | Variable | Description |
-|----------|-------------|
-| `PORT` | Server port (default: `8080`) |
+| -------- | ----------- |
+| `PORT` | Server port (default: `10000`) |
+| `BASE_URL` | Public HTTPS URL for the app, for example `https://app.example.com` |
+| `CANONICAL_HOST` | Hostname to force in production redirects, for example `app.example.com` |
+| `ALLOWED_ORIGINS` | Comma-separated list of frontend origins allowed by CORS |
 | `SYNC_TOKEN` | Bearer token for protected endpoints |
 | `NODE_ENV` | Set to `production` to enforce auth |
 | `STP_CONTRACT_ADDRESS` | On-chain contract address |
+
+## Custom Domain and DNS
+
+This project supports a custom production domain through the `BASE_URL` and `CANONICAL_HOST` environment variables.
+
+1. In Render, open your web service and add your custom domain, such as `app.example.com`.
+2. Copy the DNS target that Render shows you.
+3. In your DNS provider, create the record requested by Render:
+   - For a subdomain such as `app.example.com`, create a `CNAME` record pointing to the Render target.
+   - For the apex domain such as `example.com`, use the `A`, `ALIAS`, or `ANAME` record type supported by your DNS provider exactly as Render instructs.
+4. Set these environment variables on the service:
+   - `BASE_URL=https://app.example.com`
+   - `CANONICAL_HOST=app.example.com`
+   - `ALLOWED_ORIGINS=https://app.example.com,https://www.example.com`
+5. Redeploy the service after DNS has propagated.
+
+In production, requests that arrive on a non-canonical host are redirected to `CANONICAL_HOST`, and `/api/site` returns the active public URL and allowed origins.
+
+## Self-Hosting on Your Own Computer
+
+If you want to run the site, HTTPS endpoint, and domain binding from your own machine instead of a cloud host, use the self-hosting bundle in [SELF_HOSTING.md](SELF_HOSTING.md).
+
+Main files:
+
+- `docker-compose.selfhost.yml`
+- `Caddyfile`
+- `.env.selfhost.example`
+- `deploy-local.cmd`
+
+This mode keeps application data in a persistent Docker volume and publishes the site through your own domain.
+
+## Hybrid High-Availability (Local + Cloud)
+
+For `ecostamp.net`, use the hybrid deployment guide in [HYBRID_DEPLOYMENT_CLOUDFLARE.md](HYBRID_DEPLOYMENT_CLOUDFLARE.md) to combine:
+
+- cloud origin (Render)
+- local origin (your computer)
+- Cloudflare failover routing
+
+This gives you continuity when your local machine is offline.
 
 ## License
 

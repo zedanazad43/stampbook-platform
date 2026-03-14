@@ -4,9 +4,9 @@
  */
 
 const fs = require("fs");
-const path = require("path");
+const { resolveDataFile } = require("./storage-paths");
 
-const MARKET_FILE = path.join(__dirname, "market-data.json");
+const MARKET_FILE = resolveDataFile("market-data.json");
 
 // Initialize market data structure
 let marketData = {
