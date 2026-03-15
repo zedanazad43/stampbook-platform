@@ -26,6 +26,10 @@ function getHostname(value) {
 const baseUrl = normalizeUrl(process.env.BASE_URL);
 const canonicalHost = getHostname(process.env.CANONICAL_HOST || baseUrl);
 const canonicalOrigin = baseUrl || (canonicalHost ? `https://${canonicalHost}` : "");
+const productionFallbackOrigins = [
+  "https://ecostamp.net",
+  "https://www.ecostamp.net"
+];
 
 app.set("trust proxy", true);
 
@@ -33,6 +37,7 @@ const allowedOrigins = [
   "http://localhost:8080",
   "http://localhost:3000",
   "http://localhost:10000",
+  ...productionFallbackOrigins,
   ...((process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim()).filter(Boolean)),
   ...(canonicalOrigin ? [canonicalOrigin] : [])
 ].filter((origin, index, list) => list.indexOf(origin) === index);
@@ -89,6 +94,7 @@ function requireToken(req, res, next) {
 
 // Health check endpoint
 app.get("/health", (req, res) => res.json({ status: "ok", baseUrl: canonicalOrigin || null }));
+app.get("/api/health", (req, res) => res.json({ status: "ok", baseUrl: canonicalOrigin || null }));
 
 app.get("/api/site", (req, res) => {
   res.json({
