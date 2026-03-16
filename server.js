@@ -75,6 +75,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const DATA_FILE = resolveDataFile("data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
+const MARKET_FEE_BPS = Number(process.env.MARKET_FEE_BPS || 500);
+const MARKET_FEE_WALLET_ID = process.env.MARKET_FEE_WALLET_ID || "platform_treasury";
+const MARKET_FEE_WALLET_NAME = process.env.MARKET_FEE_WALLET_NAME || "Platform Treasury";
 
 function requireToken(req, res, next) {
   const auth = req.get("Authorization") || "";
@@ -202,9 +205,9 @@ app.get("/api/market/items", (req, res) => {
 // List a new item on the market
 app.post("/api/market/items", (req, res) => {
   try {
-    const { sellerId, name, description, price, type, imageUrl } = req.body;
+    const { sellerId, name, description, price, type, imageUrl, sellerContact } = req.body;
     if (!sellerId || !name) return res.status(400).json({ error: "sellerId and name are required" });
-    const item = market.addMarketItem(sellerId, { name, description, price, type, imageUrl });
+    const item = market.addMarketItem(sellerId, { name, description, price, type, imageUrl, sellerContact });
     res.json(item);
   } catch (e) {
     res.status(400).json({ error: e.message });
@@ -223,15 +226,16 @@ app.get("/api/market/items/:itemId", (req, res) => {
 // Update a market item (seller only)
 app.put("/api/market/items/:itemId", (req, res) => {
   try {
-    const { userId, price, description, status, imageUrl } = req.body || {};
+    const { userId, price, description, status, imageUrl, sellerContact } = req.body || {};
     if (!userId) return res.status(400).json({ error: "userId is required" });
-    const item = market.getMarketItem(req.params.itemId);
+    const item = market.getRawMarketItem(req.params.itemId);
     if (item.sellerId !== userId) return res.status(403).json({ error: "Only the seller can update this item" });
     const updates = {};
     if (price !== undefined) updates.price = price;
     if (description !== undefined) updates.description = description;
     if (status !== undefined) updates.status = status;
     if (imageUrl !== undefined) updates.imageUrl = imageUrl;
+    if (sellerContact !== undefined) updates.sellerContact = sellerContact;
     if (Object.keys(updates).length === 0) return res.status(400).json({ error: "No updatable fields provided" });
     res.json(market.updateMarketItem(req.params.itemId, updates));
   } catch (e) {
@@ -243,15 +247,56 @@ app.put("/api/market/items/:itemId", (req, res) => {
 // Purchase a market item
 app.post("/api/market/items/:itemId/buy", (req, res) => {
   try {
-    const { buyerId } = req.body;
+    const { buyerId, buyerContact } = req.body;
     if (!buyerId) return res.status(400).json({ error: "buyerId is required" });
-    const item = market.getMarketItem(req.params.itemId);
-    if (item.price > 0) {
-      wallet.transfer(buyerId, item.sellerId, item.price);
+    const item = market.getRawMarketItem(req.params.itemId);
+
+    if (item.price <= 0) {
+      return res.status(400).json({ error: "Free listings are not allowed. Platform commission in STP is mandatory." });
     }
-    const result = market.purchaseMarketItem(req.params.itemId, buyerId);
+
+    // Ensure treasury wallet exists for mandatory marketplace commission collection.
+    if (!wallet.getWallet(MARKET_FEE_WALLET_ID)) {
+      wallet.createWallet(MARKET_FEE_WALLET_ID, MARKET_FEE_WALLET_NAME);
+    }
+
+    const platformFee = Math.max(1, Math.ceil((item.price * MARKET_FEE_BPS) / 10000));
+    const sellerProceeds = item.price - platformFee;
+    if (sellerProceeds <= 0) {
+      return res.status(400).json({ error: "Invalid fee configuration: seller proceeds must remain positive" });
+    }
+
+    // Split payment: seller receives proceeds, treasury receives platform fee.
+    wallet.transfer(buyerId, item.sellerId, sellerProceeds);
+    wallet.transfer(buyerId, MARKET_FEE_WALLET_ID, platformFee);
+
+    const result = market.purchaseMarketItem(req.params.itemId, buyerId, {
+      platformFee,
+      sellerProceeds,
+      feeCurrency: "STP",
+      buyerContact
+    });
     res.json(result);
   } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// Reveal contact details only for transaction participants after completed purchase.
+app.get("/api/market/transactions/:transactionId/contact-exchange", (req, res) => {
+  try {
+    const requesterId = req.query.userId;
+    if (!requesterId) {
+      return res.status(400).json({ error: "userId is required" });
+    }
+    res.json(market.getTransactionContactExchange(req.params.transactionId, requesterId));
+  } catch (e) {
+    if (e.message === "Market transaction not found") {
+      return res.status(404).json({ error: e.message });
+    }
+    if (e.message.includes("Only the buyer or seller")) {
+      return res.status(403).json({ error: e.message });
+    }
     res.status(400).json({ error: e.message });
   }
 });
@@ -300,7 +345,7 @@ app.get("/api/token", (req, res) => {
       { label: "Team & Founders",       percent: 15, amount: 63150000 },
       { label: "Reserve",               percent: 10, amount: 42100000 }
     ],
-    contractAddress: process.env.STP_CONTRACT_ADDRESS || "Pending mainnet deployment",
+    contractAddress: process.env.STP_CONTRACT_ADDRESS || "0xeB834351Ee83b3877DD8620e552652733710d4e1",
     network: "EVM-compatible"
   });
 });

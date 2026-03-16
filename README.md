@@ -119,7 +119,7 @@ Full documentation: [WALLET_API.md](WALLET_API.md) · [MARKET_API.md](MARKET_API
 | `PORT` | `10000` | Server port |
 | `SYNC_TOKEN` | _(none)_ | Bearer token for protected endpoints |
 | `NODE_ENV` | `development` | Set `production` to enforce auth |
-| `STP_CONTRACT_ADDRESS` | Pending | On-chain ERC-20 contract address |
+| `STP_CONTRACT_ADDRESS` | `0xeB834351Ee83b3877DD8620e552652733710d4e1` | On-chain ERC-20 contract address |
 | `ALLOWED_ORIGINS` | localhost | Comma-separated CORS origins |
 
 ---
@@ -223,7 +223,7 @@ npm test
 | `ALLOWED_ORIGINS` | Comma-separated list of frontend origins allowed by CORS |
 | `SYNC_TOKEN` | Bearer token for protected endpoints |
 | `NODE_ENV` | Set to `production` to enforce auth |
-| `STP_CONTRACT_ADDRESS` | On-chain contract address |
+| `STP_CONTRACT_ADDRESS` | `0xeB834351Ee83b3877DD8620e552652733710d4e1` |
 
 ## Custom Domain and DNS
 
