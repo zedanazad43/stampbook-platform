@@ -55,6 +55,10 @@ cache/
 artifacts/
 typechain-types/
 
+# Git internals accidentally committed
+git.worktrees/
+*.worktrees
+
 # Runtime data files (JSON persistence - dev only, not for production commits)
 wallets.json
 transactions.json

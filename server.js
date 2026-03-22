@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs").promises;
+const fsSync = require("fs");
 const path = require("path");
 const cors = require("cors");
 const wallet = require("./wallet");
@@ -93,6 +94,16 @@ function requireToken(req, res, next) {
     return res.status(401).json({ error: "Unauthorized" });
   }
   next();
+}
+
+// Mount AI Agent Expert routes
+const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
+if (fsSync.existsSync(aiAgentPath)) {
+  const aiAgent = require(aiAgentPath);
+  app.use("/agent", aiAgent);
+  console.log("AI Agent Expert mounted successfully");
+} else {
+  console.warn("AI Agent Expert not found at:", aiAgentPath);
 }
 
 // Health check endpoint
@@ -196,6 +207,7 @@ app.get("/api/market/items", (req, res) => {
     const filter = {};
     if (req.query.status) filter.status = req.query.status;
     if (req.query.type) filter.type = req.query.type;
+    if (req.query.sellerId) filter.sellerId = req.query.sellerId;
     res.json(market.getAllMarketItems(filter));
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -596,15 +608,7 @@ app.post("/sync", requireToken, async (req, res) => {
 });
 
 const port = process.env.PORT || 10000;
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Stampcoin Platform server listening on port ${port}`);
+});
 
-function startServer() {
-  return app.listen(port, "0.0.0.0", () => {
-    console.log(`Stampcoin Platform server listening on port ${port}`);
-  });
-}
-
-if (require.main === module) {
-  startServer();
-}
-
-module.exports = { app, startServer, allowedOrigins, canonicalOrigin, canonicalHost };
