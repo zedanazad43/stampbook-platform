@@ -179,7 +179,7 @@
             <div class="text-white font-bold text-sm mb-1 truncate text-right" x-text="item.name"></div>
             <div class="text-slate-500 text-xs mb-2 text-right" x-text="item.country+' · '+item.year"></div>
             <div class="flex items-center justify-between">
-              <button @click.stop="buyStamp(item)" class="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-500 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">شراء</button>
+              <button @click.stop="startPurchase(item)" class="bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-500 text-amber-400 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">شراء</button>
               <div class="text-right">
                 <div class="text-amber-400 font-black text-sm" x-text="item.price.toLocaleString()+' STP'"></div>
                 <div class="text-slate-500 text-xs" x-text="'$'+item.priceUsd"></div>
@@ -279,7 +279,7 @@
           <div class="text-slate-500 text-sm text-right mt-1">USD تقريباً</div>
         </div>
       </div>
-      <div class="grid md:grid-cols-4 gap-4 mb-8">
+      <div class="grid md:grid-cols-5 gap-4 mb-8">
         <button @click="showTransferModal=true" class="bg-slate-800/60 border border-slate-700 hover:border-amber-400/40 rounded-xl p-4 text-center transition-all hover:-translate-y-1 group">
           <div class="text-2xl mb-2">&#128100;</div><div class="text-slate-300 group-hover:text-amber-400 text-sm font-medium transition-colors">إرسال</div>
         </button>
@@ -288,6 +288,9 @@
         </button>
         <button @click="scrollTo('market')" class="bg-slate-800/60 border border-slate-700 hover:border-purple-400/40 rounded-xl p-4 text-center transition-all hover:-translate-y-1 group">
           <div class="text-2xl mb-2">&#128717;</div><div class="text-slate-300 group-hover:text-purple-400 text-sm font-medium transition-colors">تداول</div>
+        </button>
+        <button @click="openSellModal()" class="bg-slate-800/60 border border-slate-700 hover:border-cyan-400/40 rounded-xl p-4 text-center transition-all hover:-translate-y-1 group">
+          <div class="text-2xl mb-2">&#128722;</div><div class="text-slate-300 group-hover:text-cyan-400 text-sm font-medium transition-colors">عرض للبيع</div>
         </button>
         <button @click="scrollTo('nft-mint')" class="bg-slate-800/60 border border-slate-700 hover:border-amber-400/40 rounded-xl p-4 text-center transition-all hover:-translate-y-1 group">
           <div class="text-2xl mb-2">&#127912;</div><div class="text-slate-300 group-hover:text-amber-400 text-sm font-medium transition-colors">توثيق NFT</div>
@@ -318,6 +321,38 @@
             </div>
           </template>
           <div x-show="transactions.length===0" class="text-center py-4 text-slate-500">لا توجد معاملات بعد</div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/50 border border-slate-700/50 rounded-2xl p-6 mt-6">
+        <div class="flex items-center justify-between mb-4">
+          <button @click="loadMyDeals(wallet.userId)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg transition-all">تحديث</button>
+          <h3 class="text-white font-bold text-lg text-right">صفقاتي (بيع / شراء)</h3>
+        </div>
+        <div class="space-y-3">
+          <template x-for="deal in myDeals.slice(0,10)" :key="deal.id">
+            <div class="bg-slate-800/40 rounded-xl p-3 border border-slate-700/40">
+              <div class="flex items-center justify-between gap-3">
+                <button @click="openContactExchangeForTransaction(deal.id)" class="bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 text-cyan-300 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">بيانات التواصل</button>
+                <div class="text-right">
+                  <div class="text-white text-sm font-medium">
+                    <span x-text="deal.buyerId===wallet.userId ? 'شراء' : 'بيع'"></span>
+                    <span class="text-slate-400"> • </span>
+                    <span x-text="deal.itemId"></span>
+                  </div>
+                  <div class="text-slate-500 text-xs" x-text="new Date(deal.timestamp).toLocaleString('ar')"></div>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center justify-end gap-2 mt-2 text-xs">
+                <span class="text-amber-400" x-text="'السعر: '+deal.price+' STP'"></span>
+                <span class="text-slate-500">|</span>
+                <span class="text-cyan-400" x-text="'العمولة: '+(deal.platformFee||0)+' '+(deal.feeCurrency||'STP')"></span>
+                <span class="text-slate-500">|</span>
+                <span class="text-green-400" x-text="'صافي البائع: '+(deal.sellerProceeds||deal.price)+' STP'"></span>
+              </div>
+            </div>
+          </template>
+          <div x-show="myDeals.length===0" class="text-center py-4 text-slate-500">لا توجد صفقات سوق بعد</div>
         </div>
       </div>
     </div>
@@ -570,7 +605,64 @@
       <div class="bg-slate-800/50 rounded-xl p-3"><div class="text-slate-500 text-xs mb-1">الندرة</div><div class="text-white font-bold text-sm" x-text="selectedStamp?.rarity||'عادي'"></div></div>
       <div class="bg-slate-800/50 rounded-xl p-3"><div class="text-slate-500 text-xs mb-1">NFT</div><div class="font-bold text-sm" x-text="selectedStamp?.isNft||selectedStamp?.hasNft?'✅ موثق':'⬜ غير موثق'"></div></div>
     </div>
-    <button @click="buyStamp(selectedStamp);selectedStamp=null" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 rounded-xl transition-all hover:-translate-y-1">&#128717; شراء الطابع</button>
+    <button @click="startPurchase(selectedStamp);selectedStamp=null" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold py-4 rounded-xl transition-all hover:-translate-y-1">&#128717; شراء الطابع</button>
+  </div>
+</div>
+
+<div x-show="showPurchaseModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" @click.self="showPurchaseModal=false">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 w-full max-w-md">
+    <h3 class="text-white font-bold text-xl mb-2 text-right">تأكيد الشراء</h3>
+    <p class="text-slate-400 text-sm mb-5 text-right" x-text="pendingPurchaseItem ? ('سيتم شراء: '+pendingPurchaseItem.name+' بسعر '+pendingPurchaseItem.price+' STP') : ''"></p>
+
+    <div class="space-y-3">
+      <div>
+        <label class="text-slate-400 text-sm block mb-1.5 text-right">الاسم الكامل (اختياري)</label>
+        <input type="text" x-model="purchaseForm.fullName" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400/50 text-right placeholder-slate-600" placeholder="الاسم" />
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1.5 text-right">البريد الإلكتروني</label>
+        <input type="email" x-model="purchaseForm.email" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400/50 text-right placeholder-slate-600" placeholder="name@example.com" />
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1.5 text-right">رقم الهاتف</label>
+        <input type="text" x-model="purchaseForm.phone" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400/50 text-right placeholder-slate-600" placeholder="+971..." />
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1.5 text-right">عنوان التسليم</label>
+        <input type="text" x-model="purchaseForm.addressLine1" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-400/50 text-right placeholder-slate-600" placeholder="المدينة، الشارع، المبنى" />
+      </div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-2 gap-3">
+      <button @click="showPurchaseModal=false" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-3 rounded-xl transition-all">إلغاء</button>
+      <button @click="confirmPurchase()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-3 rounded-xl transition-all">تأكيد الشراء</button>
+    </div>
+  </div>
+</div>
+
+<div x-show="showContactExchangeModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" @click.self="showContactExchangeModal=false">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 w-full max-w-lg">
+    <h3 class="text-white font-bold text-xl mb-2 text-right">بيانات التواصل بعد إتمام الصفقة</h3>
+    <p class="text-slate-400 text-sm mb-5 text-right">تظهر هذه البيانات فقط للبائع والمشتري بعد الشراء المكتمل.</p>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 text-right">
+        <h4 class="text-amber-400 font-bold mb-2">بيانات البائع</h4>
+        <p class="text-slate-300 text-sm" x-text="contactExchange?.sellerContact?.fullName || '-'" ></p>
+        <p class="text-slate-400 text-xs" x-text="contactExchange?.sellerContact?.email || '-'" ></p>
+        <p class="text-slate-400 text-xs" x-text="contactExchange?.sellerContact?.phone || '-'" ></p>
+        <p class="text-slate-500 text-xs" x-text="contactExchange?.sellerContact?.addressLine1 || '-'" ></p>
+      </div>
+      <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 text-right">
+        <h4 class="text-purple-400 font-bold mb-2">بيانات المشتري</h4>
+        <p class="text-slate-300 text-sm" x-text="contactExchange?.buyerContact?.fullName || '-'" ></p>
+        <p class="text-slate-400 text-xs" x-text="contactExchange?.buyerContact?.email || '-'" ></p>
+        <p class="text-slate-400 text-xs" x-text="contactExchange?.buyerContact?.phone || '-'" ></p>
+        <p class="text-slate-500 text-xs" x-text="contactExchange?.buyerContact?.addressLine1 || '-'" ></p>
+      </div>
+    </div>
+
+    <button @click="showContactExchangeModal=false" class="w-full mt-5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-3 rounded-xl transition-all">إغلاق</button>
   </div>
 </div>
 
@@ -586,6 +678,51 @@
   </div>
 </div>
 
+<div x-show="showSellModal" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" @click.self="showSellModal=false">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <h3 class="text-white font-bold text-xl mb-2 text-right">إنشاء عرض بيع</h3>
+    <p class="text-slate-400 text-sm mb-5 text-right">بيانات التواصل تبقى مخفية ولن تظهر إلا بعد إتمام الشراء.</p>
+
+    <div class="space-y-4">
+      <div>
+        <label class="text-slate-400 text-sm block mb-1.5 text-right">اسم الطابع</label>
+        <input type="text" x-model="sellForm.name" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 text-right placeholder-slate-600" placeholder="مثال: طابع نادر 1965" />
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1.5 text-right">الوصف</label>
+        <textarea x-model="sellForm.description" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 text-right placeholder-slate-600" placeholder="وصف الطابع بدون بيانات تواصل"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-slate-400 text-sm block mb-1.5 text-right">السعر (STP)</label>
+          <input type="number" x-model="sellForm.price" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 text-right" placeholder="100" />
+        </div>
+        <div>
+          <label class="text-slate-400 text-sm block mb-1.5 text-right">النوع</label>
+          <input type="text" x-model="sellForm.type" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 text-right" placeholder="stamp" />
+        </div>
+      </div>
+
+      <div class="border-t border-slate-700 pt-4">
+        <h4 class="text-cyan-400 font-bold mb-3 text-right">بيانات التواصل الخاصة بالبائع</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          <input type="text" x-model="sellForm.sellerContact.fullName" class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-right" placeholder="الاسم الكامل" />
+          <input type="email" x-model="sellForm.sellerContact.email" class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-right" placeholder="البريد الإلكتروني" />
+          <input type="text" x-model="sellForm.sellerContact.phone" class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-right" placeholder="رقم الهاتف" />
+          <input type="text" x-model="sellForm.sellerContact.addressLine1" class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-right" placeholder="العنوان" />
+        </div>
+      </div>
+
+      <p x-show="sellMessage" class="text-sm text-center" :class="sellSuccess?'text-green-400':'text-red-400'" x-text="sellMessage"></p>
+
+      <div class="grid grid-cols-2 gap-3">
+        <button @click="showSellModal=false" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-3 rounded-xl transition-all">إلغاء</button>
+        <button @click="submitSellListing()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold py-3 rounded-xl transition-all">نشر العرض</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div x-show="toast.show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
   class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-800 border rounded-xl px-6 py-3 shadow-2xl flex items-center gap-3"
   :class="toast.type==='success'?'border-green-400/40':toast.type==='error'?'border-red-400/40':'border-amber-400/40'">
@@ -597,10 +734,14 @@
 const API_BASE = window.location.origin;
 function stampApp() {
   return {
-    activeSection:'home',mobileMenu:false,walletConnected:false,wallet:{},transactions:[],
-    showWalletModal:false,showTransferModal:false,selectedStamp:null,
+    activeSection:'home',mobileMenu:false,walletConnected:false,wallet:{},transactions:[],myDeals:[],
+    showWalletModal:false,showTransferModal:false,showPurchaseModal:false,showContactExchangeModal:false,showSellModal:false,selectedStamp:null,
+    pendingPurchaseItem:null,
+    purchaseForm:{fullName:'',email:'',phone:'',addressLine1:''},
+    contactExchange:null,
     connectForm:{userId:'',userName:''},walletError:'',
     transferForm:{to:'',amount:''},transferMessage:'',transferSuccess:false,
+    sellForm:{name:'',description:'',price:'',type:'stamp',sellerContact:{fullName:'',email:'',phone:'',addressLine1:''}},sellMessage:'',sellSuccess:false,
     activeMarketFilter:'الكل',marketSearch:'',marketSort:'newest',
     archiveSearch:'',archiveCountry:'',
     dragOver:false,nftPreview:null,nftForm:{name:'',country:'',year:'',description:'',rarity:'عادي'},nftMinting:false,
@@ -732,7 +873,7 @@ function stampApp() {
       setInterval(()=>{this._timerTick=Date.now();},1000);
     },
     loadWalletFromStorage(){
-      try{const s=localStorage.getItem('stp_wallet');if(s){const w=JSON.parse(s);this.wallet=w;this.walletConnected=true;this.loadTransactions(w.userId);}}catch(e){}
+      try{const s=localStorage.getItem('stp_wallet');if(s){const w=JSON.parse(s);this.wallet=w;this.walletConnected=true;this.loadTransactions(w.userId);this.loadMyDeals(w.userId);}}catch(e){}
     },
     async connectWallet(){
       this.walletError='';
@@ -749,6 +890,7 @@ function stampApp() {
         localStorage.setItem('stp_wallet',JSON.stringify(data));
         this.showWalletModal=false;
         this.loadTransactions(data.userId);
+        this.loadMyDeals(data.userId);
         this.showToast('✅ تم ربط المحفظة بنجاح','success');
       }catch(e){this.walletError='خطأ في الاتصال بالخادم';}
     },
@@ -760,15 +902,83 @@ function stampApp() {
     async loadTransactions(userId){
       try{const res=await fetch(API_BASE+'/api/wallet/'+userId+'/transactions');const data=await res.json();this.transactions=Array.isArray(data)?data:[];}catch(e){}
     },
+    async loadMyDeals(userId){
+      if(!userId)return;
+      try{
+        const [buyerRes,sellerRes]=await Promise.all([
+          fetch(API_BASE+'/api/market/transactions?buyerId='+encodeURIComponent(userId)),
+          fetch(API_BASE+'/api/market/transactions?sellerId='+encodeURIComponent(userId))
+        ]);
+        const buyerData=await buyerRes.json();
+        const sellerData=await sellerRes.json();
+        const merged=[...(Array.isArray(buyerData)?buyerData:[]),...(Array.isArray(sellerData)?sellerData:[])];
+        const map=new Map();
+        merged.forEach(tx=>{if(tx&&tx.id)map.set(tx.id,tx);});
+        this.myDeals=Array.from(map.values()).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+      }catch(e){
+        this.myDeals=[];
+      }
+    },
+    async openContactExchangeForTransaction(transactionId){
+      if(!this.walletConnected||!transactionId)return;
+      try{
+        const res=await fetch(API_BASE+'/api/market/transactions/'+transactionId+'/contact-exchange?userId='+encodeURIComponent(this.wallet.userId));
+        const data=await res.json();
+        if(data.error){this.showToast('❌ '+data.error,'error');return;}
+        this.contactExchange=data;
+        this.showContactExchangeModal=true;
+      }catch(e){
+        this.showToast('❌ تعذر جلب بيانات التواصل لهذه الصفقة','error');
+      }
+    },
+    startPurchase(item){
+      if(!item)return;
+      if(!this.walletConnected){this.showWalletModal=true;return;}
+      this.pendingPurchaseItem=item;
+      this.purchaseForm={
+        fullName:this.connectForm.userName||'',
+        email:'',
+        phone:'',
+        addressLine1:''
+      };
+      this.showPurchaseModal=true;
+    },
+    async confirmPurchase(){
+      const item=this.pendingPurchaseItem;
+      this.showPurchaseModal=false;
+      if(!item)return;
+      await this.buyStamp(item);
+    },
     async buyStamp(item){
       if(!this.walletConnected){this.showWalletModal=true;return;}
       if((this.wallet.balance||0)<item.price){this.showToast('❌ رصيد غير كافٍ لشراء هذا الطابع','error');return;}
       // Call market API if item has a server-side ID, otherwise show demo message
       try{
         if(item.serverId){
-          const res=await fetch(API_BASE+'/api/market/items/'+item.serverId+'/buy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({buyerId:this.wallet.userId})});
+          const buyerContact={
+            fullName:this.purchaseForm.fullName,
+            email:this.purchaseForm.email,
+            phone:this.purchaseForm.phone,
+            addressLine1:this.purchaseForm.addressLine1
+          };
+          const res=await fetch(API_BASE+'/api/market/items/'+item.serverId+'/buy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({buyerId:this.wallet.userId,buyerContact})});
           const data=await res.json();
           if(data.error){this.showToast('❌ '+data.error,'error');return;}
+
+          if(data.transaction&&data.transaction.platformFee!==undefined){
+            this.showToast('✅ تم الشراء. عمولة المنصة: '+data.transaction.platformFee+' '+(data.transaction.feeCurrency||'STP'),'success');
+          }
+
+          if(data.transaction&&data.transaction.id){
+            const contactRes=await fetch(API_BASE+'/api/market/transactions/'+data.transaction.id+'/contact-exchange?userId='+encodeURIComponent(this.wallet.userId));
+            const contactData=await contactRes.json();
+            if(!contactData.error){
+              this.contactExchange=contactData;
+              this.showContactExchangeModal=true;
+            }
+          }
+
+          this.loadMyDeals(this.wallet.userId);
         }
         this.wallet.balance=Math.max(0,(this.wallet.balance||0)-item.price);
         localStorage.setItem('stp_wallet',JSON.stringify(this.wallet));
@@ -803,6 +1013,65 @@ function stampApp() {
         if(data.error){this.transferMessage=data.error;this.transferSuccess=false;}
         else{this.transferMessage='✅ تم الإرسال بنجاح!';this.transferSuccess=true;this.wallet.balance-=Number(this.transferForm.amount);this.loadTransactions(this.wallet.userId);setTimeout(()=>{this.showTransferModal=false;this.transferMessage='';},1500);}
       }catch(e){this.transferMessage='خطأ في الاتصال';this.transferSuccess=false;}
+    },
+    openSellModal(){
+      if(!this.walletConnected){this.showWalletModal=true;return;}
+      this.sellMessage='';
+      this.sellSuccess=false;
+      this.sellForm={
+        name:'',
+        description:'',
+        price:'',
+        type:'stamp',
+        sellerContact:{
+          fullName:this.connectForm.userName||'',
+          email:'',
+          phone:'',
+          addressLine1:''
+        }
+      };
+      this.showSellModal=true;
+    },
+    async submitSellListing(){
+      this.sellMessage='';
+      this.sellSuccess=false;
+      if(!this.walletConnected){this.showWalletModal=true;return;}
+      if(!this.sellForm.name||!this.sellForm.price){this.sellMessage='الاسم والسعر مطلوبان';return;}
+      try{
+        const payload={
+          sellerId:this.wallet.userId,
+          name:this.sellForm.name,
+          description:this.sellForm.description,
+          price:Number(this.sellForm.price),
+          type:this.sellForm.type||'stamp',
+          sellerContact:this.sellForm.sellerContact
+        };
+        const res=await fetch(API_BASE+'/api/market/items',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const data=await res.json();
+        if(data.error){this.sellMessage=data.error;return;}
+
+        this.marketItems.unshift({
+          id:Date.now(),
+          serverId:data.id,
+          name:data.name,
+          country:'غير محدد',
+          year:new Date().getFullYear(),
+          price:data.price,
+          priceUsd:(Number(data.price)*0.0042).toFixed(2),
+          emoji:'🏷️',
+          rarity:'عادي',
+          isNft:false,
+          type:data.type||'stamp',
+          likes:0
+        });
+
+        this.sellSuccess=true;
+        this.sellMessage='✅ تم نشر العرض بنجاح';
+        this.showToast('✅ تم نشر عرض البيع','success');
+        setTimeout(()=>{this.showSellModal=false;},900);
+      }catch(e){
+        this.sellMessage='خطأ في الاتصال بالخادم';
+      }
     },
     handleFileSelect(event){const f=event.target.files[0];if(f){const r=new FileReader();r.onload=e=>{this.nftPreview=e.target.result;};r.readAsDataURL(f);}},
     handleDrop(event){this.dragOver=false;const f=event.dataTransfer.files[0];if(f&&f.type.startsWith('image/')){const r=new FileReader();r.onload=e=>{this.nftPreview=e.target.result;};r.readAsDataURL(f);}},

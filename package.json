@@ -1,8 +1,10 @@
 {
   "name": "stampcoin-platform",
-  "version": "1.0.0",
-  "description": "Stampcoin Platform - blockchain-powered digital stamps, wallet and marketplace",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "Stampcoin Digital Platform - Blockchain-based digital stamps platform with wallet and marketplace",
+  "main": "server.js",
+  "license": "MIT",
+  "private": true,
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
@@ -16,9 +18,11 @@
   },
   "dependencies": {
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "js-yaml": "^4.1.1"
   },
   "devDependencies": {
     "jest": "^30.2.0"
   }
 }
+

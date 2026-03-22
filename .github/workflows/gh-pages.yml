@@ -5,25 +5,29 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       # 1. أخذ الكود
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. تثبيت Node.js (لو المشروع npm/react/vue)
+      # 2. تثبيت Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '18'
+          cache: 'npm'
 
       # 3. تثبيت الحزم
       - name: Install dependencies
-        run: npm install
+        run: npm ci --no-audit
 
-      # 4. بناء المشروع (لو react/vue/node)
+      # 4. بناء المشروع (ينتج محتوى في مجلد public/)
       - name: Build project
         run: npm run build
 
@@ -32,4 +36,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./public
