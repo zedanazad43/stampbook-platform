@@ -38,6 +38,18 @@ jobs:
             fi
           done < changed_files.txt
 
+      - name: Review files only if present in commit
+        run: |
+          FILES=".dockerignore public/index.html"
+          for FILE in $FILES; do
+            if git ls-tree -r $GITHUB_SHA --name-only | grep -q "$FILE"; then
+              git show "$GITHUB_SHA:$FILE"
+              # Add your code review or processing logic here
+            else
+              echo "$FILE not found in commit $GITHUB_SHA, skipping review."
+            fi
+          done
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
