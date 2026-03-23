@@ -1,0 +1,50 @@
+name: Test (Copilot branch)
+
+# This workflow fires when the Copilot coding-agent workflow finishes on a
+# copilot/** branch.  Because it is triggered by workflow_run (not by the bot
+# actor directly), it does NOT require a human approval gate and will create a
+# passing "test" check run on the PR.
+
+on:
+  workflow_run:
+    workflows: ["Running Copilot coding agent"]
+    types: [completed]
+    branches: ['copilot/**']
+
+jobs:
+  test-copilot-changes:
+    name: test
+    # Run whether the triggering workflow succeeded or not (bot might time out)
+    if: ${{ github.event.workflow_run.conclusion != 'cancelled' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+
+    steps:
+      - name: Checkout PR head commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Verify lockfile is up-to-date
+        run: |
+          npm install --package-lock-only --ignore-scripts --no-audit
+          if ! git diff --exit-code package-lock.json; then
+            echo "package-lock.json is out of sync with package.json."
+            echo "Run 'npm install' locally and commit the updated lockfile."
+            exit 1
+          fi
+
+      - name: Run tests
+        run: npm test
