@@ -2,9 +2,11 @@ name: Build, Test, and Publish
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, 'copilot/**' ]
   pull_request:
     branches: [ main ]
+    types: [ opened, synchronize, reopened, ready_for_review ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -14,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -26,7 +30,7 @@ jobs:
 
       - name: Verify lockfile is up-to-date
         run: |
-          npm install --package-lock-only --ignore-scripts
+          npm install --package-lock-only --ignore-scripts 2>/dev/null
           if ! git diff --exit-code package-lock.json; then
             echo "package-lock.json is out of sync with package.json."
             echo "Run 'npm install' locally and commit the updated lockfile."
@@ -35,3 +39,4 @@ jobs:
 
       - name: Run tests
         run: npm test
+

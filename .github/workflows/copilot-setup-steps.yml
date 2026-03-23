@@ -11,12 +11,21 @@ jobs:
   copilot-setup-steps:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # <-- Changed from 'read' to 'write' for checkout
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }} # Explicitly provides the token
+          fetch-depth: 0
+
+      - name: Ensure main ref is available (for git diff/show)
+        run: |
+          git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
+          if git show-ref --verify --quiet refs/remotes/origin/main; then
+            git branch -f main refs/remotes/origin/main 2>/dev/null || true
+          else
+            echo "Warning: refs/remotes/origin/main not found, skipping local ref creation"
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -27,9 +36,9 @@ jobs:
       - name: Install project dependencies
         run: |
           if [ -f package-lock.json ]; then
-            npm ci
+            npm ci --no-audit
           elif [ -f package.json ]; then
-            npm install
+            npm install --no-audit
           fi
 
       - name: Copilot setup complete
