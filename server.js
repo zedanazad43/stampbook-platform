@@ -1,46 +1,84 @@
 const express = require("express");
-const fs = require("fs").promises;
+const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 const wallet = require("./wallet");
 const market = require("./market");
 const blockchain = require("./blockchain");
+const { dataDir, resolveDataFile } = require("./storage-paths");
 
 const app = express();
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
-  : ["http://localhost:8080", "http://localhost:3000"];
+function normalizeUrl(value) {
+  if (!value) return "";
+  return value.trim().replace(/\/$/, "");
+}
+
+function getHostname(value) {
+  if (!value) return "";
+  try {
+    return new URL(value).hostname.toLowerCase();
+  } catch (error) {
+    return value.trim().toLowerCase();
+  }
+}
+
+const baseUrl = normalizeUrl(process.env.BASE_URL);
+const canonicalHost = getHostname(process.env.CANONICAL_HOST || baseUrl);
+const canonicalOrigin = baseUrl || (canonicalHost ? `https://${canonicalHost}` : "");
+const productionFallbackOrigins = [
+  "https://ecostamp.net",
+  "https://www.ecostamp.net"
+];
+
+app.set("trust proxy", true);
+
+const allowedOrigins = [
+  "http://localhost:8080",
+  "http://localhost:3000",
+  "http://localhost:10000",
+  ...productionFallbackOrigins,
+  ...((process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim()).filter(Boolean)),
+  ...(canonicalOrigin ? [canonicalOrigin] : [])
+].filter((origin, index, list) => list.indexOf(origin) === index);
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
+    if (process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    }
     callback(new Error("Not allowed by CORS"));
   }
 }));
+
 app.use(express.json());
+
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV !== "production" || !canonicalHost) {
+    return next();
+  }
+
+  const requestHost = (req.hostname || "").toLowerCase();
+  if (!requestHost || requestHost === canonicalHost) {
+    return next();
+  }
+
+  const forwardedProto = req.get("x-forwarded-proto");
+  const requestProtocol = (forwardedProto || req.protocol || "https").split(",")[0].trim();
+  const redirectTarget = `${canonicalOrigin.replace(/^https?:\/\//, `${requestProtocol}://`)}${req.originalUrl}`;
+  return res.redirect(308, redirectTarget);
+});
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const DATA_FILE = path.join(__dirname, "data.json");
+const DATA_FILE = resolveDataFile("data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
+const MARKET_FEE_BPS = Number(process.env.MARKET_FEE_BPS || 500);
+const MARKET_FEE_WALLET_ID = process.env.MARKET_FEE_WALLET_ID || "platform_treasury";
+const MARKET_FEE_WALLET_NAME = process.env.MARKET_FEE_WALLET_NAME || "Platform Treasury";
 
-<<<<<<< HEAD
-// Import AI Agent Expert
-const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
-if (fs.existsSync(aiAgentPath)) {
-  // Dynamically import the AI Agent Expert to avoid issues if it doesn't exist
-  const aiAgent = require(aiAgentPath);
-  // Mount AI Agent Expert routes
-  app.use("/agent", aiAgent);
-  console.log("AI Agent Expert mounted successfully");
-} else {
-  console.warn("AI Agent Expert not found at:", aiAgentPath);
-}
-
-// Original Stampcoin Platform routes
-=======
 function requireToken(req, res, next) {
   const auth = req.get("Authorization") || "";
   const token = auth.replace(/^Bearer\s+/i, "");
@@ -57,12 +95,18 @@ function requireToken(req, res, next) {
   next();
 }
 
-// Health check endpoint
-app.get("/health", (req, res) => res.json({ status: "ok" }));
-
 // --- Wallet API ---
 
-// Create wallet
+app.get("/api/site", (req, res) => {
+  res.json({
+    baseUrl: canonicalOrigin || `${req.protocol}://${req.get("host")}`,
+    canonicalHost: canonicalHost || req.hostname,
+    allowedOrigins,
+    dataDir
+  });
+});
+
+// --- Wallet API ---
 app.post("/api/wallet/create", (req, res) => {
   try {
     const { userId, userName } = req.body;
@@ -74,7 +118,6 @@ app.post("/api/wallet/create", (req, res) => {
   }
 });
 
-// Get wallet by userId
 app.get("/api/wallet/:userId", (req, res) => {
   try {
     const w = wallet.getWallet(req.params.userId);
@@ -85,7 +128,6 @@ app.get("/api/wallet/:userId", (req, res) => {
   }
 });
 
-// Transfer balance between wallets
 app.post("/api/wallet/transfer", (req, res) => {
   try {
     const { fromUserId, toUserId, amount } = req.body;
@@ -97,7 +139,6 @@ app.post("/api/wallet/transfer", (req, res) => {
   }
 });
 
-// Get transaction history for a user
 app.get("/api/wallet/:userId/transactions", (req, res) => {
   try {
     const txs = wallet.getTransactionHistory(req.params.userId);
@@ -107,7 +148,6 @@ app.get("/api/wallet/:userId/transactions", (req, res) => {
   }
 });
 
-// Add stamp to wallet (token-protected to prevent unauthorized stamp minting)
 app.post("/api/wallet/:userId/stamps", requireToken, (req, res) => {
   try {
     const stamp = req.body;
@@ -120,7 +160,6 @@ app.post("/api/wallet/:userId/stamps", requireToken, (req, res) => {
   }
 });
 
-// List all wallets (admin endpoint, token-protected)
 app.get("/api/wallets", requireToken, (req, res) => {
   try {
     res.json(wallet.getAllWallets());
@@ -129,7 +168,6 @@ app.get("/api/wallets", requireToken, (req, res) => {
   }
 });
 
-// Top-up wallet balance (token-protected)
 app.post("/api/wallet/:userId/topup", requireToken, (req, res) => {
   try {
     const amount = Number((req.body && req.body.amount) || 1000);
@@ -141,32 +179,29 @@ app.post("/api/wallet/:userId/topup", requireToken, (req, res) => {
 });
 
 // --- Market API ---
-
-// Get all market items (with optional filters)
 app.get("/api/market/items", (req, res) => {
   try {
     const filter = {};
     if (req.query.status) filter.status = req.query.status;
     if (req.query.type) filter.type = req.query.type;
+    if (req.query.sellerId) filter.sellerId = req.query.sellerId;
     res.json(market.getAllMarketItems(filter));
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-// List a new item on the market
 app.post("/api/market/items", (req, res) => {
   try {
-    const { sellerId, name, description, price, type, imageUrl } = req.body;
+    const { sellerId, name, description, price, type, imageUrl, sellerContact } = req.body;
     if (!sellerId || !name) return res.status(400).json({ error: "sellerId and name are required" });
-    const item = market.addMarketItem(sellerId, { name, description, price, type, imageUrl });
+    const item = market.addMarketItem(sellerId, { name, description, price, type, imageUrl, sellerContact });
     res.json(item);
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
 });
 
-// Get a specific market item by ID
 app.get("/api/market/items/:itemId", (req, res) => {
   try {
     res.json(market.getMarketItem(req.params.itemId));
@@ -175,18 +210,18 @@ app.get("/api/market/items/:itemId", (req, res) => {
   }
 });
 
-// Update a market item (seller only)
 app.put("/api/market/items/:itemId", (req, res) => {
   try {
-    const { userId, price, description, status, imageUrl } = req.body || {};
+    const { userId, price, description, status, imageUrl, sellerContact } = req.body || {};
     if (!userId) return res.status(400).json({ error: "userId is required" });
-    const item = market.getMarketItem(req.params.itemId);
+    const item = market.getRawMarketItem(req.params.itemId);
     if (item.sellerId !== userId) return res.status(403).json({ error: "Only the seller can update this item" });
     const updates = {};
     if (price !== undefined) updates.price = price;
     if (description !== undefined) updates.description = description;
     if (status !== undefined) updates.status = status;
     if (imageUrl !== undefined) updates.imageUrl = imageUrl;
+    if (sellerContact !== undefined) updates.sellerContact = sellerContact;
     if (Object.keys(updates).length === 0) return res.status(400).json({ error: "No updatable fields provided" });
     res.json(market.updateMarketItem(req.params.itemId, updates));
   } catch (e) {
@@ -195,94 +230,43 @@ app.put("/api/market/items/:itemId", (req, res) => {
   }
 });
 
-// Purchase a market item
 app.post("/api/market/items/:itemId/buy", (req, res) => {
   try {
-    const { buyerId } = req.body;
+    const { buyerId, buyerContact } = req.body;
     if (!buyerId) return res.status(400).json({ error: "buyerId is required" });
-    const item = market.getMarketItem(req.params.itemId);
-    if (item.price > 0) {
-      wallet.transfer(buyerId, item.sellerId, item.price);
+    const item = market.getRawMarketItem(req.params.itemId);
+
+    if (item.price <= 0) {
+      return res.status(400).json({ error: "Free listings are not allowed." });
     }
-    const result = market.purchaseMarketItem(req.params.itemId, buyerId);
+
+    if (!wallet.getWallet(MARKET_FEE_WALLET_ID)) {
+      wallet.createWallet(MARKET_FEE_WALLET_ID, MARKET_FEE_WALLET_NAME);
+    }
+
+    const platformFee = Math.max(1, Math.ceil((item.price * MARKET_FEE_BPS) / 10000));
+    const sellerProceeds = item.price - platformFee;
+    
+    wallet.transfer(buyerId, item.sellerId, sellerProceeds);
+    wallet.transfer(buyerId, MARKET_FEE_WALLET_ID, platformFee);
+
+    const result = market.purchaseMarketItem(req.params.itemId, buyerId, {
+      platformFee,
+      sellerProceeds,
+      feeCurrency: "STP",
+      buyerContact
+    });
     res.json(result);
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
 });
 
-// Remove a market item (seller only)
-app.delete("/api/market/items/:itemId", (req, res) => {
-  try {
-    const userId = (req.body && req.body.userId) || req.query.userId;
-    if (!userId) return res.status(400).json({ error: "userId is required" });
-    res.json(market.removeMarketItem(req.params.itemId, userId));
-  } catch (e) {
-    res.status(400).json({ error: e.message });
-  }
-});
-
-// Get market transaction history (with optional buyer/seller filters)
-app.get("/api/market/transactions", (req, res) => {
-  try {
-    const filter = {};
-    if (req.query.buyerId) filter.buyerId = req.query.buyerId;
-    if (req.query.sellerId) filter.sellerId = req.query.sellerId;
-    res.json(market.getMarketTransactions(filter));
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-// --- Token Info API ---
-app.get("/api/token", (req, res) => {
-  res.json({
-    name: "StampCoin",
-    symbol: "STP",
-    totalSupply: 421000000,
-    icoPrice: 1.65,
-    icoUnit: "USD",
-    decimals: 18,
-    license: "MIT",
-    website: "https://ecostamp.net",
-    github: "https://github.com/zedanazad43/stp",
-    contact: "stampcoin.contact@gmail.com",
-    distribution: [
-      { label: "Public ICO Sale",       percent: 20, amount: 84200000 },
-      { label: "Ecosystem & Partners",  percent: 20, amount: 84200000 },
-      { label: "Community & Rewards",   percent: 20, amount: 84200000 },
-      { label: "Liquidity Pool",        percent: 15, amount: 63150000 },
-      { label: "Team & Founders",       percent: 15, amount: 63150000 },
-      { label: "Reserve",               percent: 10, amount: 42100000 }
-    ],
-    contractAddress: process.env.STP_CONTRACT_ADDRESS || "Pending mainnet deployment",
-    network: "EVM-compatible"
-  });
-});
-
 // --- Blockchain API ---
-
-app.get("/api/blockchain/info", (req, res) => {
-  try {
-    res.json(blockchain.getBlockchainInfo());
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-app.get("/api/blockchain/supply", (req, res) => {
-  try {
-    res.json(blockchain.getSupply());
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
 app.post("/api/blockchain/mint", requireToken, (req, res) => {
   try {
     const { toAddress, amount } = req.body || {};
     if (!toAddress) return res.status(400).json({ error: "toAddress is required" });
-    if (amount === undefined || amount === null) return res.status(400).json({ error: "amount is required" });
     const event = blockchain.mintTokens(toAddress, Number(amount));
     res.json(event);
   } catch (e) {
@@ -307,23 +291,20 @@ app.get("/api/blockchain/mint/events", requireToken, (req, res) => {
 });
 
 // --- Sync API ---
->>>>>>> 56a771d62b71d5933a7297d2255270f53d6e616a
 async function readData() {
   try {
-    const raw = await fs.readFile(DATA_FILE, "utf8");
+    const raw = await fs.promises.readFile(DATA_FILE, "utf8");
     return JSON.parse(raw);
   } catch (e) {
-    console.error("Error reading data file:", e.message);
     return [];
   }
 }
 
 async function writeData(todos) {
   try {
-    await fs.writeFile(DATA_FILE, JSON.stringify(todos, null, 2), "utf8");
+    await fs.promises.writeFile(DATA_FILE, JSON.stringify(todos, null, 2), "utf8");
     return true;
   } catch (e) {
-    console.error("Write error:", e);
     return false;
   }
 }
@@ -336,48 +317,14 @@ app.get("/sync", requireToken, async (req, res) => {
 app.post("/sync", requireToken, async (req, res) => {
   const payload = req.body;
   if (!payload || !Array.isArray(payload.todos)) {
-    return res.status(400).json({ error: "Invalid payload, expected { todos: [...] }" });
+    return res.status(400).json({ error: "Invalid payload" });
   }
   const ok = await writeData(payload.todos);
   if (!ok) return res.status(500).json({ error: "Failed to store data" });
   res.json({ ok: true });
 });
 
-<<<<<<< HEAD
-// AI Agent Expert integration endpoint
-app.get("/ai-agent-status", async (req, res) => {
-  try {
-    const agentStatus = await fetch(`${process.env.BASE_URL || "http://localhost:" + process.env.PORT}/agent/status`);
-    const statusData = await agentStatus.json();
-    res.json({
-      agentIntegrated: true,
-      status: statusData
-    });
-  } catch (error) {
-    res.json({
-      agentIntegrated: false,
-      error: "AI Agent Expert not available",
-      message: error.message
-    });
-  }
-});
-
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.json({
-    status: "ok",
-    timestamp: new Date().toISOString(),
-    service: "Stampcoin Platform",
-    version: "2.0.0"
-  });
-});
-
 const port = process.env.PORT || 10000;
-app.listen(port, '0.0.0.0', () => {
-=======
-const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
->>>>>>> 56a771d62b71d5933a7297d2255270f53d6e616a
   console.log(`Stampcoin Platform server listening on port ${port}`);
-  console.log(`AI Agent Expert available at: http://localhost:${port}/agent`);
 });
