@@ -14,21 +14,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Fetch main branch
-        run: git fetch origin main:main
-
-      - name: Run git diff
-        run: |
-          if git show-ref --verify --quiet refs/heads/main; then
-            git diff main -- yourfile
-          else
-            echo "Branch 'main' is not available."
-          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
