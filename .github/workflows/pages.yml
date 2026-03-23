@@ -2,77 +2,44 @@ name: Deploy to Cloudflare Pages
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
   workflow_dispatch:
 
-permissions:
-  contents: read
-  deployments: write
-
 concurrency:
-  group: "cloudflare-pages"
-  cancel-in-progress: false
+  group: pages-deploy-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   deploy:
+    name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Check Cloudflare secrets
-        id: check-cloudflare
+      - name: Preflight check
+        id: preflight
         env:
-          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          if [ -n "$CF_TOKEN" ] && [ -n "$CF_ACCOUNT" ]; then
-            echo "deploy=true" >> $GITHUB_OUTPUT
-          else
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
             echo "deploy=false" >> $GITHUB_OUTPUT
-            echo "Cloudflare secrets not configured, skipping deployment."
+            echo "Cloudflare secrets are not configured, skipping deployment."
+          else
+            echo "deploy=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Deploy to Cloudflare Pages
-        id: deployment
-        if: steps.check-cloudflare.outputs.deploy == 'true'
+        if: steps.preflight.outputs.deploy == 'true'
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: stp
+          projectName: stampcoin-platform
           directory: public
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: '3'
-          skipCaching: true
-
-      - name: Notify n8n webhook
-        if: always()
-        continue-on-error: true
-        env:
-          N8N_WEBHOOK_URL: ${{ secrets.N8N_WEBHOOK_URL }}
-        run: |
-          if [ -z "${N8N_WEBHOOK_URL}" ]; then
-            echo "N8N_WEBHOOK_URL is not set, skipping notification."
-            exit 0
-          fi
-          curl -sf -X POST "${N8N_WEBHOOK_URL}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "event": "cloudflare_pages_deploy",
-              "status": "${{ job.status }}",
-              "branch": "${{ github.ref_name }}",
-              "commit": "${{ github.sha }}",
-              "url": "${{ steps.deployment.outputs.url }}",
-              "actor": "${{ github.actor }}",
-              "repository": "${{ github.repository }}"
-            }'

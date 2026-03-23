@@ -1,11 +1,9 @@
 # Digital Wallet API Documentation
-#     
+# واجهة برمجة تطبيقات المحفظة الرقمية
 
-## Overview |  
+## Overview | نظرة عامة
 
 The Digital Wallet API provides endpoints for managing digital wallets, balances, stamps, and peer-to-peer transfers in the Stampcoin platform.
-
-                  Stampcoin.
 
 ## Base URL
 
@@ -13,11 +11,18 @@ The Digital Wallet API provides endpoints for managing digital wallets, balances
 http://localhost:8080/api
 ```
 
-## Endpoints |  
+## Authentication
 
-### 1. Create Wallet |  
+Protected endpoints require a `Bearer` token in the `Authorization` header:
+```
+Authorization: Bearer <SYNC_TOKEN>
+```
 
-**POST** `/api/wallets`
+## Endpoints | نقاط النهاية
+
+### 1. Create Wallet | إنشاء محفظة
+
+**POST** `/api/wallet/create`
 
 Create a new digital wallet for a user.
 
@@ -29,7 +34,7 @@ Create a new digital wallet for a user.
 }
 ```
 
-**Response (201 Created):**
+**Response (200 OK):**
 ```json
 {
   "userId": "user123",
@@ -50,9 +55,9 @@ Create a new digital wallet for a user.
 
 ---
 
-### 2. Get Wallet |   
+### 2. Get Wallet | الحصول على المحفظة
 
-**GET** `/api/wallets/:userId`
+**GET** `/api/wallet/:userId`
 
 Retrieve wallet information for a specific user.
 
@@ -85,13 +90,13 @@ Retrieve wallet information for a specific user.
 
 ---
 
-### 3. Get All Wallets |    
+### 3. Get All Wallets | الحصول على جميع المحافظ (Admin)
 
 **GET** `/api/wallets`
 
-Retrieve all wallets in the system.
+🔒 **Requires authentication** — token-protected admin endpoint.
 
-**Authentication:** Requires `Authorization: Bearer <token>` header.
+Retrieve all wallets in the system.
 
 **Response (200 OK):**
 ```json
@@ -100,7 +105,7 @@ Retrieve all wallets in the system.
     "userId": "user123",
     "userName": "Ahmed Ali",
     "balance": 150,
-    "stamps": [...],
+    "stamps": [],
     "createdAt": "2026-02-07T18:35:00.000Z",
     "updatedAt": "2026-02-07T18:40:00.000Z"
   },
@@ -108,7 +113,7 @@ Retrieve all wallets in the system.
     "userId": "user456",
     "userName": "Sara Mohammed",
     "balance": 200,
-    "stamps": [...],
+    "stamps": [],
     "createdAt": "2026-02-07T18:35:00.000Z",
     "updatedAt": "2026-02-07T18:40:00.000Z"
   }
@@ -117,46 +122,66 @@ Retrieve all wallets in the system.
 
 ---
 
-### 4. Update Balance |  
+### 4. Transfer | التحويل
 
-**POST** `/api/wallets/:userId/balance`
+**POST** `/api/wallet/transfer`
 
-Add or subtract from wallet balance.
+Transfer balance between wallets.
 
 **Request Body:**
 ```json
 {
-  "amount": 100
+  "fromUserId": "user123",
+  "toUserId": "user456",
+  "amount": 50
 }
 ```
 
 **Response (200 OK):**
 ```json
 {
-  "userId": "user123",
-  "userName": "Ahmed Ali",
-  "balance": 250,
-  "stamps": [...],
-  "updatedAt": "2026-02-07T18:45:00.000Z"
-}
-```
-
-**Error Response (400):**
-```json
-{
-  "error": "Insufficient balance"
+  "id": "transaction-uuid-1",
+  "from": "user123",
+  "to": "user456",
+  "amount": 50,
+  "stampId": null,
+  "timestamp": "2026-02-07T18:55:00.000Z",
+  "status": "completed"
 }
 ```
 
 ---
 
-### 5. Add Stamp to Wallet |    
+### 5. Get Transaction History | الحصول على سجل المعاملات
+
+**GET** `/api/wallet/:userId/transactions`
+
+Retrieve transaction history for a specific user.
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": "transaction-uuid-1",
+    "from": "user123",
+    "to": "user456",
+    "amount": 50,
+    "stampId": null,
+    "timestamp": "2026-02-07T18:55:00.000Z",
+    "status": "completed"
+  }
+]
+```
+
+---
+
+### 6. Add Stamp to Wallet | إضافة طابع إلى المحفظة
 
 **POST** `/api/wallet/:userId/stamps`
 
-Add a digital stamp to a user's wallet.
+🔒 **Requires authentication** — token-protected to prevent unauthorized stamp minting.
 
-**Authentication:** Requires `Authorization: Bearer <token>` header.
+Add a digital stamp to a user's wallet.
 
 **Request Body:**
 ```json
@@ -174,7 +199,7 @@ Add a digital stamp to a user's wallet.
 {
   "userId": "user123",
   "userName": "Ahmed Ali",
-  "balance": 250,
+  "balance": 150,
   "stamps": [
     {
       "id": "stamp-uuid-2",
@@ -190,112 +215,44 @@ Add a digital stamp to a user's wallet.
 }
 ```
 
----
-
-### 6. Transfer | 
-
-**POST** `/api/wallets/transfer`
-
-Transfer balance or stamps between wallets.
-
-**Request Body (Balance Transfer):**
+**Error Response (404):**
 ```json
 {
-  "fromUserId": "user123",
-  "toUserId": "user456",
-  "amount": 50
+  "error": "Wallet not found"
 }
 ```
 
-**Request Body (Stamp Transfer):**
+---
+
+### 7. Top Up Balance | شحن الرصيد
+
+**POST** `/api/wallet/:userId/topup`
+
+🔒 **Requires authentication**.
+
+Add balance to a wallet.
+
+**Request Body:**
 ```json
 {
-  "fromUserId": "user123",
-  "toUserId": "user456",
-  "stampId": "stamp-uuid-1"
+  "amount": 1000
 }
 ```
 
 **Response (200 OK):**
 ```json
 {
-  "id": "transaction-uuid-1",
-  "from": "user123",
-  "to": "user456",
-  "amount": 50,
-  "stampId": null,
-  "timestamp": "2026-02-07T18:55:00.000Z",
-  "status": "completed"
-}
-```
-
-**Error Response (400):**
-```json
-{
-  "error": "Insufficient balance"
+  "userId": "user123",
+  "balance": 1150,
+  "updatedAt": "2026-02-07T18:45:00.000Z"
 }
 ```
 
 ---
 
-### 7. Get Transaction History |    
+## Data Models | نماذج البيانات
 
-**GET** `/api/wallets/:userId/transactions`
-
-Retrieve transaction history for a specific user.
-
-**Response (200 OK):**
-```json
-[
-  {
-    "id": "transaction-uuid-1",
-    "from": "user123",
-    "to": "user456",
-    "amount": 50,
-    "stampId": null,
-    "timestamp": "2026-02-07T18:55:00.000Z",
-    "status": "completed"
-  },
-  {
-    "id": "transaction-uuid-2",
-    "from": "user789",
-    "to": "user123",
-    "amount": 100,
-    "stampId": null,
-    "timestamp": "2026-02-07T19:00:00.000Z",
-    "status": "completed"
-  }
-]
-```
-
----
-
-### 8. Get All Transactions |    
-
-**GET** `/api/transactions`
-
-Retrieve all transactions in the system.
-
-**Response (200 OK):**
-```json
-[
-  {
-    "id": "transaction-uuid-1",
-    "from": "user123",
-    "to": "user456",
-    "amount": 50,
-    "stampId": null,
-    "timestamp": "2026-02-07T18:55:00.000Z",
-    "status": "completed"
-  }
-]
-```
-
----
-
-## Data Models |  
-
-### Wallet Object |  
+### Wallet Object
 
 ```typescript
 {
@@ -308,12 +265,12 @@ Retrieve all transactions in the system.
 }
 ```
 
-### Stamp Object |  
+### Stamp Object
 
 ```typescript
 {
   id: string,              // Auto-generated UUID
-  name: string,            // Stamp name
+  name: string,            // Stamp name (required)
   value?: number,          // Stamp value in credits
   rarity?: string,         // Rarity level
   description?: string,    // Description
@@ -323,85 +280,56 @@ Retrieve all transactions in the system.
 }
 ```
 
-### Transaction Object |  
+### Transaction Object
 
 ```typescript
 {
   id: string,              // Transaction UUID
   from: string,            // Sender userId
   to: string,              // Receiver userId
-  amount: number,          // Amount transferred (0 if stamp-only)
+  amount: number,          // Amount transferred
   stampId: string | null,  // Stamp ID if transferring a stamp
   timestamp: string,       // ISO timestamp
-  status: string           // Transaction status (completed, pending, failed)
+  status: string           // "completed"
 }
 ```
 
 ---
 
-## Example Usage |  
-
-### Create and Fund a Wallet
-
-```bash
-# Create wallet
-curl -X POST http://localhost:8080/api/wallets \
-  -H "Content-Type: application/json" \
-  -d '{"userId": "user123", "userName": "Ahmed Ali"}'
-
-# Add balance
-curl -X POST http://localhost:8080/api/wallets/user123/balance \
-  -H "Content-Type: application/json" \
-  -d '{"amount": 500}'
-
-# Add stamp
-curl -X POST http://localhost:8080/api/wallets/user123/stamps \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Vintage 1960", "value": 100, "rarity": "rare"}'
-```
-
-### Transfer Between Users
-
-```bash
-# Create second wallet
-curl -X POST http://localhost:8080/api/wallets \
-  -H "Content-Type: application/json" \
-  -d '{"userId": "user456", "userName": "Sara Mohammed"}'
-
-# Transfer balance
-curl -X POST http://localhost:8080/api/wallets/transfer \
-  -H "Content-Type: application/json" \
-  -d '{"fromUserId": "user123", "toUserId": "user456", "amount": 50}'
-```
-
----
-
-## Error Codes |  
+## Error Codes
 
 - **400 Bad Request**: Invalid input or business rule violation
+- **401 Unauthorized**: Missing or invalid authentication token
 - **404 Not Found**: Wallet not found
 - **500 Internal Server Error**: Server error
 
 ---
 
-## Security Considerations |  
+## Example Usage
 
-1. In production, implement authentication and authorization
-2. Use HTTPS for all API calls
-3. Validate all input data
-4. Implement rate limiting
-5. Add transaction signatures for enhanced security
+```bash
+# Create wallet
+curl -X POST http://localhost:8080/api/wallet/create \
+  -H "Content-Type: application/json" \
+  -d '{"userId": "user123", "userName": "Ahmed Ali"}'
 
-**Concurrency Note**: The current implementation uses file-based storage without locking mechanisms. For production use with concurrent access, consider:
-- Implementing file locking (e.g., using `proper-lockfile` npm package)
-- Migrating to a database with transaction support (PostgreSQL, MongoDB, etc.)
-- Using a queue system for wallet operations to serialize transactions
+# Add stamp (requires token)
+curl -X POST http://localhost:8080/api/wallet/user123/stamps \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"name": "Vintage 1960", "value": 100, "rarity": "rare"}'
 
-## Future Enhancements |  
+# List all wallets (admin, requires token)
+curl -X GET http://localhost:8080/api/wallets \
+  -H "Authorization: Bearer <token>"
 
-- Add wallet authentication with JWT tokens
-- Implement transaction rollback functionality
-- Add stamp marketplace integration
-- Support multi-currency wallets
-- Add transaction fees and commissions
-- Implement wallet backup and recovery
+# Transfer balance
+curl -X POST http://localhost:8080/api/wallet/transfer \
+  -H "Content-Type: application/json" \
+  -d '{"fromUserId": "user123", "toUserId": "user456", "amount": 50}'
+```
+
+## See Also
+
+- [MARKET_API.md](MARKET_API.md) — Market Institution API documentation
+- [README.md](README.md) — General platform documentation

@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for this project
+about: Suggest an idea for the Stampcoin Platform
 title: '[FEATURE] '
 labels: enhancement
 assignees: zedanazad43
@@ -45,4 +45,3 @@ assignees: zedanazad43
 
 ## Related Issues
 <!-- Optional: Link to related issues or discussions -->
-

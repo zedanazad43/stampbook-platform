@@ -1,83 +1,58 @@
-#  / Security / Sicherheit
+# Security Policy
 
-##  
+## Supported Versions
 
-###   
-1. **    **
-   -    API     
-   -    (.env) 
-   -  .env  .gitignore
+| Version | Supported          |
+| ------- | ------------------ |
+| 1.x     | ✅ Fully supported |
 
-2. ** **
-   -  HTTPS  
-   -       
-   -      
+## Reporting a Vulnerability
 
-3. ** **
-   -       (Version2, Version3)
-   -     
-   -        
+If you discover a security vulnerability in the Stampcoin Platform, please report it **privately** rather than opening a public issue.
 
-4. ** **
-   -  GitHub Security advisories
-   -    
-   -  Dependabot  
+### How to Report
 
-###    
-      : security@stampcoin-platform.dev
+1. **Email**: Open a private security advisory at [GitHub Security Advisories](https://github.com/zedanazad43/stp/security/advisories/new)
+2. **Include** in your report:
+   - A description of the vulnerability
+   - Steps to reproduce the issue
+   - The potential impact
+   - Any suggested fix (optional)
 
----
+### Response Timeline
 
-## English 
+- **Acknowledgement**: within 48 hours
+- **Initial assessment**: within 7 days
+- **Fix and disclosure**: within 30 days (depending on complexity)
 
-### Security Warnings
-1. **Never Share Sensitive Data**
-   - Do not commit API keys or passwords to the repository
-   - Always use environment variables (.env)
-   - Add .env to .gitignore
+## Security Best Practices
 
-2. **Data Security**
-   - Use HTTPS for all communications
-   - Encrypt sensitive data in the database
-   - Never store passwords in plain text
+When running the Stampcoin Platform in production:
 
-3. **Suspicious Files**
-   - Files with multiple versions (Version2, Version3) have been removed
-   - Empty and stray files have been cleaned up
-   - Check any new files before pushing to the repository
+### Environment Variables
+```
+NODE_ENV=production
+SYNC_TOKEN=<strong-random-secret>
+PORT=10000
+```
 
-4. **Security Reviews**
-   - Use GitHub Security advisories
-   - Update libraries regularly
-   - Enable Dependabot for automatic alerts
+- **Always** set `SYNC_TOKEN` to a strong random secret in production
+- **Never** commit secrets or tokens to the repository
+- Set `NODE_ENV=production` to enforce authentication on protected endpoints
 
-### Reporting Security Issues
-If you find a security vulnerability, email: security@stampcoin-platform.dev
+### API Authentication
 
----
+Protected endpoints require a `Bearer` token in the `Authorization` header:
+```
+Authorization: Bearer <SYNC_TOKEN>
+```
 
-## Deutsch 
+### CORS
 
-### Sicherheitswarnungen
-1. **Teile Keine Vertraulichen Daten**
-   - Committe API-Schlussel oder Passworter nicht ins Repository
-   - Verwende immer Umgebungsvariablen (.env)
-   - Fuge .env zu .gitignore hinzu
+The server restricts CORS origins in production. Set `ALLOWED_ORIGINS` to a comma-separated list of allowed origins.
 
-2. **Datensicherheit**
-   - Verwende HTTPS fur alle Kommunikation
-   - Verschlussele sensible Daten in der Datenbank
-   - Speichere Passworter niemals im Klartext
+## Known Security Configurations
 
-3. **Verdachtige Dateien**
-   - Dateien mit mehreren Versionen (Version2, Version3) wurden entfernt
-   - Leere und verwaiste Dateien wurden bereinigt
-   - Uberprufe neue Dateien vor dem Pushen ins Repository
-
-4. **Sicherheitsuberprufungen**
-   - Nutze GitHub Security advisories
-   - Update Bibliotheken regelmaig
-   - Aktiviere Dependabot fur automatische Benachrichtigungen
-
-### Sicherheitsprobleme Melden
-Wenn du eine Sicherheitslucke findest, sende eine E-Mail an: security@stampcoin-platform.dev
+- All wallet mutation endpoints are protected by `requireToken` middleware when `NODE_ENV=production`
+- The `blockchain/mint` endpoint requires authentication in all environments when `SYNC_TOKEN` is set
+- In-memory data stores (auctions, NFT stamps, users) are for demonstration — use a database in production
