@@ -12,10 +12,17 @@ services:
         value: production
       - key: PORT
         value: 10000
+      - key: BASE_URL
+        sync: false
+      - key: CANONICAL_HOST
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
       # Add any additional environment variables required by your app
       # - key: SYNC_TOKEN
       #   value: your-sync-token-here
-      # - key: BASE_URL
-      #   value: https://your-service-name.onrender.com
+      # BASE_URL example: https://app.yourdomain.com
+      # CANONICAL_HOST example: app.yourdomain.com
+      # ALLOWED_ORIGINS example: https://app.yourdomain.com,https://www.yourdomain.com
     # healthCheckPath uses Render native Node.js health check (no dockerfilePath)
     healthCheckPath: /health

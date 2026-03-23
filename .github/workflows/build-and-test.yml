@@ -2,7 +2,7 @@ name: Build, Test, and Publish
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, 'copilot/**' ]
   pull_request:
     branches: [ main ]
     types: [ opened, synchronize, reopened, ready_for_review ]
@@ -14,12 +14,22 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Ensure main ref is available (for git diff/show)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Review files only if present in commit
         run: |
-          git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
-          git show-ref --verify --quiet refs/remotes/origin/main
-          # اختياري: إنشاء ref محلي باسم main إذا كان شيء يتوقع refs/heads/main
-          git branch -f main refs/remotes/origin/main
+          FILES=".dockerignore public/index.html"
+          for FILE in $FILES; do
+            if git ls-tree -r $GITHUB_SHA --name-only | grep -q "$FILE"; then
+              git show "$GITHUB_SHA:$FILE"
+              # Add your code review or processing logic here
+            else
+              echo "$FILE not found in commit $GITHUB_SHA, skipping review."
+            fi
+          done
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -28,11 +38,11 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --no-audit
 
       - name: Verify lockfile is up-to-date
         run: |
-          npm install --package-lock-only --ignore-scripts
+          npm install --package-lock-only --ignore-scripts --no-audit
           if ! git diff --exit-code package-lock.json; then
             echo "package-lock.json is out of sync with package.json."
             echo "Run 'npm install' locally and commit the updated lockfile."
@@ -41,3 +51,4 @@ jobs:
 
       - name: Run tests
         run: npm test
+
