@@ -1,5 +1,6 @@
 const express = require("express");
-const cors = require("cors");
+const fs = require("fs").promises;
+const path = require("path");
 
 const router = express.Router();
 
@@ -382,17 +383,16 @@ router.get("/history", (req, res) => {
     });
 });
 
-// Export router for mounting in the main server
+router.agentState = agentState;
 module.exports = router;
 
-// Start standalone server when run directly
+// Allow standalone execution for development
 if (require.main === module) {
-    const app = express();
-    app.use(cors());
-    app.use(express.json());
-    app.use("/agent", router);
+    const standalone = express();
+    standalone.use(express.json());
+    standalone.use("/agent", router);
     const PORT = process.env.PORT || 3001;
-    app.listen(PORT, "0.0.0.0", () => {
+    standalone.listen(PORT, "0.0.0.0", () => {
         console.log(`AI Agent Expert server listening on port ${PORT}`);
     });
 }
