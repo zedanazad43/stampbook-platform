@@ -1,38 +1,34 @@
-# Blockchain API – StampCoin (STP)
+# Blockchain API Documentation
+# واجهة برمجة تطبيقات البلوك تشين
 
-The Blockchain API exposes BEP-20 token and minting endpoints for the StampCoin (STP)
-platform, deployed on **BNB Smart Chain (BSC)** using **Proof of Staked Authority (PoSA)** consensus.
+## Overview | نظرة عامة
 
----
+The Blockchain API provides endpoints for interacting with the STP (StampCoin) BEP-20 token on BNB Smart Chain. It supports querying token metadata, supply metrics, minting tokens, and checking address balances.
 
-## Blockchain Platform
+## Base URL
 
-| Property        | Value                              |
-|-----------------|------------------------------------|
-| Blockchain      | BNB Smart Chain (BSC)              |
-| Standard        | BEP-20                             |
-| Consensus       | Proof of Staked Authority (PoSA)   |
-| Chain ID        | 56                                 |
-| Token Name      | StampCoin                          |
-| Symbol          | STP                                |
-| Decimals        | 18                                 |
-| Total Supply    | 421,000,000 STP                    |
+```
+http://localhost:8080/api
+```
 
----
+## Authentication
 
-## Smart Contract
+Protected endpoints require a `Bearer` token in the `Authorization` header:
+```
+Authorization: Bearer <SYNC_TOKEN>
+```
 
-The BEP-20 Solidity smart contract is located at `contracts/STP.sol`.
-It implements the full `IBEP20` interface with a hard-cap mint function
-restricted to the contract owner.
+> **Note:** In development mode (`NODE_ENV` is not `production` and `SYNC_TOKEN` is unset), authentication is bypassed automatically. **Always set `SYNC_TOKEN` and `NODE_ENV=production` in production deployments to enforce authentication.**
 
 ---
 
-## Endpoints
+## Endpoints | نقاط النهاية
 
-### GET `/api/blockchain/info`
+### 1. Get Blockchain Info | معلومات البلوك تشين
 
-Returns token and blockchain metadata.
+**GET** `/api/blockchain/info`
+
+Returns static token and blockchain metadata.
 
 **Response:**
 ```json
@@ -52,16 +48,18 @@ Returns token and blockchain metadata.
 
 ---
 
-### GET `/api/blockchain/supply`
+### 2. Get Token Supply | إحصائيات الإمداد
 
-Returns current minted supply vs the hard cap.
+**GET** `/api/blockchain/supply`
+
+Returns current token supply metrics.
 
 **Response:**
 ```json
 {
   "totalSupply": 421000000,
-  "mintedSupply": 0,
-  "remainingSupply": 421000000,
+  "mintedSupply": 1000,
+  "remainingSupply": 420999000,
   "symbol": "STP",
   "decimals": 18
 }
@@ -69,91 +67,111 @@ Returns current minted supply vs the hard cap.
 
 ---
 
-### POST `/api/blockchain/mint` *(requires auth token)*
+### 3. Mint Tokens 🔒 | سك الرموز
 
-Mint STP tokens to an address. Protected by `SYNC_TOKEN` authorization.
+**POST** `/api/blockchain/mint`
 
-**Request body:**
+Mint new STP tokens to a specified address. Requires authentication.
+
+**Request Body:**
 ```json
 {
-  "toAddress": "user123",
+  "toAddress": "wallet_address_here",
   "amount": 1000
 }
 ```
 
-**Response:**
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `toAddress` | string | ✅ | Recipient wallet address |
+| `amount` | integer | ✅ | Number of whole STP tokens to mint (positive integer) |
+
+**Response (200 OK):**
 ```json
 {
-  "id": "uuid",
-  "type": "mint",
-  "to": "user123",
-  "amount": 1000,
-  "timestamp": "2026-03-06T15:34:12.747Z"
+  "success": true,
+  "event": {
+    "id": "uuid-here",
+    "type": "mint",
+    "to": "wallet_address_here",
+    "amount": 1000,
+    "timestamp": "2024-01-01T00:00:00.000Z"
+  }
 }
 ```
 
-**Error responses:**
-- `400` – missing/invalid `toAddress` or `amount`, or supply cap exceeded
-- `401` – missing or invalid auth token
+**Error Responses:**
+- `400` — Missing or invalid `toAddress` / `amount`
+- `400` — Mint would exceed total supply cap
+- `401` — Missing or invalid token
 
 ---
 
-### GET `/api/blockchain/balance/:address`
+### 4. Get Address Balance | رصيد العنوان
 
-Returns the STP token balance for a given address.
+**GET** `/api/blockchain/balance/:address`
+
+Get the STP token balance for a specific address.
+
+**Path Parameters:**
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `address` | string | Wallet address or user ID |
 
 **Response:**
 ```json
 {
-  "address": "user123",
+  "address": "wallet_address_here",
   "balance": 1000,
   "symbol": "STP"
 }
 ```
 
-**Error responses:**
-- `400` – invalid address
+**Error Responses:**
+- `400` — Invalid address
 
 ---
 
-### GET `/api/blockchain/mint/events` *(requires auth token)*
+### 5. Get Mint Events 🔒 | سجل السك
 
-Returns all mint events (full audit log).
+**GET** `/api/blockchain/mint/events`
+
+Get the complete mint audit log. Requires authentication.
 
 **Response:**
 ```json
 [
   {
-    "id": "uuid",
+    "id": "uuid-here",
     "type": "mint",
-    "to": "user123",
+    "to": "wallet_address_here",
     "amount": 1000,
-    "timestamp": "2026-03-06T15:34:12.747Z"
+    "timestamp": "2024-01-01T00:00:00.000Z"
   }
 ]
 ```
 
-**Error responses:**
-- `401` – missing or invalid auth token
+**Error Responses:**
+- `401` — Missing or invalid token
 
 ---
 
-## Token Distribution
+## Token Details | تفاصيل الرمز
 
-| Allocation           | %   | Amount (STP) |
-|----------------------|-----|--------------|
-| Public ICO Sale      | 20% | 84,200,000   |
-| Ecosystem & Partners | 20% | 84,200,000   |
-| Community & Rewards  | 20% | 84,200,000   |
-| Liquidity Pool       | 15% | 63,150,000   |
-| Team & Founders      | 15% | 63,150,000   |
-| Reserve              | 10% | 42,100,000   |
-
----
+| Property | Value |
+|----------|-------|
+| **Name** | StampCoin |
+| **Symbol** | STP |
+| **Decimals** | 18 |
+| **Total Supply** | 421,000,000 STP |
+| **Blockchain** | BNB Smart Chain (BSC) |
+| **Standard** | BEP-20 |
+| **Consensus** | Proof of Staked Authority (PoSA) |
+| **Chain ID** | 56 |
 
 ## Environment Variables
 
-| Variable              | Description                                        |
-|-----------------------|----------------------------------------------------|
-| `STP_CONTRACT_ADDRESS`| On-chain BEP-20 contract address after deployment  |
-| `SYNC_TOKEN`          | Bearer token required for protected mint endpoints |
+| Variable | Description |
+|----------|-------------|
+| `SYNC_TOKEN` | Bearer token for protected endpoints |
+| `STP_CONTRACT_ADDRESS` | On-chain contract address (defaults to `"Pending mainnet deployment"`) |
