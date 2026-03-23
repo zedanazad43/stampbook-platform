@@ -1,1 +1,0 @@
-{ "projectName": "stp", "deploy": { "provider": "railway", "env": "production" } }
