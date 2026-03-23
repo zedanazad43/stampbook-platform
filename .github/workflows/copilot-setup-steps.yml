@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.COPILOT_TOKEN || github.token }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -27,9 +28,9 @@ jobs:
       - name: Install project dependencies
         run: |
           if [ -f package-lock.json ]; then
-            npm ci
+            npm ci --no-audit
           elif [ -f package.json ]; then
-            npm install
+            npm install --no-audit
           fi
 
       - name: Copilot setup complete
