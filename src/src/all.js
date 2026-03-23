@@ -1,7 +1,8 @@
 // ====================== blockchain.js ======================
 /**
- * Blockchain Module for Stampcoin Platform ...
- * (بقية تعليقات الملف الأصلي)
+ * Blockchain Module for Stampcoin Platform
+ * Implements BEP-20-compatible token logic for the STP (StampCoin) token
+ * on BNB Smart Chain (BSC) using Proof of Staked Authority (PoSA) consensus.
  */
 "use strict";
 const fs = require("fs");
@@ -48,7 +49,6 @@ function saveState(state) {
   }
 }
 
-/** Validate a wallet/token address. */
 function validateAddress(address) {
   if (
     typeof address !== "string" ||
@@ -130,7 +130,8 @@ loadState();
 
 // ====================== wallet.js ======================
 /**
- * Digital Wallet Module for Stampcoin Platform ...
+ * Digital Wallet Module for Stampcoin Platform
+ * Module for managing digital wallets, balances, and transactions
  */
 const WALLETS_FILE = path.join(__dirname, 'wallets.json');
 const TRANSACTIONS_FILE = path.join(__dirname, 'transactions.json');
@@ -363,7 +364,8 @@ initializeStorage();
 
 // ====================== market.js ======================
 /**
- * Market Institution Module ...
+ * Market Institution Module
+ * Digital marketplace for stamps and collectibles
  */
 const MARKET_FILE = path.join(__dirname, "market-data.json");
 
@@ -373,7 +375,6 @@ let marketData = {
   transactions: []
 };
 
-// Load market data from file
 function loadMarketData() {
   try {
     if (fs.existsSync(MARKET_FILE)) {
@@ -385,7 +386,6 @@ function loadMarketData() {
   }
 }
 
-// Save market data to file
 function saveMarketData() {
   try {
     fs.writeFileSync(MARKET_FILE, JSON.stringify(marketData, null, 2), "utf8");
@@ -530,7 +530,8 @@ function getMarketTransactions(filter = {}) {
 
 // ====================== index.js ======================
 /**
- * Entry point for Stampcoin Platform ...
+ * Entry point for Stampcoin Platform
+ * Starts the main server
  */
 try {
   require('./server');
@@ -541,13 +542,6 @@ try {
 
 // ====================== server.js ======================
 /**
- * Express Server ...
+ * Express Server – API endpoints and integration
+ * (يمكنك دمج server.js هنا أو استدعاء express والتكامل مع الوظائف أعلاه)
  */
-const express = require("express");
-const fs_promise = require("fs").promises;
-const cors = require("cors");
-// const wallet = require("./wallet");
-// const market = require("./market");
-// const blockchain = require("./blockchain");
-
-// (أكواد سيرفر Express مع إعدادات الـ API وصلاحيات الـ CORS يمكن دمجها واستدعاؤها من الوظائف أعلاه)

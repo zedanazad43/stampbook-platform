@@ -1,30 +1,84 @@
 const express = require("express");
 const fs = require("fs").promises;
+const fsSync = require("fs");
 const path = require("path");
 const cors = require("cors");
 const wallet = require("./wallet");
 const market = require("./market");
 const blockchain = require("./blockchain");
+const { dataDir, resolveDataFile } = require("./storage-paths");
 
 const app = express();
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
-  : ["http://localhost:8080", "http://localhost:3000"];
+function normalizeUrl(value) {
+  if (!value) return "";
+  return value.trim().replace(/\/$/, "");
+}
+
+function getHostname(value) {
+  if (!value) return "";
+  try {
+    return new URL(value).hostname.toLowerCase();
+  } catch (error) {
+    return value.trim().toLowerCase();
+  }
+}
+
+const baseUrl = normalizeUrl(process.env.BASE_URL);
+const canonicalHost = getHostname(process.env.CANONICAL_HOST || baseUrl);
+const canonicalOrigin = baseUrl || (canonicalHost ? `https://${canonicalHost}` : "");
+const productionFallbackOrigins = [
+  "https://ecostamp.net",
+  "https://www.ecostamp.net"
+];
+
+app.set("trust proxy", true);
+
+const allowedOrigins = [
+  "http://localhost:8080",
+  "http://localhost:3000",
+  "http://localhost:10000",
+  ...productionFallbackOrigins,
+  ...((process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim()).filter(Boolean)),
+  ...(canonicalOrigin ? [canonicalOrigin] : [])
+].filter((origin, index, list) => list.indexOf(origin) === index);
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) return callback(null, true);
+    // In development mode, allow all origins for easier local testing
+    if (process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    }
     callback(new Error("Not allowed by CORS"));
   }
 }));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV !== "production" || !canonicalHost) {
+    return next();
+  }
+
+  const requestHost = (req.hostname || "").toLowerCase();
+  if (!requestHost || requestHost === canonicalHost) {
+    return next();
+  }
+
+  const forwardedProto = req.get("x-forwarded-proto");
+  const requestProtocol = (forwardedProto || req.protocol || "https").split(",")[0].trim();
+  const redirectTarget = `${canonicalOrigin.replace(/^https?:\/\//, `${requestProtocol}://`)}${req.originalUrl}`;
+  return res.redirect(308, redirectTarget);
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
-const DATA_FILE = path.join(__dirname, "data.json");
+const DATA_FILE = resolveDataFile("data.json");
 const SYNC_TOKEN = process.env.SYNC_TOKEN || "";
+const MARKET_FEE_BPS = Number(process.env.MARKET_FEE_BPS || 500);
+const MARKET_FEE_WALLET_ID = process.env.MARKET_FEE_WALLET_ID || "platform_treasury";
+const MARKET_FEE_WALLET_NAME = process.env.MARKET_FEE_WALLET_NAME || "Platform Treasury";
 
 function requireToken(req, res, next) {
   const auth = req.get("Authorization") || "";
@@ -42,8 +96,28 @@ function requireToken(req, res, next) {
   next();
 }
 
+// Mount AI Agent Expert routes
+const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
+if (fsSync.existsSync(aiAgentPath)) {
+  const aiAgent = require(aiAgentPath);
+  app.use("/agent", aiAgent);
+  console.log("AI Agent Expert mounted successfully");
+} else {
+  console.warn("AI Agent Expert not found at:", aiAgentPath);
+}
+
 // Health check endpoint
-app.get("/health", (req, res) => res.json({ status: "ok" }));
+app.get("/health", (req, res) => res.json({ status: "ok", baseUrl: canonicalOrigin || null }));
+app.get("/api/health", (req, res) => res.json({ status: "ok", baseUrl: canonicalOrigin || null }));
+
+app.get("/api/site", (req, res) => {
+  res.json({
+    baseUrl: canonicalOrigin || `${req.protocol}://${req.get("host")}`,
+    canonicalHost: canonicalHost || req.hostname,
+    allowedOrigins,
+    dataDir
+  });
+});
 
 // --- Wallet API ---
 
@@ -133,6 +207,7 @@ app.get("/api/market/items", (req, res) => {
     const filter = {};
     if (req.query.status) filter.status = req.query.status;
     if (req.query.type) filter.type = req.query.type;
+    if (req.query.sellerId) filter.sellerId = req.query.sellerId;
     res.json(market.getAllMarketItems(filter));
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -142,9 +217,9 @@ app.get("/api/market/items", (req, res) => {
 // List a new item on the market
 app.post("/api/market/items", (req, res) => {
   try {
-    const { sellerId, name, description, price, type, imageUrl } = req.body;
+    const { sellerId, name, description, price, type, imageUrl, sellerContact } = req.body;
     if (!sellerId || !name) return res.status(400).json({ error: "sellerId and name are required" });
-    const item = market.addMarketItem(sellerId, { name, description, price, type, imageUrl });
+    const item = market.addMarketItem(sellerId, { name, description, price, type, imageUrl, sellerContact });
     res.json(item);
   } catch (e) {
     res.status(400).json({ error: e.message });
@@ -163,15 +238,16 @@ app.get("/api/market/items/:itemId", (req, res) => {
 // Update a market item (seller only)
 app.put("/api/market/items/:itemId", (req, res) => {
   try {
-    const { userId, price, description, status, imageUrl } = req.body || {};
+    const { userId, price, description, status, imageUrl, sellerContact } = req.body || {};
     if (!userId) return res.status(400).json({ error: "userId is required" });
-    const item = market.getMarketItem(req.params.itemId);
+    const item = market.getRawMarketItem(req.params.itemId);
     if (item.sellerId !== userId) return res.status(403).json({ error: "Only the seller can update this item" });
     const updates = {};
     if (price !== undefined) updates.price = price;
     if (description !== undefined) updates.description = description;
     if (status !== undefined) updates.status = status;
     if (imageUrl !== undefined) updates.imageUrl = imageUrl;
+    if (sellerContact !== undefined) updates.sellerContact = sellerContact;
     if (Object.keys(updates).length === 0) return res.status(400).json({ error: "No updatable fields provided" });
     res.json(market.updateMarketItem(req.params.itemId, updates));
   } catch (e) {
@@ -183,15 +259,56 @@ app.put("/api/market/items/:itemId", (req, res) => {
 // Purchase a market item
 app.post("/api/market/items/:itemId/buy", (req, res) => {
   try {
-    const { buyerId } = req.body;
+    const { buyerId, buyerContact } = req.body;
     if (!buyerId) return res.status(400).json({ error: "buyerId is required" });
-    const item = market.getMarketItem(req.params.itemId);
-    if (item.price > 0) {
-      wallet.transfer(buyerId, item.sellerId, item.price);
+    const item = market.getRawMarketItem(req.params.itemId);
+
+    if (item.price <= 0) {
+      return res.status(400).json({ error: "Free listings are not allowed. Platform commission in STP is mandatory." });
     }
-    const result = market.purchaseMarketItem(req.params.itemId, buyerId);
+
+    // Ensure treasury wallet exists for mandatory marketplace commission collection.
+    if (!wallet.getWallet(MARKET_FEE_WALLET_ID)) {
+      wallet.createWallet(MARKET_FEE_WALLET_ID, MARKET_FEE_WALLET_NAME);
+    }
+
+    const platformFee = Math.max(1, Math.ceil((item.price * MARKET_FEE_BPS) / 10000));
+    const sellerProceeds = item.price - platformFee;
+    if (sellerProceeds <= 0) {
+      return res.status(400).json({ error: "Invalid fee configuration: seller proceeds must remain positive" });
+    }
+
+    // Split payment: seller receives proceeds, treasury receives platform fee.
+    wallet.transfer(buyerId, item.sellerId, sellerProceeds);
+    wallet.transfer(buyerId, MARKET_FEE_WALLET_ID, platformFee);
+
+    const result = market.purchaseMarketItem(req.params.itemId, buyerId, {
+      platformFee,
+      sellerProceeds,
+      feeCurrency: "STP",
+      buyerContact
+    });
     res.json(result);
   } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// Reveal contact details only for transaction participants after completed purchase.
+app.get("/api/market/transactions/:transactionId/contact-exchange", (req, res) => {
+  try {
+    const requesterId = req.query.userId;
+    if (!requesterId) {
+      return res.status(400).json({ error: "userId is required" });
+    }
+    res.json(market.getTransactionContactExchange(req.params.transactionId, requesterId));
+  } catch (e) {
+    if (e.message === "Market transaction not found") {
+      return res.status(404).json({ error: e.message });
+    }
+    if (e.message.includes("Only the buyer or seller")) {
+      return res.status(403).json({ error: e.message });
+    }
     res.status(400).json({ error: e.message });
   }
 });
@@ -240,7 +357,7 @@ app.get("/api/token", (req, res) => {
       { label: "Team & Founders",       percent: 15, amount: 63150000 },
       { label: "Reserve",               percent: 10, amount: 42100000 }
     ],
-    contractAddress: process.env.STP_CONTRACT_ADDRESS || "Pending mainnet deployment",
+    contractAddress: process.env.STP_CONTRACT_ADDRESS || "0xeB834351Ee83b3877DD8620e552652733710d4e1",
     network: "EVM-compatible"
   });
 });
@@ -291,6 +408,169 @@ app.get("/api/blockchain/mint/events", requireToken, (req, res) => {
   }
 });
 
+// --- Auctions API (in-memory — data resets on server restart) ---
+// For production, replace with a persistent data store (e.g., database or JSON file).
+const auctions = new Map();
+
+app.get("/api/auctions", (req, res) => {
+  try {
+    const list = Array.from(auctions.values()).filter(a => a.status !== "cancelled");
+    const { status } = req.query;
+    res.json(status ? list.filter(a => a.status === status) : list);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/auctions", (req, res) => {
+  try {
+    const { sellerId, stampName, description, startingBid, durationHours } = req.body;
+    if (!sellerId || !stampName || !startingBid) {
+      return res.status(400).json({ error: "sellerId, stampName, and startingBid are required" });
+    }
+    const id = "auction_" + Date.now();
+    const auction = {
+      id,
+      sellerId,
+      stampName,
+      description: description || "",
+      currentBid: Number(startingBid),
+      startingBid: Number(startingBid),
+      bids: [],
+      status: "active",
+      endsAt: Date.now() + (Number(durationHours) || 24) * 3600 * 1000,
+      createdAt: new Date().toISOString(),
+    };
+    auctions.set(id, auction);
+    res.status(201).json(auction);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/auctions/:id", (req, res) => {
+  try {
+    const auction = auctions.get(req.params.id);
+    if (!auction) return res.status(404).json({ error: "Auction not found" });
+    res.json(auction);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/auctions/:id/bid", (req, res) => {
+  try {
+    const auction = auctions.get(req.params.id);
+    if (!auction) return res.status(404).json({ error: "Auction not found" });
+    if (auction.status !== "active") return res.status(400).json({ error: "Auction is not active" });
+    if (Date.now() > auction.endsAt) {
+      auction.status = "ended";
+      return res.status(400).json({ error: "Auction has ended" });
+    }
+    const { bidderId, amount } = req.body;
+    if (!bidderId || !amount) return res.status(400).json({ error: "bidderId and amount are required" });
+    if (Number(amount) <= auction.currentBid) {
+      return res.status(400).json({ error: `Bid must be greater than current bid of ${auction.currentBid}` });
+    }
+    const bid = { bidderId, amount: Number(amount), timestamp: new Date().toISOString() };
+    auction.bids.push(bid);
+    auction.currentBid = Number(amount);
+    res.json({ auction, bid });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// --- NFT Stamps API (in-memory — data resets on server restart) ---
+// For production, replace with a persistent data store (e.g., database or JSON file).
+const nftStamps = new Map();
+
+app.get("/api/nft/stamps", (req, res) => {
+  try {
+    const list = Array.from(nftStamps.values());
+    const { ownerId } = req.query;
+    res.json(ownerId ? list.filter(s => s.ownerId === ownerId) : list);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/nft/mint", (req, res) => {
+  try {
+    const { ownerId, name, country, year, description, rarity, imageUrl } = req.body;
+    if (!ownerId || !name) return res.status(400).json({ error: "ownerId and name are required" });
+    const tokenId = "STP-" + Date.now().toString(36).toUpperCase();
+    const stamp = {
+      tokenId,
+      ownerId,
+      name,
+      country: country || "",
+      year: year || null,
+      description: description || "",
+      rarity: rarity || "common",
+      imageUrl: imageUrl || null,
+      mintedAt: new Date().toISOString(),
+      status: "minted",
+      mintCost: 50,
+    };
+    nftStamps.set(tokenId, stamp);
+    res.status(201).json(stamp);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/nft/stamps/:tokenId", (req, res) => {
+  try {
+    const stamp = nftStamps.get(req.params.tokenId);
+    if (!stamp) return res.status(404).json({ error: "NFT stamp not found" });
+    res.json(stamp);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// --- Users / Registration API (in-memory — data resets on server restart) ---
+// For production, replace with a persistent data store (e.g., database or JSON file).
+const users = new Map();
+
+app.post("/api/users/register", (req, res) => {
+  try {
+    const { userId, userName, email } = req.body;
+    if (!userId || !userName) return res.status(400).json({ error: "userId and userName are required" });
+    if (users.has(userId)) return res.status(409).json({ error: "User already registered" });
+    const user = {
+      userId,
+      userName,
+      email: email || null,
+      registeredAt: new Date().toISOString(),
+      role: "user",
+    };
+    users.set(userId, user);
+    // Also create wallet for the user
+    let walletData = null;
+    try { walletData = wallet.createWallet(userId, userName); } catch (e) {
+      // Wallet may already exist for this userId — that is acceptable
+      if (!e.message.includes("already exists")) {
+        console.error("Wallet creation error during registration:", e.message);
+      }
+    }
+    res.status(201).json({ user, wallet: walletData });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/users/:userId", (req, res) => {
+  try {
+    const user = users.get(req.params.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // --- Sync API ---
 async function readData() {
   try {
@@ -331,3 +611,4 @@ const port = process.env.PORT || 10000;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Stampcoin Platform server listening on port ${port}`);
 });
+

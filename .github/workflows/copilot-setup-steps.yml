@@ -36,9 +36,9 @@ jobs:
       - name: Install project dependencies
         run: |
           if [ -f package-lock.json ]; then
-            npm ci
+            npm ci --no-audit
           elif [ -f package.json ]; then
-            npm install
+            npm install --no-audit
           fi
 
       - name: Copilot setup complete
