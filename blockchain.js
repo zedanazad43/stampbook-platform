@@ -8,8 +8,8 @@
 "use strict";
 
 const fs = require("fs");
-const path = require("path");
 const crypto = require("crypto");
+const { resolveDataFile } = require("./storage-paths");
 
 const TOKEN = {
   name: "StampCoin",
@@ -23,7 +23,7 @@ const TOKEN = {
   chainId: 56
 };
 
-const BLOCKCHAIN_FILE = path.join(__dirname, "blockchain-state.json");
+const BLOCKCHAIN_FILE = resolveDataFile("blockchain-state.json");
 
 function loadState() {
   try {
