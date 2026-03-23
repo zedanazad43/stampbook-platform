@@ -1,8 +1,8 @@
-name: CodeQL Advanced
+name: CodeQL Analysis
 
 on:
   push:
-    branches: [main]
+    branches: [ main, develop ]
   pull_request:
     branches: [main]
   schedule:
