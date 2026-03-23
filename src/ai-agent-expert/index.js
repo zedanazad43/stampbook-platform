@@ -1,11 +1,7 @@
 const express = require("express");
-const fs = require("fs").promises;
-const path = require("path");
 const cors = require("cors");
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const router = express.Router();
 
 // Agent configuration
 const AGENT_CONFIG = {
@@ -31,29 +27,8 @@ const agentState = {
     pendingIssues: []
 };
 
-// Helper functions
-async function readProjectData() {
-    try {
-        const raw = await fs.readFile(path.join(__dirname, "../../data.json"), "utf8");
-        return JSON.parse(raw);
-    } catch (e) {
-        console.error("Error reading project data:", e.message);
-        return [];
-    }
-}
-
-async function writeProjectData(data) {
-    try {
-        await fs.writeFile(path.join(__dirname, "../../data.json"), JSON.stringify(data, null, 2), "utf8");
-        return true;
-    } catch (e) {
-        console.error("Write error:", e);
-        return false;
-    }
-}
-
 // Agent API endpoints
-app.get("/agent/status", (req, res) => {
+router.get("/status", (req, res) => {
     res.json({
         status: agentState.active ? "active" : "inactive",
         currentTask: agentState.currentTask,
@@ -62,17 +37,17 @@ app.get("/agent/status", (req, res) => {
     });
 });
 
-app.post("/agent/activate", (req, res) => {
+router.post("/activate", (req, res) => {
     agentState.active = true;
     res.json({ message: "Agent activated successfully", status: agentState.active });
 });
 
-app.post("/agent/deactivate", (req, res) => {
+router.post("/deactivate", (req, res) => {
     agentState.active = false;
     res.json({ message: "Agent deactivated successfully", status: agentState.active });
 });
 
-app.post("/agent/analyze-code", async (req, res) => {
+router.post("/analyze-code", async (req, res) => {
     if (!agentState.active) {
         return res.status(403).json({ error: "Agent is not active" });
     }
@@ -119,7 +94,7 @@ app.post("/agent/analyze-code", async (req, res) => {
     }
 });
 
-app.post("/agent/fix-issues", async (req, res) => {
+router.post("/fix-issues", async (req, res) => {
     if (!agentState.active) {
         return res.status(403).json({ error: "Agent is not active" });
     }
@@ -153,7 +128,7 @@ app.post("/agent/fix-issues", async (req, res) => {
     }
 });
 
-app.post("/agent/organize-project", async (req, res) => {
+router.post("/organize-project", async (req, res) => {
     if (!agentState.active) {
         return res.status(403).json({ error: "Agent is not active" });
     }
@@ -199,7 +174,7 @@ app.post("/agent/organize-project", async (req, res) => {
     }
 });
 
-app.post("/agent/optimize-performance", async (req, res) => {
+router.post("/optimize-performance", async (req, res) => {
     if (!agentState.active) {
         return res.status(403).json({ error: "Agent is not active" });
     }
@@ -248,7 +223,7 @@ app.post("/agent/optimize-performance", async (req, res) => {
     }
 });
 
-app.post("/agent/audit-security", async (req, res) => {
+router.post("/audit-security", async (req, res) => {
     if (!agentState.active) {
         return res.status(403).json({ error: "Agent is not active" });
     }
@@ -300,7 +275,7 @@ app.post("/agent/audit-security", async (req, res) => {
     }
 });
 
-app.post("/agent/generate-docs", async (req, res) => {
+router.post("/generate-docs", async (req, res) => {
     if (!agentState.active) {
         return res.status(403).json({ error: "Agent is not active" });
     }
@@ -350,7 +325,7 @@ app.post("/agent/generate-docs", async (req, res) => {
     }
 });
 
-app.post("/agent/create-tests", async (req, res) => {
+router.post("/create-tests", async (req, res) => {
     if (!agentState.active) {
         return res.status(403).json({ error: "Agent is not active" });
     }
@@ -400,14 +375,24 @@ app.post("/agent/create-tests", async (req, res) => {
     }
 });
 
-app.get("/agent/history", (req, res) => {
+router.get("/history", (req, res) => {
     res.json({
         completedTasks: agentState.completedTasks,
         pendingIssues: agentState.pendingIssues
     });
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`AI Agent Expert server listening on port ${PORT}`);
-});
+// Export router for mounting in the main server
+module.exports = router;
+
+// Start standalone server when run directly
+if (require.main === module) {
+    const app = express();
+    app.use(cors());
+    app.use(express.json());
+    app.use("/agent", router);
+    const PORT = process.env.PORT || 3001;
+    app.listen(PORT, "0.0.0.0", () => {
+        console.log(`AI Agent Expert server listening on port ${PORT}`);
+    });
+}
