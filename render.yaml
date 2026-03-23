@@ -12,6 +12,12 @@ services:
         value: production
       - key: PORT
         value: 10000
+      - key: BASE_URL
+        sync: false
+      - key: CANONICAL_HOST
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
       # Add any additional environment variables required by your app
       # - key: SYNC_TOKEN
       #   value: your-sync-token-here
