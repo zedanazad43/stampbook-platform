@@ -2,11 +2,11 @@
 // Module for managing digital wallets, balances, and transactions
 
 const fs = require('fs');
-const path = require('path');
 const crypto = require('crypto');
+const { resolveDataFile } = require('./storage-paths');
 
-const WALLETS_FILE = path.join(__dirname, 'wallets.json');
-const TRANSACTIONS_FILE = path.join(__dirname, 'transactions.json');
+const WALLETS_FILE = resolveDataFile('wallets.json');
+const TRANSACTIONS_FILE = resolveDataFile('transactions.json');
 
 /**
  * Validate a userId to prevent prototype-pollution and injection attacks.
