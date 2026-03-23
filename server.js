@@ -607,7 +607,11 @@ app.post("/sync", requireToken, async (req, res) => {
   res.json({ ok: true });
 });
 
+<<<<<<< copilot/update-file-structure
+const port = process.env.PORT || 8080;
+=======
 const port = process.env.PORT || 10000;
+>>>>>>> main
 app.listen(port, "0.0.0.0", () => {
   console.log(`Stampcoin Platform server listening on port ${port}`);
 });
