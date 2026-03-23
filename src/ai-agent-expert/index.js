@@ -28,27 +28,6 @@ const agentState = {
     pendingIssues: []
 };
 
-// Helper functions
-async function readProjectData() {
-    try {
-        const raw = await fs.readFile(path.join(__dirname, "../../data.json"), "utf8");
-        return JSON.parse(raw);
-    } catch (e) {
-        console.error("Error reading project data:", e.message);
-        return [];
-    }
-}
-
-async function writeProjectData(data) {
-    try {
-        await fs.writeFile(path.join(__dirname, "../../data.json"), JSON.stringify(data, null, 2), "utf8");
-        return true;
-    } catch (e) {
-        console.error("Write error:", e);
-        return false;
-    }
-}
-
 // Agent API endpoints
 router.get("/status", (req, res) => {
     res.json({
