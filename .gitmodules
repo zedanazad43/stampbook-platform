@@ -1,3 +1,0 @@
-[submodule "cloudflare-assets"]
-    path = cloudflare-assets
-    url = https://github.com/cloudflare/stp-assets.git

@@ -2,20 +2,33 @@ name: Build, Test, and Publish
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, 'copilot/**' ]
   pull_request:
     branches: [ main ]
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+    types: [ opened, synchronize, reopened, ready_for_review ]
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch main branch
+        run: git fetch origin main:main
+
+      - name: Run git diff
+        run: |
+          if git show-ref --verify --quiet refs/heads/main; then
+            git diff main -- yourfile
+          else
+            echo "Branch 'main' is not available."
+          fi
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
