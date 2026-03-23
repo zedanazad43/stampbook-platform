@@ -1,3 +1,3 @@
 module github.com/zedanazad43/stp
 
-go 1.18
+go 1.21
