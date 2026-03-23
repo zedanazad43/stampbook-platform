@@ -1,4 +1,14 @@
-name: Deploy to Railway
+# ======================================================
+# سير عمل: نشر الخلفية تلقائياً على Railway
+# يُشغَّل عند كل Push على الفرع الرئيسي (main)
+# الأسرار المطلوبة في GitHub → Settings → Secrets:
+#   RAILWAY_TOKEN      - رمز المصادقة الخاص بـ Railway (مطلوب)
+#   RAILWAY_SERVICE_ID - معرّف الخدمة في Railway (يُوصى به لتجنب خطأ "Multiple services")
+#   RAILWAY_PROJECT_ID - معرّف المشروع في Railway (اختياري)
+#   RAILWAY_ENVIRONMENT - اسم البيئة المستهدفة (production أو staging... إلخ)
+# كذلك أضف SYNC_TOKEN و PORT في لوحة Railway
+# ======================================================
+name: نشر الخلفية على Railway
 
 on:
   push:
@@ -12,24 +22,24 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy to Railway
+    name: نشر تلقائي على Railway
     runs-on: ubuntu-latest
     permissions:
       contents: read
 
     steps:
-      - name: Checkout repository
+      - name: استنساخ الكود
         uses: actions/checkout@v4
         with:
           submodules: false
 
-      - name: Set up Node.js
+      - name: إعداد Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: تثبيت الحزم
         run: npm ci
 
       - name: Check Railway token
@@ -44,9 +54,8 @@ jobs:
             echo "RAILWAY_TOKEN is not configured, skipping deployment."
           fi
 
-      - name: Deploy to Railway
+      - name: نشر على Railway
         if: steps.check-railway.outputs.deploy == 'true'
-        shell: bash
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
@@ -59,10 +68,11 @@ jobs:
           if [ -n "$RAILWAY_SERVICE_ID" ]; then
             EXTRA_ARGS+=(--service "$RAILWAY_SERVICE_ID")
           fi
-          if [ -n "$RAILWAY_PROJECT_ID" ]; then
+          # Only pass --project and --environment together (both are required when using --project)
+          if [ -n "$RAILWAY_PROJECT_ID" ] && [ -n "$RAILWAY_ENVIRONMENT" ]; then
             EXTRA_ARGS+=(--project "$RAILWAY_PROJECT_ID")
-          fi
-          if [ -n "$RAILWAY_ENVIRONMENT" ]; then
+            EXTRA_ARGS+=(--environment "$RAILWAY_ENVIRONMENT")
+          elif [ -n "$RAILWAY_ENVIRONMENT" ]; then
             EXTRA_ARGS+=(--environment "$RAILWAY_ENVIRONMENT")
           fi
 
