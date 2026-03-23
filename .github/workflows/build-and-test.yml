@@ -14,41 +14,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Get changed files
-        id: changed_files
-        if: github.event_name == 'pull_request'
-        run: |
-          git fetch origin $GITHUB_BASE_REF
-          git diff --name-only $GITHUB_BASE_REF $GITHUB_SHA > changed_files.txt
-
-      - name: Review changed files if present
-        if: github.event_name == 'pull_request'
-        run: |
-          while read FILE; do
-            if git ls-tree -r $GITHUB_SHA --name-only | grep -q "$FILE"; then
-              git show "$GITHUB_SHA:$FILE"
-              # Review logic for $FILE
-            else
-              echo "$FILE not found in commit $GITHUB_SHA, skipping."
-            fi
-          done < changed_files.txt
-
-      - name: Review files only if present in commit
-        run: |
-          FILES=".dockerignore public/index.html"
-          for FILE in $FILES; do
-            if git ls-tree -r $GITHUB_SHA --name-only | grep -q "$FILE"; then
-              git show "$GITHUB_SHA:$FILE"
-              # Add your code review or processing logic here
-            else
-              echo "$FILE not found in commit $GITHUB_SHA, skipping review."
-            fi
-          done
+      - uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
