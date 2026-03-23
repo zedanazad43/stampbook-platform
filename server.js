@@ -80,6 +80,17 @@ const MARKET_FEE_BPS = Number(process.env.MARKET_FEE_BPS || 500);
 const MARKET_FEE_WALLET_ID = process.env.MARKET_FEE_WALLET_ID || "platform_treasury";
 const MARKET_FEE_WALLET_NAME = process.env.MARKET_FEE_WALLET_NAME || "Platform Treasury";
 
+// Mount AI Agent Expert routes
+const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
+let aiAgentRouter = null;
+if (fsSync.existsSync(aiAgentPath)) {
+  aiAgentRouter = require(aiAgentPath);
+  app.use("/agent", aiAgentRouter);
+  console.log("AI Agent Expert mounted successfully");
+} else {
+  console.warn("AI Agent Expert not found at:", aiAgentPath);
+}
+
 function requireToken(req, res, next) {
   const auth = req.get("Authorization") || "";
   const token = auth.replace(/^Bearer\s+/i, "");
@@ -96,20 +107,7 @@ function requireToken(req, res, next) {
   next();
 }
 
-// Mount AI Agent Expert routes
-const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
-if (fsSync.existsSync(aiAgentPath)) {
-  const aiAgent = require(aiAgentPath);
-  app.use("/agent", aiAgent);
-  console.log("AI Agent Expert mounted successfully");
-} else {
-  console.warn("AI Agent Expert not found at:", aiAgentPath);
-}
-
-// --- API Endpoints ---
-
-app.get("/health", (req, res) => res.json({ status: "ok", baseUrl: canonicalOrigin || null }));
-app.get("/api/health", (req, res) => res.json({ status: "ok", baseUrl: canonicalOrigin || null }));
+// --- Wallet API ---
 
 app.get("/api/site", (req, res) => {
   res.json({
@@ -336,6 +334,36 @@ app.post("/sync", requireToken, async (req, res) => {
   const ok = await writeData(payload.todos);
   if (!ok) return res.status(500).json({ error: "Failed to store data" });
   res.json({ ok: true });
+});
+
+// AI Agent Expert integration status endpoint
+app.get("/ai-agent-status", (req, res) => {
+  if (!aiAgentRouter) {
+    return res.json({
+      agentIntegrated: false,
+      error: "AI Agent Expert not available"
+    });
+  }
+  const state = aiAgentRouter.agentState;
+  res.json({
+    agentIntegrated: true,
+    status: {
+      status: state.active ? "active" : "inactive",
+      currentTask: state.currentTask,
+      completedTasks: state.completedTasks.length,
+      pendingIssues: state.pendingIssues.length
+    }
+  });
+});
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    service: "Stampcoin Platform",
+    version: "2.0.0"
+  });
 });
 
 const port = process.env.PORT || 10000;
