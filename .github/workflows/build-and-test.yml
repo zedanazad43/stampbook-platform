@@ -2,13 +2,11 @@ name: Build, Test, and Publish
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, 'copilot/**' ]
   pull_request:
     branches: [ main ]
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+    types: [ opened, synchronize, reopened, ready_for_review ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -60,3 +58,4 @@ jobs:
 
       - name: Run tests
         run: npm test
+
