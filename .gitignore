@@ -6,12 +6,13 @@ yarn-error.log*
 
 # Environment variables
 .env
+.env.selfhost
+.env.cloud
 .env.local
 .env.*.local
 
 # IDE
 .vscode/
-!.vscode/mcp.json
 .idea/
 *.swp
 *.swo
@@ -53,3 +54,20 @@ temp/
 cache/
 artifacts/
 typechain-types/
+
+# Git internals accidentally committed
+git.worktrees/
+*.worktrees
+
+# Runtime data files (JSON persistence - dev only, not for production commits)
+wallets.json
+transactions.json
+market-data.json
+blockchain-state.json
+data.json
+
+# Accidental git worktree/submodule directories — never commit these
+git/
+git.worktrees/
+stampcoin-platform/
+stp/

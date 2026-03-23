@@ -1,8 +1,10 @@
 FROM node:18
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --production
+RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
+    npm install --production
 COPY . .
-RUN npm run build
+RUN --mount=type=cache,id=npm-build-cache,target=/root/.npm \
+    npm run build
 EXPOSE 3000
 CMD ["npm", "start"]
