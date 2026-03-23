@@ -12,15 +12,9 @@ RUN --mount=type=cache,id=npm,target=/root/.npm \
     if [ -f /run/secrets/npm_token ] && [ -s /run/secrets/npm_token ]; then \
       echo "//registry.npmjs.org/:_authToken=$(cat /run/secrets/npm_token)" > ~/.npmrc; \
     fi && \
-    npm install && \
-    rm -f ~/.npmrc
+    npm ci)
 
 COPY . .
 
-COPY .docker-healthcheck.sh /app/.docker-healthcheck.sh
-
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD ["/bin/bash", "/app/.docker-healthcheck.sh"]
-
-EXPOSE 8080
+EXPOSE 10000
 CMD ["node", "server.js"]
