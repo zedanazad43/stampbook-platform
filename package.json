@@ -19,24 +19,10 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
-    "jest": "^29.7.0"
-  },
-  "engines": {
-    "node": ">=16.x"
-  },
-  "keywords": [
-    "stampcoin",
-    "blockchain",
-    "digital-stamps",
-    "collectibles",
-    "marketplace",
-    "wallet",
-    "digital-currency"
-  ],
-  "author": "Azad Zedan",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/zedanazad43/stp.git"
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.17",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.14"
   }
 }
 
