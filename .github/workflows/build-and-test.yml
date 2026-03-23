@@ -18,18 +18,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.COPILOT_TOKEN || github.token }}
 
-      - name: Review files only if present in commit
+      - name: Ensure main ref is available (for git diff/show)
         run: |
-          FILES=".dockerignore public/index.html"
-          for FILE in $FILES; do
-            if git ls-tree -r $GITHUB_SHA --name-only | grep -q "$FILE"; then
-              git show "$GITHUB_SHA:$FILE"
-              # Add your code review or processing logic here
-            else
-              echo "$FILE not found in commit $GITHUB_SHA, skipping review."
-            fi
-          done
+          git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
+          git show-ref --verify --quiet refs/remotes/origin/main
+          # اختياري: إنشاء ref محلي باسم main إذا كان شيء يتوقع refs/heads/main
+          git show-ref --quiet refs/heads/main || git branch -f main refs/remotes/origin/main
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
