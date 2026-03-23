@@ -288,7 +288,23 @@ app.post("/api/blockchain/mint", requireToken, (req, res) => {
   }
 });
 
-// --- Sync API (Persistent Storage) ---
+app.get("/api/blockchain/balance/:address", (req, res) => {
+  try {
+    res.json(blockchain.getBalance(req.params.address));
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+app.get("/api/blockchain/mint/events", requireToken, (req, res) => {
+  try {
+    res.json(blockchain.getMintEvents());
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// --- Sync API ---
 async function readData() {
   try {
     const raw = await fs.readFile(DATA_FILE, "utf8");
@@ -322,8 +338,7 @@ app.post("/sync", requireToken, async (req, res) => {
   res.json({ ok: true });
 });
 
-// Final Server Startup
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Stampcoin Platform server listening on port ${port}`);
 });
