@@ -8,8 +8,8 @@ COPY package*.json ./
 # npm authentication first so private packages can be resolved, then clean up.
 # The npm cache is persisted across builds via a BuildKit cache mount.
 # Usage: docker build --secret id=npm_token,env=NPM_TOKEN .
-RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
-    --mount=type=secret,id=npm_token,required=false \
+RUN --mount=type=secret,id=npm_token,required=false \
+    --mount=type=cache,id=npm-cache,target=/root/.npm \
     if [ -f /run/secrets/npm_token ] && [ -s /run/secrets/npm_token ]; then \
       echo "//registry.npmjs.org/:_authToken=$(cat /run/secrets/npm_token)" > ~/.npmrc; \
     fi && \
