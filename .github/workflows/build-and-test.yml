@@ -14,7 +14,8 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -22,7 +23,7 @@ jobs:
         run: |
           git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
           git show-ref --verify --quiet refs/remotes/origin/main
-          # Optionally create a local main ref if something expects refs/heads/main
+          # اختياري: إنشاء ref محلي باسم main إذا كان شيء يتوقع refs/heads/main
           git branch -f main refs/remotes/origin/main
 
       - name: Set up Node.js
