@@ -1,0 +1,19 @@
+name: Execute Command on MCP Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mcp-command:
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - name: Execute command on MCP server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.MCP_HOST }}
+          username: ${{ secrets.MCP_USER }}
+          key: ${{ secrets.MCP_KEY }}
+          script: |
+            echo "Copilot Bot connected with admin permissions"
+            # تنفيذ أوامر حسب الحاجة
