@@ -1,7 +1,7 @@
-# Stampcoin Platform utility helpers
+# Stampcoin platform helper script.
 
-def platform_name
-  "Stampcoin Platform"
+def main
+  puts "Stampcoin platform"
 end
 
-puts platform_name if __FILE__ == $PROGRAM_NAME
+main if __FILE__ == $PROGRAM_NAME

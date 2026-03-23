@@ -1,10 +1,9 @@
-"""Stampcoin Platform utility helpers."""
+"""Stampcoin platform helper script."""
 
 
-def get_platform_name():
-    """Return the platform name."""
-    return "Stampcoin Platform"
+def main():
+    print("Stampcoin platform")
 
 
 if __name__ == "__main__":
-    print(get_platform_name())
+    main()

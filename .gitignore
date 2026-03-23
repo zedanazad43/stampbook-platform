@@ -66,8 +66,8 @@ market-data.json
 blockchain-state.json
 data.json
 
-# Stray/temp files that should not be committed
+# Accidental git worktree/submodule directories — never commit these
+git/
 git.worktrees/
-.githubworkflows/
-mcp.json
-package1.json
+stampcoin-platform/
+stp/
