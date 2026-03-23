@@ -8,7 +8,7 @@ The Blockchain API provides endpoints for interacting with the STP (StampCoin) B
 ## Base URL
 
 ```
-http://localhost:10000/api
+http://localhost:8080/api
 ```
 
 ## Authentication
