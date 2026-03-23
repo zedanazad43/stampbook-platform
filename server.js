@@ -79,24 +79,6 @@ const MARKET_FEE_BPS = Number(process.env.MARKET_FEE_BPS || 500);
 const MARKET_FEE_WALLET_ID = process.env.MARKET_FEE_WALLET_ID || "platform_treasury";
 const MARKET_FEE_WALLET_NAME = process.env.MARKET_FEE_WALLET_NAME || "Platform Treasury";
 
-// Import AI Agent Expert if available
-let aiAgentMounted = false;
-const aiAgentPath = path.join(__dirname, "src/ai-agent-expert/index.js");
-if (fs.existsSync(aiAgentPath)) {
-  try {
-    const aiAgent = require(aiAgentPath);
-    if (aiAgent && typeof aiAgent === "function") {
-      app.use("/agent", aiAgent);
-      aiAgentMounted = true;
-      console.log("AI Agent Expert mounted successfully");
-    } else {
-      console.log("AI Agent Expert module loaded but not mounted (not a function)");
-    }
-  } catch (e) {
-    console.warn("Failed to load AI Agent Expert:", e.message);
-  }
-}
-
 function requireToken(req, res, next) {
   const auth = req.get("Authorization") || "";
   const token = auth.replace(/^Bearer\s+/i, "");
@@ -342,37 +324,7 @@ app.post("/sync", requireToken, async (req, res) => {
   res.json({ ok: true });
 });
 
-// AI Agent Expert integration endpoint
-app.get("/ai-agent-status", async (req, res) => {
-  try {
-    const agentStatus = await fetch(`${process.env.BASE_URL || "http://localhost:" + process.env.PORT}/agent/status`);
-    const statusData = await agentStatus.json();
-    res.json({
-      agentIntegrated: true,
-      status: statusData
-    });
-  } catch (error) {
-    res.json({
-      agentIntegrated: false,
-      error: "AI Agent Expert not available"
-    });
-  }
-  const state = aiAgentRouter.agentState;
-  res.json({
-    agentIntegrated: true,
-    status: {
-      status: state.active ? "active" : "inactive",
-      currentTask: state.currentTask,
-      completedTasks: state.completedTasks.length,
-      pendingIssues: state.pendingIssues.length
-    }
-  });
-});
-
 const port = process.env.PORT || 10000;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Stampcoin Platform server listening on port ${port}`);
-  if (aiAgentMounted) {
-    console.log(`AI Agent Expert available at: http://localhost:${port}/agent`);
-  }
 });
