@@ -4,9 +4,11 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Use BuildKit mounts for npm cache and secret token, then clean .npmrc
-RUN --mount=type=secret,id=npm_token,required=false \
-    --mount=type=cache,id=npm-cache,target=/root/.npm \
+# Install dependencies; if NPM_TOKEN is provided via BuildKit secret, configure
+# npm authentication first so private packages can be resolved, then clean up.
+# Usage: docker build --secret id=npm_token,env=NPM_TOKEN .
+RUN --mount=type=cache,id=npm,target=/root/.npm \
+    --mount=type=secret,id=npm_token,required=false \
     if [ -f /run/secrets/npm_token ] && [ -s /run/secrets/npm_token ]; then \
       echo "//registry.npmjs.org/:_authToken=$(cat /run/secrets/npm_token)" > ~/.npmrc; \
     fi && \
