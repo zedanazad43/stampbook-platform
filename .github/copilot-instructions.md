@@ -1,24 +1,18 @@
 # Copilot Instructions for Stampcoin Platform (stp)
 
-This is a Node.js/Express.js repository for the **Stampcoin Platform** — a blockchain-inspired digital stamps platform with wallet and marketplace features. The project also includes a static frontend served via GitHub Pages.
+This is a Node.js/Express.js repository for the **Stampcoin Platform** — a blockchain-inspired digital stamps platform with wallet and marketplace features.
 
 ## Repository Structure
 
-- `server.js` — Main Express.js API server (wallet & market endpoints, static file serving, health check)
-- `wallet.js` — Core business logic for digital wallets, balances, and transactions
+- `server.js` — Main Express.js API server (wallet, market & blockchain endpoints)
+- `wallet.js` — Core business logic for digital wallets, balances, stamps, and transactions
 - `market.js` — Core business logic for the digital stamps marketplace
-- `index.js` — Contains Dockerfile-like bootstrap content (not standard JavaScript)
-- `index.html` — Static frontend homepage
-- `public/` — Static frontend assets served by Express
-- `locales/` — i18n translation files (`ar.json`, `de.json`, `en.json`, `es.json`, `fr.json`, `zh.json`)
-- `docs/` — Documentation and GitHub Pages site
-- `scripts/` — Helper scripts
-- `server/` — Additional server-side modules (includes TypeScript files)
-- `lib/` — Shared library code
-- `admin/` — Admin interface components
-- `proto/` — Protocol buffer definitions
-- `.github/workflows/` — CI/CD GitHub Actions workflows
-- `wallets.json`, `transactions.json`, `market-data.json` — Runtime data files (JSON-based persistence, do not commit sensitive data)
+- `blockchain.js` — BEP-20-compatible token logic for STP token supply tracking
+- `index.js` — Entry point that starts the server
+- `tests/` — Jest unit tests (`wallet.test.js`, `market.test.js`, `blockchain.test.js`)
+- `WALLET_API.md` — Digital Wallet API documentation
+- `MARKET_API.md` — Market Institution API documentation
+- `wallets.json`, `transactions.json`, `market-data.json` — Runtime data files (JSON-based persistence)
 
 ## Development Flow
 
@@ -27,64 +21,63 @@ This is a Node.js/Express.js repository for the **Stampcoin Platform** — a blo
 npm install
 
 # Start development server
-npm start          # runs: node server.js (listens on PORT env var or default)
+npm start
 
-# Build (no compile step needed for plain Node.js)
-npm run build      # echo 'No build needed'
-
-# Validate the server starts correctly
-node -e "require('./server.js')" 2>&1 | head -5
-
-# Validate individual modules load without errors
-node -e "require('./wallet.js'); console.log('wallet OK')"
-node -e "require('./market.js'); console.log('market OK')"
+# Run tests
+npm test
 ```
 
 ## Code Standards
 
 ### Required Before Each Commit
-- Verify that the server and all modules load without errors using `node -e "require('./server.js')"` (or the individual module checks above).
+- Verify that all modules load without errors: `node -e "require('./wallet.js'); require('./market.js'); require('./blockchain.js'); console.log('OK')"`
 - Ensure no secrets, tokens, or private keys are introduced — use `process.env` for all sensitive values (e.g., `process.env.SYNC_TOKEN`).
-- If adding user-facing strings, add translations to **all six** locale files in `locales/` (`ar.json`, `de.json`, `en.json`, `es.json`, `fr.json`, `zh.json`).
 
 ### Style
 - **Indentation**: 2 spaces (no tabs)
-- **Strings**: Double quotes in JS files (`"like this"`)
-- **Language**: JavaScript (Node.js 18+). Follow standard JS idioms. TypeScript is only acceptable in `server/` where it already exists.
-- **Error handling**: Wrap route handlers in `try/catch`, return `res.status(4xx/5xx).json({ error: e.message })` on failure — matching the pattern in `server.js`.
-- **Comments**: Use JSDoc-style block comments for functions (see `wallet.js` for examples).
+- **Strings**: Double quotes in JS files
+- **Language**: JavaScript (Node.js 18+)
+- **Error handling**: Wrap route handlers in `try/catch`, return `res.status(4xx/5xx).json({ error: e.message })` on failure
 
 ### Data Persistence
 - Wallet and transaction state live in `wallets.json` and `transactions.json` (root of repo).
 - Market state lives in `market-data.json` (root of repo).
-- Always read/write these files using the helper functions already defined in `wallet.js` and `market.js` — do not bypass them.
-- Never commit real user data. These JSON files are for development use only.
+- Always read/write these files using the helper functions in `wallet.js` and `market.js`.
 
 ### API Design
-- Follow the existing REST pattern in `server.js`: `POST` for mutations, `GET` for reads.
+- Follow the existing REST pattern in `server.js`: `POST` for mutations, `GET` for reads, `PUT` for updates, `DELETE` for removal.
 - All API routes are prefixed with `/api/`.
 - Return JSON responses for all API endpoints.
-- Document any new API endpoints in `WALLET_API.md` or `MARKET_API.md` as appropriate.
-- The `/health` endpoint must always remain functional (used by Docker healthchecks).
+- Document any new endpoints in `WALLET_API.md` or `MARKET_API.md`.
 
-## Key Guidelines
+## Key API Endpoints
 
-1. **Language**: JavaScript (Node.js 18+). Follow standard JS idioms; no TypeScript unless already present.
-2. **Dependencies**: Use `npm ci` when `package-lock.json` is present (as done in CI). Run `npm install` locally.
-3. **Security**: Never commit secrets or private keys. Use environment variables (e.g., `process.env.SYNC_TOKEN`).
-4. **i18n**: The platform supports multiple languages. When adding user-facing strings, add translations to all locale files in `locales/`.
-5. **API changes**: Document any new API endpoints in `WALLET_API.md` or `MARKET_API.md` as appropriate.
-6. **Tests**: Run `npm test` if a test suite is available. The `build-and-test.yml` CI workflow currently only runs `npm ci` to install dependencies.
-7. **Docker**: The project is Docker-ready. Ensure changes don't break `docker compose up --build`.
+### Wallet API
+- `POST /api/wallet/create` — Create a new wallet
+- `GET /api/wallet/:userId` — Get wallet by user ID
+- `POST /api/wallet/transfer` — Transfer balance between wallets
+- `GET /api/wallet/:userId/transactions` — Get transaction history
+- `POST /api/wallet/:userId/stamps` — Add a stamp (token-protected)
+- `GET /api/wallets` — List all wallets (token-protected admin endpoint)
+- `POST /api/wallet/:userId/topup` — Top up wallet balance (token-protected)
+
+### Market API
+- `GET /api/market/items` — Get all market items (supports `?status=`, `?type=`)
+- `POST /api/market/items` — List a new item
+- `GET /api/market/items/:itemId` — Get item by ID
+- `PUT /api/market/items/:itemId` — Update item (seller only)
+- `POST /api/market/items/:itemId/buy` — Purchase an item
+- `DELETE /api/market/items/:itemId` — Remove an item (seller only)
+- `GET /api/market/transactions` — Get transaction history (supports `?buyerId=`, `?sellerId=`)
+
+### Blockchain API
+- `GET /api/blockchain/info` — Get token metadata
+- `GET /api/blockchain/supply` — Get token supply stats
+- `POST /api/blockchain/mint` — Mint STP tokens (token-protected)
+- `GET /api/blockchain/balance/:address` — Get address balance
+- `GET /api/blockchain/mint/events` — Get mint audit log (token-protected)
 
 ## CI/CD
 
-- Workflows are in `.github/workflows/`
-- `build-and-test.yml` — Runs on pushes/PRs to `main`/`develop`; installs deps with `npm ci`
-- `pages.yml` — Deploys the static site to **Cloudflare Pages** (requires `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets; skipped gracefully if not configured)
-- `publish.yml` — Publishes/deploys the application
-- `railway-deploy.yml` — Deploys to Railway (uses `RAILWAY_TOKEN`, `RAILWAY_SERVICE_ID`, `RAILWAY_PROJECT_ID` secrets)
-- `codeql.yml` — Runs CodeQL security analysis
-- `copilot-setup-steps.yml` — Sets up the environment for Copilot coding agent
-
-All CI workflows use **Node.js 18** and npm caching via `actions/setup-node@v4`.
+- `.github/workflows/build-and-test.yml` — Runs on PRs/pushes to `main`; installs deps and runs `npm test`
+- `.github/workflows/copilot-setup-steps.yml` — Sets up the environment for Copilot coding agent

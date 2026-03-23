@@ -1,1 +1,81 @@
-# ======================================================\n# سير عمل: نشر الخلفية تلقائياً على Railway\n# يُشغَّل عند كل Push على الفرع الرئيسي (main)\n# الأسرار المطلوبة في GitHub → Settings → Secrets:\n#   RAILWAY_TOKEN      - رمز المصادقة الخاص بـ Railway (مطلوب)\n#   RAILWAY_SERVICE_ID - معرّف الخدمة في Railway (يُوصى به لتجنب خطأ "Multiple services")\n#   RAILWAY_PROJECT_ID - معرّف المشروع في Railway (اختياري)\n#   RAILWAY_ENVIRONMENT - اسم البيئة المستهدفة (production أو staging... إلخ)\n# كذلك أضف SYNC_TOKEN و PORT في لوحة Railway\n# ======================================================\nname: نشر الخلفية على Railway\n\non:\n  push:\n    branches:\n      - main\n  workflow_dispatch:\n\nconcurrency:\n  group: railway-deploy-${{ github.ref }}\n  cancel-in-progress: true\n\njobs:\n  deploy:\n    name: نشر تلقائي على Railway\n    runs-on: ubuntu-latest\n    permissions:\n      contents: read\n\n    steps:\n      - name: استنساخ الكود\n        uses: actions/checkout@v4\n        with:\n          submodules: false\n\n      - name: إعداد Node.js\n        uses: actions/setup-node@v4\n        with:\n          node-version: '18'\n          cache: 'npm'\n\n      - name: تثبيت الحزم\n        run: npm ci\n\n      - name: Check Railway token\n        id: check-railway\n        env:\n          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}\n        run: |\n          if [ -n "$RAILWAY_TOKEN" ]; then\n            echo "deploy=true" >> $GITHUB_OUTPUT\n          else\n            echo "deploy=false" >> $GITHUB_OUTPUT\n            echo "RAILWAY_TOKEN is not configured, skipping deployment."\n          fi\n\n      - name: نشر على Railway\n        if: steps.check-railway.outputs.deploy == 'true'\n        env:\n          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}\n          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}\n          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}\n          RAILWAY_ENVIRONMENT: ${{ secrets.RAILWAY_ENVIRONMENT }}\n        run: |\n          npm install -g @railway/cli\n\n          EXTRA_ARGS=()\n          if [ -n "$RAILWAY_SERVICE_ID" ]; then\n            EXTRA_ARGS+=(--service "$RAILWAY_SERVICE_ID")\n          fi\n          if [ -n "$RAILWAY_PROJECT_ID" ]; then\n            EXTRA_ARGS+=(--project "$RAILWAY_PROJECT_ID")\n          fi\n          if [ -n "$RAILWAY_ENVIRONMENT" ]; then\n            EXTRA_ARGS+=(--environment "$RAILWAY_ENVIRONMENT")\n          fi\n\n          railway up "${EXTRA_ARGS[@]}" --detach\n
+name: Deploy to Railway
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: railway-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+      - run: npm ci
+      - run: npm test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Railway token
+        id: check-railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -n "$RAILWAY_TOKEN" ]; then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy=false" >> $GITHUB_OUTPUT
+            echo "RAILWAY_TOKEN is not configured, skipping deployment."
+          fi
+
+      - name: Deploy to Railway
+        if: steps.check-railway.outputs.deploy == 'true'
+        shell: bash
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ secrets.RAILWAY_SERVICE_ID }}
+          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT: ${{ secrets.RAILWAY_ENVIRONMENT }}
+        run: |
+          npm install -g @railway/cli
+
+          EXTRA_ARGS=()
+          if [ -n "$RAILWAY_SERVICE_ID" ]; then
+            EXTRA_ARGS+=(--service "$RAILWAY_SERVICE_ID")
+          fi
+          if [ -n "$RAILWAY_PROJECT_ID" ] && [ -n "$RAILWAY_ENVIRONMENT" ]; then
+            EXTRA_ARGS+=(--project "$RAILWAY_PROJECT_ID")
+            EXTRA_ARGS+=(--environment "$RAILWAY_ENVIRONMENT")
+          elif [ -n "$RAILWAY_ENVIRONMENT" ]; then
+            EXTRA_ARGS+=(--environment "$RAILWAY_ENVIRONMENT")
+          fi
+
+          railway up "${EXTRA_ARGS[@]}" --detach

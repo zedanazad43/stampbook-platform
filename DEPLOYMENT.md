@@ -4,18 +4,16 @@ This document provides comprehensive deployment instructions for the Stampcoin P
 
 ## Table of Contents
 
-<<<<<<< HEAD
-       Stampcoin    Docker  GitHub Pages  .
-
----
-
-## Table of Contents /  
-
 1. [Local Development](#local-development)
 2. [Docker Deployment](#docker-deployment)
 3. [GitHub Actions CI/CD](#github-actions-cicd)
-4. [GitHub Pages Deployment](#github-pages-deployment)
-5. [Cloud Platform Deployment](#cloud-platform-deployment)
+4. [GitHub Pages Deployment (Static Site)](#github-pages-deployment)
+5. [Backend API Deployment Options](#backend-api-deployment-options)
+   - [Railway](#railway)
+   - [Render](#render)
+   - [Heroku](#heroku)
+   - [Vercel](#vercel)
+   - [Fly.io](#flyio)
 6. [Environment Variables](#environment-variables)
 
 ---
@@ -176,15 +174,6 @@ This file defines the service configuration for Render deployment.
 **File**: `.github/workflows/pages.yml`
 
 Additional GitHub Pages configuration for static content.
-=======
-- [GitHub Pages Deployment (Static Site)](#github-pages-deployment)
-- [Backend API Deployment Options](#backend-api-deployment-options)
-  - [Railway](#railway)
-  - [Render](#render)
-  - [Heroku](#heroku)
-  - [Vercel](#vercel)
-  - [Fly.io](#flyio)
->>>>>>> a4f0e2ee76d23aa5eaf9d56063365761bc958a18
 
 ---
 
@@ -287,22 +276,7 @@ railway up
 
 #### Environment Variables
 
-<<<<<<< HEAD
-1. Create account at [Render.com](https://render.com)
-2. Create new Web Service
-3. Connect GitHub repository
-4. Configure:
-   - **Build Command**: `npm ci`
-   - **Start Command**: `node server.js`
-   - **Environment**: Node
-   - **Port**: 10000 (Render default)
-
-Alternatively, you can use the `render.yaml` file for automated configuration:
-1. Create a new Web Service
-2. Select "Configure with render.yaml"
-3. The service will automatically use the configuration in the repository
-=======
-In Railway dashboard  Variables tab, add:
+In Railway dashboard → Variables tab, add:
 
 ```
 SYNC_TOKEN=your-secret-token-here
@@ -373,7 +347,6 @@ Render automatically redeploys when you push to the main branch.
 - Starter: $7/month (always on)
 
 ---
->>>>>>> a4f0e2ee76d23aa5eaf9d56063365761bc958a18
 
 ### Heroku
 
