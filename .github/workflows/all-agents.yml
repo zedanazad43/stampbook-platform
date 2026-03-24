@@ -1,6 +1,3 @@
-# Combined GitHub Actions Workflows for Stampcoin Platform
-# This file consolidates all CI/CD agents into a single workflow file.
-
 name: Stampcoin Platform — All Agents
 
 on:
