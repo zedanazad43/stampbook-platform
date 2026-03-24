@@ -46,9 +46,9 @@ describe("market module", () => {
     });
 
     test("defaults missing optional fields", () => {
-      const item = market.addMarketItem("seller1", { name: "Test Stamp" });
+      const item = market.addMarketItem("seller1", { name: "Test Stamp", price: 10 });
       expect(item.description).toBe("");
-      expect(item.price).toBe(0);
+      expect(item.price).toBe(10);
       expect(item.type).toBe("stamp");
       expect(item.imageUrl).toBe("");
     });
@@ -59,6 +59,18 @@ describe("market module", () => {
 
     test("throws when item name is missing", () => {
       expect(() => market.addMarketItem("seller1", {})).toThrow();
+    });
+
+    test("throws when listing contains contact info before purchase", () => {
+      expect(() => market.addMarketItem("seller1", {
+        name: "Rare stamp",
+        description: "Contact me on whatsapp +971501234567"
+      })).toThrow("not allowed before purchase");
+    });
+
+    test("throws when price is zero or negative", () => {
+      expect(() => market.addMarketItem("seller1", { name: "Stamp", price: 0 })).toThrow("positive number");
+      expect(() => market.addMarketItem("seller1", { name: "Stamp", price: -10 })).toThrow("positive number");
     });
   });
 
@@ -99,13 +111,23 @@ describe("market module", () => {
   // --- getMarketItem ---
   describe("getMarketItem", () => {
     test("returns item by id", () => {
-      const created = market.addMarketItem("s1", { name: "Stamp X" });
+      const created = market.addMarketItem("s1", { name: "Stamp X", price: 20 });
       const fetched = market.getMarketItem(created.id);
       expect(fetched.name).toBe("Stamp X");
     });
 
     test("throws for unknown id", () => {
       expect(() => market.getMarketItem("nonexistent-id")).toThrow("Market item not found");
+    });
+
+    test("does not expose private seller contact details", () => {
+      const created = market.addMarketItem("s1", {
+        name: "Stamp X",
+        price: 50,
+        sellerContact: { email: "seller@example.com", phone: "+971501234567" }
+      });
+      const fetched = market.getMarketItem(created.id);
+      expect(fetched.sellerContactPrivate).toBeUndefined();
     });
   });
 
@@ -139,19 +161,40 @@ describe("market module", () => {
       const item = market.addMarketItem("user1", { name: "Stamp", price: 10 });
       expect(() => market.purchaseMarketItem(item.id, "user1")).toThrow("Cannot purchase your own item");
     });
+
+    test("records fee metadata and keeps contacts private in transaction output", () => {
+      const item = market.addMarketItem("seller1", {
+        name: "Stamp",
+        price: 100,
+        sellerContact: { email: "seller@example.com", addressLine1: "Hidden Street" }
+      });
+
+      const result = market.purchaseMarketItem(item.id, "buyer1", {
+        platformFee: 5,
+        sellerProceeds: 95,
+        feeCurrency: "STP",
+        buyerContact: { email: "buyer@example.com", phone: "+971501111111" }
+      });
+
+      expect(result.transaction.platformFee).toBe(5);
+      expect(result.transaction.sellerProceeds).toBe(95);
+      expect(result.transaction.feeCurrency).toBe("STP");
+      expect(result.transaction.sellerContactPrivate).toBeUndefined();
+      expect(result.transaction.buyerContactPrivate).toBeUndefined();
+    });
   });
 
   // --- removeMarketItem ---
   describe("removeMarketItem", () => {
     test("removes item when called by the seller", () => {
-      const item = market.addMarketItem("seller1", { name: "Stamp" });
+      const item = market.addMarketItem("seller1", { name: "Stamp", price: 10 });
       const result = market.removeMarketItem(item.id, "seller1");
       expect(result.success).toBe(true);
       expect(market.getAllMarketItems().length).toBe(0);
     });
 
     test("throws when called by non-seller", () => {
-      const item = market.addMarketItem("seller1", { name: "Stamp" });
+      const item = market.addMarketItem("seller1", { name: "Stamp", price: 10 });
       expect(() => market.removeMarketItem(item.id, "hacker")).toThrow("Only the seller");
     });
 
@@ -177,6 +220,27 @@ describe("market module", () => {
       const txns = market.getMarketTransactions({ buyerId: "buyer1" });
       expect(txns.length).toBe(1);
       expect(txns[0].buyerId).toBe("buyer1");
+    });
+  });
+
+  // --- getTransactionContactExchange ---
+  describe("getTransactionContactExchange", () => {
+    test("returns private contact details only for buyer/seller", () => {
+      const item = market.addMarketItem("seller1", {
+        name: "Stamp",
+        price: 100,
+        sellerContact: { email: "seller@example.com" }
+      });
+
+      const result = market.purchaseMarketItem(item.id, "buyer1", {
+        buyerContact: { email: "buyer@example.com" }
+      });
+
+      const byBuyer = market.getTransactionContactExchange(result.transaction.id, "buyer1");
+      expect(byBuyer.sellerContact.email).toBe("seller@example.com");
+      expect(byBuyer.buyerContact.email).toBe("buyer@example.com");
+
+      expect(() => market.getTransactionContactExchange(result.transaction.id, "intruder")).toThrow("Only the buyer or seller");
     });
   });
 });
