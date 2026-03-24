@@ -1,50 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stampcoin Platform</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stampcoin Platform (STP)</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #333; }
-    h1 { color: #2c7be5; }
-    .api-section { background: #f5f5f5; border-radius: 8px; padding: 20px; margin: 20px 0; }
-    code { background: #e8e8e8; padding: 2px 6px; border-radius: 4px; }
-    a { color: #2c7be5; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    header {
+      text-align: center;
+      padding: 3rem 1rem 1.5rem;
+    }
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #f0c040;
+      letter-spacing: -0.5px;
+    }
+    header p {
+      margin-top: 0.75rem;
+      font-size: 1.1rem;
+      color: #8b949e;
+      max-width: 520px;
+    }
+    .badge {
+      display: inline-block;
+      background: #238636;
+      color: #fff;
+      border-radius: 12px;
+      padding: 0.2rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      justify-content: center;
+      padding: 2rem 1rem;
+      max-width: 900px;
+      width: 100%;
+    }
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 260px;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: #f0c040; }
+    .card h2 { font-size: 1.1rem; color: #f0c040; margin-bottom: 0.5rem; }
+    .card p { font-size: 0.9rem; color: #8b949e; line-height: 1.5; }
+    .endpoints {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      max-width: 640px;
+      width: 100%;
+      margin: 0 1rem 2rem;
+    }
+    .endpoints h2 { font-size: 1.2rem; color: #f0c040; margin-bottom: 1rem; }
+    .endpoints ul { list-style: none; }
+    .endpoints li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #21262d;
+      font-size: 0.88rem;
+    }
+    .endpoints li:last-child { border-bottom: none; }
+    .method {
+      background: #1f6feb;
+      color: #fff;
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      min-width: 48px;
+      text-align: center;
+    }
+    .method.post { background: #238636; }
+    .method.put  { background: #9a6700; }
+    .method.del  { background: #b91c1c; }
+    code { color: #79c0ff; font-size: 0.85rem; }
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      font-size: 0.8rem;
+      color: #484f58;
+      text-align: center;
+    }
+    a { color: #58a6ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <h1>Stampcoin Platform</h1>
-  <p>Blockchain-powered digital stamps marketplace and wallet.</p>
+  <header>
+    <h1>🪙 Stampcoin Platform</h1>
+    <p>A blockchain-inspired digital stamps platform with wallet, marketplace, and BEP-20 token features.</p>
+    <span class="badge">v1.0.0 · Live on GitHub Pages</span>
+  </header>
 
-  <div class="api-section">
-    <h2>Wallet API</h2>
+  <div class="cards">
+    <div class="card">
+      <h2>💼 Digital Wallet</h2>
+      <p>Create wallets, transfer balances, manage stamps, and view full transaction history.</p>
+    </div>
+    <div class="card">
+      <h2>🛒 Marketplace</h2>
+      <p>List, buy, update, and remove digital stamp items with full transaction tracking.</p>
+    </div>
+    <div class="card">
+      <h2>⛓️ Blockchain</h2>
+      <p>BEP-20-compatible STP token with supply tracking, minting, and per-address balances.</p>
+    </div>
+  </div>
+
+  <div class="endpoints">
+    <h2>Key API Endpoints</h2>
     <ul>
-      <li><code>POST /api/wallet/create</code> — Create a new wallet</li>
-      <li><code>GET /api/wallet/:userId</code> — Get wallet by user ID</li>
-      <li><code>POST /api/wallet/transfer</code> — Transfer balance between wallets</li>
-      <li><code>GET /api/wallet/:userId/transactions</code> — Get transaction history</li>
+      <li><span class="method post">POST</span><code>/api/wallet/create</code></li>
+      <li><span class="method">GET</span><code>/api/wallet/:userId</code></li>
+      <li><span class="method post">POST</span><code>/api/wallet/transfer</code></li>
+      <li><span class="method post">POST</span><code>/api/market/items</code></li>
+      <li><span class="method">GET</span><code>/api/market/items</code></li>
+      <li><span class="method post">POST</span><code>/api/market/items/:itemId/buy</code></li>
+      <li><span class="method">GET</span><code>/api/blockchain/supply</code></li>
+      <li><span class="method post">POST</span><code>/api/blockchain/mint</code></li>
     </ul>
   </div>
 
-  <div class="api-section">
-    <h2>Market API</h2>
-    <ul>
-      <li><code>GET /api/market/items</code> — List market items</li>
-      <li><code>POST /api/market/items</code> — List a new item</li>
-      <li><code>POST /api/market/items/:itemId/buy</code> — Purchase an item</li>
-      <li><code>GET /api/market/transactions</code> — Get market transactions</li>
-    </ul>
-  </div>
-
-  <div class="api-section">
-    <h2>Blockchain API</h2>
-    <ul>
-      <li><code>GET /api/blockchain/info</code> — Get token metadata</li>
-      <li><code>GET /api/blockchain/supply</code> — Get token supply stats</li>
-      <li><code>GET /api/blockchain/balance/:address</code> — Get address balance</li>
-    </ul>
-  </div>
-
-  <p>See the <a href="https://github.com/zedanazad43/stp/blob/main/WALLET_API.md">Wallet API docs</a> and <a href="https://github.com/zedanazad43/stp/blob/main/MARKET_API.md">Market API docs</a> for details.</p>
+  <footer>
+    Built with ❤️ ·
+    <a href="https://github.com/zedanazad43/stp" target="_blank" rel="noopener">GitHub Repository</a> ·
+    <a href="https://github.com/zedanazad43/stp/blob/main/WALLET_API.md" target="_blank" rel="noopener">Wallet API Docs</a> ·
+    <a href="https://github.com/zedanazad43/stp/blob/main/MARKET_API.md" target="_blank" rel="noopener">Market API Docs</a>
+  </footer>
 </body>
 </html>
