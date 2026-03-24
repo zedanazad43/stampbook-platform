@@ -4,6 +4,13 @@
 
 The Market Institution API provides endpoints for managing a digital marketplace where users can list, browse, update, and purchase digital stamps and collectibles.
 
+### Privacy & Commission Policy
+
+- Sharing personal contact details (phone, email, social handles, personal address) in public listing fields is blocked before purchase.
+- Free listings are not allowed (`price` must be a positive number).
+- Each completed purchase charges a mandatory platform commission in `STP` and routes it to the platform treasury wallet.
+- Buyer/seller contact details are only revealed through a dedicated post-purchase endpoint and only to transaction participants.
+
 ## Base URL
 
 ```
@@ -91,7 +98,15 @@ List a new item for sale in the market.
   "description": "Vintage 1950s stamp",
   "price": 100,
   "type": "stamp",
-  "imageUrl": "https://example.com/image.jpg"
+  "imageUrl": "https://example.com/image.jpg",
+  "sellerContact": {
+    "fullName": "Seller Name",
+    "email": "seller@example.com",
+    "phone": "+971501234567",
+    "addressLine1": "Building 12, Street 4",
+    "city": "Dubai",
+    "country": "UAE"
+  }
 }
 ```
 
@@ -130,7 +145,7 @@ Update an existing market item. Only the seller can update their own listing.
 ```
 
 - `userId` (required): Must match the item's `sellerId`.
-- `price`, `description`, `status`, `imageUrl`: At least one must be provided.
+- `price`, `description`, `status`, `imageUrl`, `sellerContact`: At least one must be provided.
 
 **Example Response:**
 ```json
@@ -158,12 +173,18 @@ Update an existing market item. Only the seller can update their own listing.
 
 **POST** `/api/market/items/:itemId/buy`
 
-Purchase an item from the market. If the item has a price > 0, the buyer's wallet balance is transferred to the seller.
+Purchase an item from the market. The system applies a mandatory platform commission in `STP` and splits payment into seller proceeds + platform fee.
 
 **Request Body:**
 ```json
 {
-  "buyerId": "user456"
+  "buyerId": "user456",
+  "buyerContact": {
+    "fullName": "Buyer Name",
+    "email": "buyer@example.com",
+    "phone": "+971509998887",
+    "addressLine1": "Delivery Address"
+  }
 }
 ```
 
@@ -176,6 +197,10 @@ Purchase an item from the market. If the item has a price > 0, the buyer's walle
     "sellerId": "user123",
     "buyerId": "user456",
     "price": 100,
+    "platformFee": 5,
+    "sellerProceeds": 95,
+    "feeCurrency": "STP",
+    "contactExchangeUnlocked": true,
     "timestamp": "2026-02-07T21:26:00.000Z"
   },
   "item": {
@@ -184,6 +209,38 @@ Purchase an item from the market. If the item has a price > 0, the buyer's walle
     "name": "Rare Stamp 1",
     "status": "sold"
   }
+}
+```
+
+---
+
+### 8. Get Contact Exchange Data (Post-Purchase)
+
+**GET** `/api/market/transactions/:transactionId/contact-exchange?userId=:userId`
+
+Returns buyer/seller private contact details only after a completed transaction and only if `userId` belongs to the buyer or seller.
+
+**Example Request:**
+```bash
+curl -X GET "http://localhost:8080/api/market/transactions/txn_123/contact-exchange?userId=user456"
+```
+
+**Example Response:**
+```json
+{
+  "transactionId": "txn_123",
+  "itemId": "item_123",
+  "sellerId": "user123",
+  "buyerId": "user456",
+  "sellerContact": {
+    "fullName": "Seller Name",
+    "email": "seller@example.com"
+  },
+  "buyerContact": {
+    "fullName": "Buyer Name",
+    "email": "buyer@example.com"
+  },
+  "unlockedAt": "2026-02-07T21:26:00.000Z"
 }
 ```
 
@@ -282,13 +339,16 @@ curl -X PUT "http://localhost:8080/api/market/items/ITEM_ID" \
 # 4. Purchase an item
 curl -X POST "http://localhost:8080/api/market/items/ITEM_ID/buy" \
   -H "Content-Type: application/json" \
-  -d '{"buyerId": "buyer1"}'
+  -d '{"buyerId": "buyer1", "buyerContact": {"email": "buyer@example.com"}}'
 
 # 5. View transaction history
 curl -X GET "http://localhost:8080/api/market/transactions"
 
 # 6. View transaction history for a specific buyer
 curl -X GET "http://localhost:8080/api/market/transactions?buyerId=buyer1"
+
+# 7. Get post-purchase contact exchange data (buyer/seller only)
+curl -X GET "http://localhost:8080/api/market/transactions/TXN_ID/contact-exchange?userId=buyer1"
 ```
 
 ---
