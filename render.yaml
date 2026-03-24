@@ -12,6 +12,12 @@ services:
         value: production
       - key: PORT
         value: 10000
+      - key: BASE_URL
+        sync: false
+      - key: CANONICAL_HOST
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
       # Add any additional environment variables required by your app
       # - key: SYNC_TOKEN
       #   value: your-sync-token-here
@@ -23,13 +29,3 @@ services:
       timeout: 3s
       method: GET
       retries: 3
-    dockerfilePath: Dockerfile
-    dockerContext: .
-    # Add persistence if needed
-    # persistentDisk:
-    #   sizeGB: 1
-    #   mountPath: /data
-    # Mount the AI Agent Expert directory
-    # persistentDisk:
-    #   sizeGB: 1
-    #   mountPath: /src
