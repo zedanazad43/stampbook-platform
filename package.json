@@ -15,9 +15,11 @@
     "docker:run": "docker run -p 8080:8080 stampcoin-platform"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "js-yaml": "^4.1.1"
+    "js-yaml": "^4.1.1",
+    "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
@@ -26,4 +28,3 @@
     "nodemon": "^3.1.14"
   }
 }
-

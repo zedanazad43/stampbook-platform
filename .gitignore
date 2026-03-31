@@ -71,3 +71,4 @@ git/
 git.worktrees/
 stampcoin-platform/
 stp/
+.vercel
