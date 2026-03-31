@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stampbook | منصة المقتنيات الرقمية والطوابع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #1a1a3a; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(45deg, #f5af19, #ff6b35); border-radius: 10px; }
+        .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 3s infinite; }
+        @keyframes twinkle { 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+        .navbar {
+            position: fixed; top: 0; width: 100%; background: rgba(15,25,35,0.95); backdrop-filter: blur(10px);
+            z-index: 1000; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #f5af19, #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
+        .nav-links a { color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 30px; transition: 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: linear-gradient(135deg, #ff6b35, #f5af19); transform: translateY(-2px); }
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 100px 20px; position: relative; }
+        .hero h1 { font-size: 64px; margin-bottom: 20px; background: linear-gradient(135deg, #fff, #f5af19, #ff6b35); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 24px; margin-bottom: 30px; }
+        .btn-primary { background: linear-gradient(135deg, #ff6b35, #f5af19); padding: 15px 35px; border: none; border-radius: 50px; cursor: pointer; color: white; font-weight: bold; transition: 0.3s; }
+        .btn-secondary { background: transparent; border: 2px solid #ff6b35; padding: 15px 35px; border-radius: 50px; cursor: pointer; color: #ff6b35; font-weight: bold; }
+        .btn-primary:hover, .btn-secondary:hover { transform: scale(1.05); }
+        .section { padding: 80px 40px; position: relative; z-index: 1; }
+        .section-title { text-align: center; font-size: 42px; margin-bottom: 50px; }
+        .section-title:after { content: ''; display: block; width: 80px; height: 4px; background: linear-gradient(90deg, #ff6b35, #f5af19); margin: 15px auto 0; border-radius: 2px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; max-width: 1400px; margin: 0 auto; }
+        .floating-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border-radius: 20px; overflow: hidden; transition: 0.4s; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); }
+        .floating-card:hover { transform: translateY(-15px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .card-image { width: 100%; height: 250px; object-fit: cover; }
+        .card-content { padding: 20px; }
+        .price { font-size: 28px; font-weight: bold; color: #f5af19; margin: 10px 0; }
+        .gold-banner { background: linear-gradient(135deg, #f5af19, #f12711); border-radius: 30px; padding: 60px; text-align: center; margin: 40px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(245,175,25,0.4);} 50%{box-shadow:0 0 0 20px rgba(245,175,25,0);} }
+        .gold-banner h2 { font-size: 48px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; text-align: center; margin: 60px 0; }
+        .stat-number { font-size: 48px; font-weight: bold; color: #f5af19; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: linear-gradient(135deg, #1a1f3a, #0f0c29); padding: 40px; border-radius: 20px; max-width: 500px; width: 90%; }
+        .modal-content input, .modal-content textarea, .modal-content select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white; }
+        .fab { position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #ff6b35, #f5af19); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+        .loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f0c29; display: flex; justify-content: center; align-items: center; z-index: 9999; transition: 0.5s; }
+        .loader.hide { opacity: 0; pointer-events: none; }
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(255,107,53,0.3); border-top-color: #ff6b35; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 768px) { .navbar { padding: 15px 20px; } .nav-links { display: none; } .hero h1 { font-size: 32px; } .section { padding: 40px 20px; } .gold-banner { margin: 20px; padding: 30px; } .gold-banner h2 { font-size: 28px; } }
+    </style>
+</head>
+<body>
+<div class="loader" id="loader"><div class="spinner"></div></div>
+<div class="fab" onclick="showModal('register')"><i class="fas fa-plus" style="font-size: 24px;"></i></div>
+<div class="navbar">
+    <div class="logo"> Stampbook | STP</div>
+    <div class="nav-links">
+        <a href="#" class="active" data-page="home"> الرئيسية</a>
+        <a href="#" data-page="marketplace"> المتجر</a>
+        <a href="#" data-page="nft"> NFT Studio</a>
+        <a href="#" data-page="trading"> تداول</a>
+        <a href="#" data-page="wallets"> محفظتي</a>
+        <a href="#" data-page="gold"> الوبيل الذهبي</a>
+    </div>
+    <div id="userInfo"><button class="btn-secondary" style="padding:8px 20px;" onclick="showModal('login')">دخول</button><button class="btn-primary" style="padding:8px 20px;" onclick="showModal('register')">تسجيل</button></div>
+</div>
+<div class="stars" id="stars"></div>
+
+<!-- Home Page -->
+<div id="homePage" class="page active-page">
+    <div class="hero"><div><h1> انشر وتداول المقتنيات الرقمية</h1><p>أول منصة اجتماعية متكاملة للطوابع والمقتنيات بتقنية Web3</p><div><button class="btn-primary" onclick="showModal('register')"> ابدأ الآن</button><button class="btn-secondary" onclick="navigateTo('marketplace')"> استكشف المتجر</button></div></div></div>
+    <div class="section"><div class="stats-grid"><div><div class="stat-number" id="statUsers">0</div><div>مستخدم نشط</div></div><div><div class="stat-number" id="statNFTs">0</div><div>NFT مسكوك</div></div><div><div class="stat-number" id="statVolume">0</div><div>حجم التداول</div></div></div></div>
+    <div class="gold-banner"><h2> الوبيل الذهبي - أولمبيا برلين أغسطس 2026 </h2><p>احجز جناحك الآن واحصل على خصم 30% + NFT حصري</p><button class="btn-primary" onclick="navigateTo('gold')"> احجز الآن</button></div>
+    <div class="section"><h2 class="section-title"> أبرز المقتنيات</h2><div class="card-grid" id="featuredNFTs"></div></div>
+</div>
+
+<!-- Marketplace Page -->
+<div id="marketplacePage" class="page" style="display:none"><div class="section"><h2 class="section-title"> سوق المقتنيات</h2><div style="text-align:center;margin-bottom:30px"><button class="btn-primary" onclick="showListingModal()">+ إضافة عرض</button></div><div class="card-grid" id="marketplaceList"></div></div></div>
+
+<!-- NFT Page -->
+<div id="nftPage" class="page" style="display:none"><div class="section"><h2 class="section-title"> NFT Studio</h2><div class="floating-card" style="max-width:500px;margin:0 auto 40px"><div class="card-content"><h3> سك NFT جديد</h3><input type="text" id="nftName" placeholder="اسم NFT"><textarea id="nftDesc" placeholder="وصف NFT" rows="3"></textarea><input type="text" id="nftImage" placeholder="رابط الصورة"><input type="number" id="nftPrice" placeholder="السعر"><button class="btn-primary" onclick="mintNFT()" style="width:100%"> سك NFT</button></div></div><h2 class="section-title"> جميع NFTs</h2><div class="card-grid" id="allNFTs"></div></div></div>
+
+<!-- Trading Page -->
+<div id="tradingPage" class="page" style="display:none"><div class="section"><h2 class="section-title"> منصة التداول</h2><div class="floating-card" style="max-width:600px;margin:0 auto"><div class="card-content"><h3>سعر STP الحالي</h3><div class="price" id="stpPrice">$0.40 USD</div><p>حجم التداول 24h: <span id="tradingVolume">$1.2M</span></p><button class="btn-primary" onclick="showModal('login')">ابدأ التداول</button></div></div></div></div>
+
+<!-- Wallets Page -->
+<div id="walletsPage" class="page" style="display:none"><div class="section"><h2 class="section-title"> محفظتي الرقمية</h2><div style="text-align:center;margin-bottom:30px"><button class="btn-primary" onclick="createWallet()">+ إنشاء محفظة</button></div><div class="card-grid" id="walletsList"></div></div></div>
+
+<!-- Gold Event Page -->
+<div id="goldPage" class="page" style="display:none"><div class="section"><div class="gold-banner" style="margin:0"><h2> الوبيل الذهبي - برلين 2026</h2><p> 1-15 أغسطس 2026 |  Olympiastadion Berlin</p><div style="max-width:400px;margin:30px auto"><input type="text" id="goldName" placeholder="الاسم الكامل"><input type="email" id="goldEmail" placeholder="البريد"><input type="tel" id="goldPhone" placeholder="الجوال"><select id="goldPackage"><option value="bronze"> برونزية - 500€</option><option value="silver"> فضية - 1500€</option><option value="gold"> ذهبية - 5000€</option><option value="investor"> مستثمر - 25000€</option></select><button class="btn-primary" onclick="bookGoldEvent()" style="width:100%"> احجز</button></div></div></div></div>
+
+<!-- Modals -->
+<div id="authModal" class="modal"><div class="modal-content"><span style="float:right;font-size:24px;cursor:pointer" onclick="closeModal()">&times;</span><h2 id="modalTitle">دخول</h2><div id="nameField" style="display:none"><input type="text" id="regName" placeholder="الاسم"></div><input type="email" id="authEmail" placeholder="البريد"><input type="password" id="authPassword" placeholder="كلمة المرور"><button class="btn-primary" onclick="submitAuth()" style="width:100%">تأكيد</button></div></div>
+<div id="listingModal" class="modal"><div class="modal-content"><span style="float:right;font-size:24px;cursor:pointer" onclick="closeListingModal()">&times;</span><h2>إضافة عرض</h2><input type="text" id="listingTitle" placeholder="العنوان"><textarea id="listingDesc" placeholder="الوصف"></textarea><input type="number" id="listingPrice" placeholder="السعر"><input type="text" id="listingImage" placeholder="رابط الصورة"><button class="btn-primary" onclick="addListing()" style="width:100%">نشر</button></div></div>
+
+<script>
+    for(let i=0;i<150;i++){let s=document.createElement('div');s.className='star';s.style.width=Math.random()*3+'px';s.style.height=s.style.width;s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=Math.random()*5+'s';document.getElementById('stars').appendChild(s);}
+    window.addEventListener('load',()=>{document.getElementById('loader').classList.add('hide');setTimeout(()=>document.getElementById('loader').style.display='none',500);});
+    let token=localStorage.getItem('token'),currentMode='login';
+    async function api(url,options={}){const res=await fetch(url,{...options,headers:{'Content-Type':'application/json',...(token?{'Authorization':`Bearer ${token}`}:{})}});return res.ok?await res.json():null;}
+    async function loadData(){await loadNFTs();await loadMarketplace();if(token)await loadUser();updateStats();}
+    async function loadUser(){const u=await api('/api/auth/me');if(u){document.getElementById('userInfo').innerHTML=`<span style="margin-left:10px;"> ${u.name}</span><button class="btn-secondary" onclick="logout()">خروج</button>`;await loadWallets();}}
+    async function loadNFTs(){const n=await api('/api/nft/all')||[];document.getElementById('allNFTs').innerHTML=n.map(n=>`<div class="floating-card"><img src="${n.imageUrl||'https://placehold.co/400x300/1a1f3a/ff6b35?text=NFT'}" class="card-image"><div class="card-content"><h3>${n.name}</h3><p>${n.description||'مقتنى رقمي'}</p><div class="price">${n.price} STP</div></div></div>`).join('');document.getElementById('featuredNFTs').innerHTML=n.slice(0,3).map(n=>`<div class="floating-card"><img src="${n.imageUrl||'https://placehold.co/400x300/1a1f3a/ff6b35?text=NFT'}" class="card-image"><div class="card-content"><h3>${n.name}</h3><div class="price">${n.price} STP</div></div></div>`).join('');}
+    async function loadMarketplace(){const l=await api('/api/marketplace/listings')||[];document.getElementById('marketplaceList').innerHTML=l.map(l=>`<div class="floating-card"><img src="${l.imageUrl||'https://placehold.co/400x300/1a1f3a/ff6b35?text=Item'}" class="card-image"><div class="card-content"><h3>${l.title}</h3><p>${l.description}</p><div class="price">${l.price} STP</div></div></div>`).join('');}
+    async function loadWallets(){const w=await api('/api/wallets/my');document.getElementById('walletsList').innerHTML=w.map(w=>`<div class="floating-card"><div class="card-content"><i class="fas fa-wallet" style="font-size:32px;color:#f5af19"></i><h3>${w.address}</h3><div class="price">${w.balance} STP</div></div></div>`).join('');}
+    async function updateStats(){const n=await api('/api/nft/all')||[];document.getElementById('statNFTs').innerText=n.length;document.getElementById('statUsers').innerText='1,247';document.getElementById('statVolume').innerText='124K';}
+    async function mintNFT(){if(!token){alert('سجل دخول أولا');return;}const r=await api('/api/nft/mint',{method:'POST',body:JSON.stringify({name:document.getElementById('nftName').value,description:document.getElementById('nftDesc').value,imageUrl:document.getElementById('nftImage').value,price:parseInt(document.getElementById('nftPrice').value)})});if(r){alert(' تم سك NFT');loadNFTs();}else alert(' فشل');}
+    async function createWallet(){if(!token){alert('سجل دخول أولا');return;}const r=await api('/api/wallets/create',{method:'POST',body:JSON.stringify({})});if(r){alert(' تم إنشاء المحفظة');loadWallets();}}
+    async function addListing(){if(!token){alert('سجل دخول أولا');return;}const r=await api('/api/marketplace/listings',{method:'POST',body:JSON.stringify({title:document.getElementById('listingTitle').value,description:document.getElementById('listingDesc').value,price:parseInt(document.getElementById('listingPrice').value),imageUrl:document.getElementById('listingImage').value})});if(r){alert(' تم النشر');loadMarketplace();closeListingModal();}}
+    async function bookGoldEvent(){const n=document.getElementById('goldName').value,e=document.getElementById('goldEmail').value;if(!n||!e){alert('أدخل اسمك وبريدك');return;}const r=await fetch('/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,password:'gold2026'})});if(r.ok)alert(' تم تسجيل اهتمامك! سنتواصل معك لحجز جناحك في برلين');else alert('تم استلام طلبك');}
+    function navigateTo(p){document.querySelectorAll('[id$="Page"]').forEach(el=>el.style.display='none');document.getElementById(p+'Page').style.display='block';document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));document.querySelector(`[data-page="${p}"]`).classList.add('active');}
+    function showModal(m){currentMode=m;document.getElementById('modalTitle').innerText=m==='register'?'إنشاء حساب':'دخول';document.getElementById('nameField').style.display=m==='register'?'block':'none';document.getElementById('authModal').style.display='flex';}
+    async function submitAuth(){const e=document.getElementById('authEmail').value,p=document.getElementById('authPassword').value;let url='/api/auth/login',body={email:e,password:p};if(currentMode==='register'){url='/api/auth/register';const n=document.getElementById('regName').value;body={name:n,email:e,password:p};}const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(r.ok){localStorage.setItem('token',d.token);token=d.token;alert(' تم بنجاح');closeModal();location.reload();}else alert(d.error||'خطأ');}
+    function logout(){localStorage.removeItem('token');location.reload();}
+    function closeModal(){document.getElementById('authModal').style.display='none';}
+    function showListingModal(){document.getElementById('listingModal').style.display='flex';}
+    function closeListingModal(){document.getElementById('listingModal').style.display='none';}
+    loadData();
+</script>
+</body>
+</html>
