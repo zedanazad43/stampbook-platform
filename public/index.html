@@ -254,3 +254,32 @@
 
 
 
+<!-- AR Viewer Integration -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script>
+// AR Viewer for Stamps
+let scene, camera, renderer;
+function initARViewer(stampImage) {
+    const container = document.getElementById('arViewer');
+    if(!container) return;
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(300, 300);
+    container.appendChild(renderer.domElement);
+    
+    const geometry = new THREE.BoxGeometry(1, 1, 0.05);
+    const texture = new THREE.TextureLoader().load(stampImage);
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    camera.position.z = 2;
+    
+    function animate() {
+        requestAnimationFrame(animate);
+        cube.rotation.y += 0.01;
+        renderer.render(scene, camera);
+    }
+    animate();
+}
+</script>
