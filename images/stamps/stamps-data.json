@@ -1,0 +1,47 @@
+﻿[
+  {
+    "id": 1,
+    "name": "طابع البريد المصري 1866",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Egypt_1866_5pa_blue.jpg/300px-Egypt_1866_5pa_blue.jpg",
+    "year": 1866,
+    "country": "مصر",
+    "value": 5000,
+    "rarity": "نادر جداً"
+  },
+  {
+    "id": 2,
+    "name": "طابع أولمبياد برلين 1936",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Berlin_1936_Olympic_stamp.jpg/300px-Berlin_1936_Olympic_stamp.jpg",
+    "year": 1936,
+    "country": "ألمانيا",
+    "value": 12500,
+    "rarity": "نادر"
+  },
+  {
+    "id": 3,
+    "name": "طابع الملك فاروق",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Farouk_Egypt_stamp.jpg/300px-Farouk_Egypt_stamp.jpg",
+    "year": 1944,
+    "country": "مصر",
+    "value": 3500,
+    "rarity": "نادر"
+  },
+  {
+    "id": 4,
+    "name": "طابع حجازي 1916",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Hejaz_1916_1pi.jpg/300px-Hejaz_1916_1pi.jpg",
+    "year": 1916,
+    "country": "الحجاز",
+    "value": 8500,
+    "rarity": "نادر جداً"
+  },
+  {
+    "id": 5,
+    "name": "طابع البريد السعودي",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Saudi_Arabia_1960_stamp.jpg/300px-Saudi_Arabia_1960_stamp.jpg",
+    "year": 1960,
+    "country": "السعودية",
+    "value": 1200,
+    "rarity": "متوسطة"
+  }
+]
