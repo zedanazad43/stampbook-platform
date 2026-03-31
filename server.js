@@ -93,3 +93,41 @@ app.listen(PORT, () => {
   console.log(` http://localhost:${PORT}`);
   console.log(` Mode: In-Memory Storage\n`);
 });
+// إضافة إلى server.js - نظام الدفع
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
+
+// إنشاء طلب دفع
+app.post('/api/payment/create-payment-intent', verifyToken, async (req, res) => {
+  try {
+    const { amount, currency = 'usd', itemId } = req.body;
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount * 100,
+      currency: currency,
+      metadata: { userId: req.userId, itemId: itemId }
+    });
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PayPal Webhook
+app.post('/api/payment/paypal-webhook', async (req, res) => {
+  const { event_type, resource } = req.body;
+  if (event_type === 'PAYMENT.CAPTURE.COMPLETED') {
+    // تحديث حالة الشراء في قاعدة البيانات
+    console.log('تم استلام دفعة PayPal:', resource);
+  }
+  res.json({ received: true });
+});
+// النشرة البريدية
+let subscribers = [];
+app.post('/api/newsletter/subscribe', (req, res) => {
+  const { email } = req.body;
+  if (!subscribers.find(s => s.email === email)) {
+    subscribers.push({ email, subscribedAt: new Date() });
+    console.log(`📧 مشترك جديد: ${email}`);
+  }
+  res.json({ success: true, message: 'تم الاشتراك' });
+});
+app.get('/api/newsletter/subscribers', (req, res) => res.json(subscribers));
