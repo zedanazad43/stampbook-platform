@@ -1,0 +1,57 @@
+<!-- ????? ??? public/index.html ??? ??? </body> -->
+<div id="tokenSalePage" class="page" style="display:none">
+    <div class="section">
+        <h2 class="section-title">?? ???? ????? STP</h2>
+        <div class="floating-card" style="max-width: 500px; margin: 0 auto;">
+            <div class="card-content">
+                <h3>??? ?????? ??????</h3>
+                <div class="price" id="stpPriceDisplay">0.40 USDT</div>
+                <p id="saleStatus" style="color: #4CAF50;">? ???????? ??????</p>
+                <input type="number" id="ethAmount" placeholder="?????? ?? ETH" step="0.1">
+                <p>????? ???: <span id="stpAmount">0</span> STP</p>
+                <button class="btn-primary" onclick="buyTokens()" style="width: 100%;">?? ???? ????</button>
+                <div id="txResult" style="margin-top: 15px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ??? ????? ????????
+let contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+let stpContract;
+
+// ????? Web3
+if (window.ethereum) {
+    window.web3 = new Web3(window.ethereum);
+    window.ethereum.request({ method: 'eth_requestAccounts' });
+    stpContract = new web3.eth.Contract(abi, contractAddress);
+}
+
+// ???? ???? STP ????????
+document.getElementById('ethAmount')?.addEventListener('input', (e) => {
+    const eth = parseFloat(e.target.value) || 0;
+    const stp = eth / 0.40;
+    document.getElementById('stpAmount').innerText = stp.toFixed(2);
+});
+
+// ???? ???????
+async function buyTokens() {
+    const amount = document.getElementById('ethAmount').value;
+    if (!amount || amount <= 0) {
+        alert('?????? ????? ???? ????');
+        return;
+    }
+    
+    try {
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        const tx = await stpContract.methods.buyTokens().send({
+            from: accounts[0],
+            value: web3.utils.toWei(amount, 'ether')
+        });
+        document.getElementById('txResult').innerHTML = `<p style="color: #4CAF50;">? ?? ?????? ?????! ??????: ${tx.transactionHash}</p>`;
+    } catch (error) {
+        document.getElementById('txResult').innerHTML = `<p style="color: #f44336;">? ??? ??????: ${error.message}</p>';
+    }
+}
+</script>

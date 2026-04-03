@@ -1,30 +1,24 @@
-{
-  "name": "stampcoin-platform",
-  "version": "2.0.0",
-  "description": "Stampcoin Digital Platform - Blockchain-based digital stamps platform with wallet and marketplace",
+﻿{
+  "name": "stampbook-platform",
+  "version": "3.0.0",
+  "type": "module",
+  "description": "Stampbook - منصة الطوابع والمقتنيات الرقمية",
   "main": "server.js",
-  "license": "MIT",
-  "private": true,
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "build": "mkdir -p public && echo 'Static site ready for deployment'",
-    "test": "jest tests/*.test.js",
-    "lint": "echo 'Linting can be configured'",
-    "docker:build": "docker build -t stampcoin-platform .",
-    "docker:run": "docker run -p 8080:8080 stampcoin-platform"
+    "dev": "nodemon server.js",
+    "compile": "npx hardhat compile"
   },
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "js-yaml": "^4.1.1",
-    "jsonwebtoken": "^9.0.3"
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "dotenv": "^16.0.0"
   },
   "devDependencies": {
+    "hardhat": "^2.22.0",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.17",
-    "jest": "^30.2.0",
-    "nodemon": "^3.1.14"
+    "@openzeppelin/contracts": "^5.0.0"
   }
 }

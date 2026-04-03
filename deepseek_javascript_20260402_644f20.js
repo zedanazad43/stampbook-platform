@@ -1,0 +1,1 @@
+await stampbookCoin.withdrawSaleFunds();

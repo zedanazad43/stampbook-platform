@@ -1,0 +1,25 @@
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in id_ed25519
+Your public key has been saved in id_ed25519.pub
+The key fingerprint is:
+SHA256:MRpcnCYfAhycbCTTAfHKIctCpKsVrQiU6iogPxEl0ag azadz@Mickey
+The key's randomart image is:
++--[ED25519 256]--+
+| oB%== ...       |
+|+.o=X.o.=        |
+|=oo+o o=o.       |
+|E*.=   o.o       |
+|*.=.  . S        |
+|=o.              |
+|=. .             |
+|o o              |
+|.  .             |
++----[SHA256]-----+
+PS C:\Users\azadz\.ssh>
+PS C:\Users\azadz\.ssh> # 5. اضغط Enter مرتين لتخطي passphrase
+PS C:\Users\azadz\.ssh>
+PS C:\Users\azadz\.ssh> # عرض المفتاح العمومي
+PS C:\Users\azadz\.ssh> Get-Content "$env:USERPROFILE\.ssh\id_ed25519.pub"
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMWgBeCzGxYayqCZhcC4egwPe2FrRpXUomu1r8wvWUHD azadz@Mickey
+PS C:\Users\azadz\.ssh>
