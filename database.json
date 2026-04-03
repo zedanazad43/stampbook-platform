@@ -1,0 +1,133 @@
+{
+  "users": [
+    {
+      "id": "1775203075323",
+      "name": "Azad Zedan",
+      "email": "zedanazad43@gmail.com",
+      "phone": "",
+      "password": "$2a$10$YYnGqAF7Gp8A9LYq.gOVweD20JfeXaiTj3rrMB.Uk5Kda0sFlcS5K",
+      "stpBalance": 100,
+      "points": 50,
+      "createdAt": "2026-04-03T07:57:55.323Z"
+    }
+  ],
+  "nfts": [
+    {
+      "id": "NFT_1775210677802_1",
+      "name": "طابع البريد المصري 1866",
+      "description": "أول طابع بريدي مصري | صدر في القاهرة، مصر عام 1866",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Egypt_1866_5pa_blue.jpg/500px-Egypt_1866_5pa_blue.jpg",
+      "price": 50,
+      "originalValue": 5000,
+      "investmentReturn": 12.5,
+      "roi": "25%",
+      "ownerId": null,
+      "status": "available",
+      "createdAt": "2026-04-03T10:04:37.802Z",
+      "metadata": {
+        "stampId": "EG-001",
+        "year": 1866,
+        "country": "مصر",
+        "city": "القاهرة",
+        "rarity": "نادر جداً",
+        "category": "تاريخي",
+        "history": "أول طابع بريدي مصري",
+        "culture": "يعكس تطور البريد في مصر"
+      }
+    },
+    {
+      "id": "NFT_1775210677805_2",
+      "name": "طابع الملك فاروق",
+      "description": "طابع بمناسبة تتويج الملك فاروق | صدر في الإسكندرية، مصر عام 1944",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Farouk_Egypt_stamp.jpg/500px-Farouk_Egypt_stamp.jpg",
+      "price": 35,
+      "originalValue": 3500,
+      "investmentReturn": 8.75,
+      "roi": "25%",
+      "ownerId": null,
+      "status": "available",
+      "createdAt": "2026-04-03T10:04:37.805Z",
+      "metadata": {
+        "stampId": "EG-002",
+        "year": 1944,
+        "country": "مصر",
+        "city": "الإسكندرية",
+        "rarity": "نادر",
+        "category": "ملكي",
+        "history": "طابع بمناسبة تتويج الملك فاروق",
+        "culture": "يظهر الملك فاروق"
+      }
+    },
+    {
+      "id": "NFT_1775210677805_3",
+      "name": "Gold Wheel Berlin 1936",
+      "description": "طابع أولمبياد برلين 1936 | صدر في برلين، ألمانيا عام 1936",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Berlin_1936_Olympic_stamp.jpg/500px-Berlin_1936_Olympic_stamp.jpg",
+      "price": 125,
+      "originalValue": 12500,
+      "investmentReturn": 31.25,
+      "roi": "25%",
+      "ownerId": null,
+      "status": "available",
+      "createdAt": "2026-04-03T10:04:37.805Z",
+      "metadata": {
+        "stampId": "DE-001",
+        "year": 1936,
+        "country": "ألمانيا",
+        "city": "برلين",
+        "rarity": "نادر",
+        "category": "أولمبي",
+        "history": "طابع أولمبياد برلين 1936",
+        "culture": "طابع أولمبي تاريخي"
+      }
+    },
+    {
+      "id": "NFT_1775210677805_4",
+      "name": "Penny Black 1840",
+      "description": "أول طابع لاصق في العالم | صدر في لندن، بريطانيا عام 1840",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Penny_Black.jpg/500px-Penny_Black.jpg",
+      "price": 250,
+      "originalValue": 25000,
+      "investmentReturn": 62.5,
+      "roi": "25%",
+      "ownerId": null,
+      "status": "available",
+      "createdAt": "2026-04-03T10:04:37.805Z",
+      "metadata": {
+        "stampId": "UK-001",
+        "year": 1840,
+        "country": "بريطانيا",
+        "city": "لندن",
+        "rarity": "فريد",
+        "category": "تاريخي",
+        "history": "أول طابع لاصق في العالم",
+        "culture": "أيقونة عالمية"
+      }
+    },
+    {
+      "id": "NFT_1775210677805_5",
+      "name": "Inverted Jenny 1918",
+      "description": "أشهر خطأ طباعة | صدر في واشنطن، الولايات المتحدة عام 1918",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Inverted_Jenny_24c_1918_issue.jpg/500px-Inverted_Jenny_24c_1918_issue.jpg",
+      "price": 1500,
+      "originalValue": 150000,
+      "investmentReturn": 375,
+      "roi": "25%",
+      "ownerId": null,
+      "status": "available",
+      "createdAt": "2026-04-03T10:04:37.805Z",
+      "metadata": {
+        "stampId": "US-001",
+        "year": 1918,
+        "country": "الولايات المتحدة",
+        "city": "واشنطن",
+        "rarity": "فريد",
+        "category": "خطأ طباعة",
+        "history": "أشهر خطأ طباعة",
+        "culture": "أغلى خطأ طباعة"
+      }
+    }
+  ],
+  "auctions": [],
+  "transactions": []
+}

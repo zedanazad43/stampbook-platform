@@ -1,9 +1,11 @@
-﻿const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const fs = require('fs');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+﻿import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,218 +14,31 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// قاعدة بيانات بسيطة (JSON)
-let users = [];
-let nfts = [];
-let auctions = [];
-let news = [];
+let db = { users: [], nfts: [], auctions: [], transactions: [] };
+const dbPath = path.join(__dirname, 'database.json');
 
-// تحميل البيانات إذا وجدت
-if (fs.existsSync('database.json')) {
-    const data = JSON.parse(fs.readFileSync('database.json'));
-    users = data.users || [];
-    nfts = data.nfts || [];
-    auctions = data.auctions || [];
-    news = data.news || [];
+if (fs.existsSync(dbPath)) {
+    const data = fs.readFileSync(dbPath, 'utf8');
+    db = JSON.parse(data);
 }
 
-// حفظ البيانات
-function saveDatabase() {
-    fs.writeFileSync('database.json', JSON.stringify({ users, nfts, auctions, news }, null, 2));
+function saveDB() {
+    fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
 }
 
-const JWT_SECRET = 'stampbook_super_secret_2026';
-
-// ============= المصادقة =============
-function verifyToken(req, res, next) {
-    const token = req.headers['authorization']?.split(' ')[1];
-    if (!token) return res.status(401).json({ error: 'غير مصرح به' });
-    try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        req.userId = decoded.id;
-        next();
-    } catch {
-        res.status(401).json({ error: 'توكن غير صالح' });
-    }
-}
-
-// تسجيل مستخدم جديد
-app.post('/api/auth/register', async (req, res) => {
-    try {
-        const { name, email, password, phone } = req.body;
-        
-        if (users.find(u => u.email === email)) {
-            return res.status(400).json({ error: 'البريد الإلكتروني مستخدم بالفعل' });
-        }
-        
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = {
-            id: Date.now().toString(),
-            name,
-            email,
-            phone: phone || '',
-            password: hashedPassword,
-            stpBalance: 100, // مكافأة ترحيبية
-            points: 50,
-            createdAt: new Date().toISOString()
-        };
-        
-        users.push(user);
-        saveDatabase();
-        
-        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
-        res.json({ success: true, token, user: { id: user.id, name: user.name, email: user.email, stpBalance: user.stpBalance, points: user.points } });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+app.get('/api/nfts', (req, res) => {
+    res.json(db.nfts);
 });
 
-// تسجيل الدخول
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = users.find(u => u.email === email);
-        
-        if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(401).json({ error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
-        }
-        
-        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
-        res.json({ success: true, token, user: { id: user.id, name: user.name, email: user.email, stpBalance: user.stpBalance, points: user.points } });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// الحصول على معلومات المستخدم
-app.get('/api/auth/me', verifyToken, (req, res) => {
-    const user = users.find(u => u.id === req.userId);
-    if (user) {
-        res.json({ name: user.name, email: user.email, stpBalance: user.stpBalance, points: user.points });
-    } else {
-        res.status(404).json({ error: 'مستخدم غير موجود' });
-    }
-});
-
-// إضافة نقاط المكافأة
-app.post('/api/points/add', verifyToken, (req, res) => {
-    const { points, reason } = req.body;
-    const user = users.find(u => u.id === req.userId);
-    if (user) {
-        user.points += points;
-        saveDatabase();
-        res.json({ success: true, points: user.points, reason });
-    } else {
-        res.status(404).json({ error: 'مستخدم غير موجود' });
-    }
-});
-
-// ============= NFTs =============
-app.get('/api/nfts', (req, res) => { res.json(nfts); });
-
-app.post('/api/nfts/mint', verifyToken, (req, res) => {
-    const { name, description, imageUrl, price } = req.body;
-    const nft = {
-        id: Date.now().toString(),
-        name,
-        description,
-        imageUrl: imageUrl || 'https://placehold.co/400x300/1a1f3a/f5af19?text=NFT',
-        price: parseFloat(price),
-        ownerId: req.userId,
-        createdAt: new Date().toISOString()
-    };
-    nfts.push(nft);
-    saveDatabase();
-    res.json({ success: true, nft });
-});
-
-// ============= المزادات =============
-app.get('/api/auctions', (req, res) => { res.json(auctions); });
-
-app.post('/api/auctions/create', verifyToken, (req, res) => {
-    const { title, description, startingPrice, endTime, imageUrl } = req.body;
-    const auction = {
-        id: Date.now().toString(),
-        title,
-        description,
-        startingPrice: parseFloat(startingPrice),
-        currentPrice: parseFloat(startingPrice),
-        endTime,
-        imageUrl: imageUrl || 'https://placehold.co/400x300/1a1f3a/f5af19?text=Auction',
-        creatorId: req.userId,
-        bids: [],
-        status: 'active',
-        createdAt: new Date().toISOString()
-    };
-    auctions.push(auction);
-    saveDatabase();
-    res.json({ success: true, auction });
-});
-
-app.post('/api/auctions/bid/:id', verifyToken, (req, res) => {
-    const { amount } = req.body;
-    const auction = auctions.find(a => a.id === req.params.id);
-    if (!auction) return res.status(404).json({ error: 'مزاد غير موجود' });
-    if (amount <= auction.currentPrice) return res.status(400).json({ error: 'العرض يجب أن يكون أكبر من السعر الحالي' });
-    
-    auction.bids.push({ userId: req.userId, amount, time: new Date().toISOString() });
-    auction.currentPrice = amount;
-    saveDatabase();
-    res.json({ success: true, currentPrice: auction.currentPrice });
-});
-
-// ============= الأخبار =============
-app.get('/api/news', (req, res) => {
-    const defaultNews = [
-        { id: 1, title: '🚀 إطلاق منصة Stampbook رسمياً', date: '2026-04-01', category: 'إطلاق', content: 'أول منصة عربية متكاملة للطوابع الرقمية' },
-        { id: 2, title: '🏆 الوبيل الذهبي - أولمبيا ميونخ 2026', date: '2026-08-15', category: 'حدث', content: 'حدث عالمي للطوابع الأولمبية' },
-        { id: 3, title: '💰 إطلاق عملة STP', date: '2026-04-15', category: 'عملة', content: 'سعر الإطلاق 0.20 دولار' }
-    ];
-    res.json(defaultNews);
-});
-
-// ============= إحصائيات =============
-app.get('/api/stats', (req, res) => {
-    res.json({
-        users: users.length,
-        nfts: nfts.length,
-        auctions: auctions.length,
-        stpPrice: 0.20
-    });
-});
-
-// ============= شراء STP =============
-app.post('/api/buy-stp', verifyToken, (req, res) => {
-    const { amount, currency } = req.body;
-    const rates = { USD: 0.20, EUR: 0.22, SAR: 0.053, AED: 0.054, EGP: 0.004 };
-    const priceInUSD = amount * (rates[currency] || 0.20);
-    const stpAmount = priceInUSD / 0.20;
-    
-    const user = users.find(u => u.id === req.userId);
-    user.stpBalance += stpAmount;
-    saveDatabase();
-    
-    res.json({ success: true, stpAmount, newBalance: user.stpBalance });
-});
-
-// ============= الحالة العامة =============
 app.get('/api/status', (req, res) => {
-    res.json({ status: 'online', version: '3.0.0', timestamp: new Date().toISOString() });
+    res.json({ status: 'online', nfts: db.nfts.length });
 });
 
-// ============= الصفحات =============
-app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'index.html')); });
-app.get('/dashboard', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'dashboard.html')); });
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 app.listen(PORT, () => {
-    console.log(`
-    ╔══════════════════════════════════════════════════════════╗
-    ║     🚀 STAMPBOOK PLATFORM - الإصدار الثوري 🚀           ║
-    ╠══════════════════════════════════════════════════════════╣
-    ║   📡 الخادم: http://localhost:${PORT}                     ║
-    ║   👥 مستخدمين: ${users.length}                             ║
-    ║   🎨 NFTs: ${nfts.length}                                  ║
-    ║   🔴 مزادات: ${auctions.length}                            ║
-    ╚══════════════════════════════════════════════════════════╝
-    `);
+    console.log(`\n🚀 Stampbook Server running on http://localhost:${PORT}`);
+    console.log(`📊 NFTs available: ${db.nfts.length}\n`);
 });
