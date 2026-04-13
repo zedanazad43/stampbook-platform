@@ -370,6 +370,32 @@ let currency    = localStorage.getItem("currency") || "USD";
 const FX = { USD: 1, EUR: 0.93, SAR: 3.75, AED: 3.67 };
 const STP_PRICE_USD = 0.20;
 
+// ─── XSS helpers ──────────────────────────────────────────────────────────────
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function escapeJsString(value) {
+    return String(value ?? "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, "\\\"")
+        .replace(/\r/g, "\\r")
+        .replace(/\n/g, "\\n");
+}
+
+function sanitizeImageUrl(value) {
+    const url = String(value ?? "").trim();
+    if (!url) return "";
+    if (/^(https?:\/\/|\/(?!\/)|\.{0,2}\/)/i.test(url)) return escapeHtml(url);
+    return "";
+}
+
 // ─── Toast ────────────────────────────────────────────────────────────────────
 function toast(msg, duration = 3500) {
     const t = document.getElementById("toast");
@@ -492,7 +518,7 @@ function updateNavUser() {
     if (!currentUser) return;
     document.getElementById("userArea").innerHTML = `
         <span style="font-size:13px;opacity:.85">👋 ${currentUser.name}</span>
-        <span style="background:var(--gold);color:#000;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700">�� ${currentUser.stpBalance||0} STP</span>
+        <span style="background:var(--gold);color:#000;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700">💰 ${currentUser.stpBalance||0} STP</span>
         <button class="btn-danger" onclick="logout()" style="padding:5px 14px;font-size:13px">خروج</button>`;
 }
 
@@ -517,8 +543,9 @@ async function res_ok(r) {
 // ─── Featured items ───────────────────────────────────────────────────────────
 async function loadFeatured() {
     try {
-        const r = await fetch("/api/market/items?status=available");
-        const items = await r.json();
+        const r = await fetch("/api/market/items?status=available&limit=3");
+        const payload = await r.json();
+        const items = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : []);
         const grid = document.getElementById("featuredGrid");
         const featured = items.slice(0, 3);
         if (!featured.length) { grid.innerHTML = '<div class="empty-state"><i class="fas fa-store"></i><p>السوق فارغ حالياً</p></div>'; return; }
@@ -529,14 +556,19 @@ async function loadFeatured() {
 // ─── Market ───────────────────────────────────────────────────────────────────
 function marketCard(item, featured = false) {
     const typeEmoji = { stamp: "📮", coin: "🪙", nft: "🎨" }[item.type] || "📮";
+    const safeName = escapeHtml(item.name);
+    const safeDesc = escapeHtml(item.description || "");
+    const safeType = escapeHtml(item.type || "stamp");
+    const safeImg  = sanitizeImageUrl(item.imageUrl);
+    const safeId   = escapeJsString(item.id);
     return `<div class="card">
-        ${item.imageUrl ? `<img src="${item.imageUrl}" class="card-img" onerror="this.style.display='none'" alt="${item.name}">` : ""}
-        <div class="badge">${typeEmoji} ${item.type || "stamp"}</div>
-        <h3 style="margin-bottom:8px;font-size:17px">${item.name}</h3>
-        <p style="opacity:.75;font-size:13px;margin-bottom:12px;line-height:1.5">${item.description || ""}</p>
+        ${safeImg ? `<img src="${safeImg}" class="card-img" onerror="this.style.display='none'" alt="${safeName}">` : ""}
+        <div class="badge">${typeEmoji} ${safeType}</div>
+        <h3 style="margin-bottom:8px;font-size:17px">${safeName}</h3>
+        <p style="opacity:.75;font-size:13px;margin-bottom:12px;line-height:1.5">${safeDesc}</p>
         <div class="price-big">💰 ${item.price.toLocaleString()} STP</div>
         <p style="font-size:12px;opacity:.6;margin-bottom:14px">≈ ${stpToFiat(item.price)}</p>
-        <button class="btn-primary" onclick="buyMarketItem('${item.id}')" style="width:100%">🛒 شراء الآن</button>
+        <button class="btn-primary" onclick="buyMarketItem('${safeId}')" style="width:100%">🛒 شراء الآن</button>
     </div>`;
 }
 
@@ -546,8 +578,9 @@ async function loadMarketItems() {
     if (type) url += `&type=${type}`;
     const grid = document.getElementById("marketGrid");
     try {
-        const r     = await fetch(url);
-        const items = await r.json();
+        const r       = await fetch(url);
+        const payload = await r.json();
+        const items   = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : []);
         grid.innerHTML = items.length
             ? items.map(i => marketCard(i)).join("")
             : `<div class="empty-state"><i class="fas fa-store"></i><p>لا توجد قطع متاحة. كن أول من يعرض!</p></div>`;
@@ -737,18 +770,28 @@ async function placeBid(auctionId) {
 async function loadNFTs() {
     const grid = document.getElementById("nftsGrid");
     try {
-        const r    = await fetch("/api/nfts");
-        const nfts = await r.json();
+        const r       = await fetch("/api/nfts");
+        const payload = await r.json();
+        const nfts    = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : []);
         grid.innerHTML = nfts.length
-            ? nfts.map(n => `<div class="card">
-                ${n.imageUrl ? `<img src="${n.imageUrl}" class="card-img" onerror="this.style.display='none'" alt="${n.name}">` : ""}
+            ? nfts.map(n => {
+                const safeName    = escapeHtml(n.name);
+                const safeDesc    = escapeHtml(n.description || "");
+                const safeImg     = sanitizeImageUrl(n.imageUrl);
+                const safeId      = escapeJsString(n.id);
+                const safeYear    = escapeHtml(n.metadata?.year || "");
+                const safeCountry = escapeHtml(n.metadata?.country || "");
+                const safeRarity  = escapeHtml(n.metadata?.rarity || "");
+                return `<div class="card">
+                ${safeImg ? `<img src="${safeImg}" class="card-img" onerror="this.style.display='none'" alt="${safeName}">` : ""}
                 <div class="badge ${n.status==='owned'?'badge-blue':''}">${n.status==='owned'?'✅ مملوك':'📮 متاح'}</div>
-                <h3 style="margin-bottom:6px">${n.name}</h3>
-                <p style="opacity:.7;font-size:13px;margin-bottom:10px">${n.description||""}</p>
+                <h3 style="margin-bottom:6px">${safeName}</h3>
+                <p style="opacity:.7;font-size:13px;margin-bottom:10px">${safeDesc}</p>
                 <div class="price-big">💰 ${n.price} STP</div>
-                ${n.metadata ? `<p style="font-size:12px;opacity:.6;margin-top:6px">🗓 ${n.metadata.year||''} | ${n.metadata.country||''} | ${n.metadata.rarity||''}</p>` : ""}
-                ${n.status === 'available' && token ? `<button class="btn-primary" onclick="buyNFT('${n.id}')" style="width:100%;margin-top:12px">🛒 شراء</button>` : ""}
-            </div>`).join("")
+                ${n.metadata ? `<p style="font-size:12px;opacity:.6;margin-top:6px">🗓 ${safeYear} | ${safeCountry} | ${safeRarity}</p>` : ""}
+                ${n.status === 'available' && token ? `<button class="btn-primary" onclick="buyNFT('${safeId}')" style="width:100%;margin-top:12px">🛒 شراء</button>` : ""}
+            </div>`;
+            }).join("")
             : `<div class="empty-state"><i class="fas fa-image"></i><p>لا توجد NFTs بعد</p></div>`;
     } catch {
         grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ في التحميل</p></div>`;
@@ -816,7 +859,7 @@ async function loadBlockchain() {
             ["🔢 الأرقام العشرية", info.decimals],
             ["⛓ الشبكة",    info.blockchain],
             ["📋 المعيار",   info.standard],
-            ["�� Chain ID",  info.chainId],
+            ["🔗 Chain ID",  info.chainId],
             ["🔒 الإجماع",   info.consensus],
         ].map(([k,v]) => `<div class="stp-item"><div style="font-size:12px;opacity:.7;margin-bottom:4px">${k}</div><div class="stp-val" style="font-size:18px">${v}</div></div>`).join("");
 

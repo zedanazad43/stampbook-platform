@@ -22,8 +22,8 @@ name = "stampbook-platform"
 #   wrangler secret put BACKEND_URL
 #   → https://your-render-or-fly-host.com
 
-[[kv_namespaces]]
-# Optional: uncomment to use KV for caching
+# KV Namespaces: uncomment and fill in 'binding' and 'id' if you need KV caching
+# [[kv_namespaces]]
 # binding = "STP_CACHE"
 # id = "REPLACE_WITH_KV_NAMESPACE_ID"
 

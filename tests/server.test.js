@@ -362,6 +362,23 @@ describe("POST /api/nfts/mint", () => {
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty("id");
     expect(res.body.name).toBe("Rare Stamp");
+    expect(res.body.price).toBe(500);
+  });
+
+  it("rejects negative price with 400", async () => {
+    const res = await request(app)
+      .post("/api/nfts/mint")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ name: "Bad Stamp", price: -10 });
+    expect(res.status).toBe(400);
+  });
+
+  it("rejects non-numeric price with 400", async () => {
+    const res = await request(app)
+      .post("/api/nfts/mint")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ name: "Bad Stamp", price: "abc" });
+    expect(res.status).toBe(400);
   });
 
   it("returns 401 without auth", async () => {
@@ -412,6 +429,23 @@ describe("POST /api/auctions", () => {
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty("id");
     expect(res.body.title).toBe("Penny Black Auction");
+    expect(res.body.startPrice).toBe(1000);
+  });
+
+  it("rejects non-numeric startPrice with 400", async () => {
+    const res = await request(app)
+      .post("/api/auctions")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ title: "Bad Auction", startPrice: "abc", endTime: new Date(Date.now() + 86400000).toISOString() });
+    expect(res.status).toBe(400);
+  });
+
+  it("rejects negative startPrice with 400", async () => {
+    const res = await request(app)
+      .post("/api/auctions")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ title: "Bad Auction", startPrice: -100, endTime: new Date(Date.now() + 86400000).toISOString() });
+    expect(res.status).toBe(400);
   });
 
   it("returns 401 without auth", async () => {
@@ -542,6 +576,27 @@ describe("GET /api/blockchain/supply", () => {
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty("totalSupply");
     expect(res.body).toHaveProperty("mintedSupply");
+  });
+});
+
+// ─── Wallet transfer input validation ────────────────────────────────────────
+
+describe("POST /api/wallet/transfer — input validation", () => {
+  beforeEach(() => { mockDB = freshDB(); });
+
+  it("rejects non-numeric amount with 400", async () => {
+    const res = await request(app)
+      .post("/api/wallet/transfer")
+      .send({ fromUserId: "u1", toUserId: "u2", amount: "abc" });
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty("error");
+  });
+
+  it("rejects zero amount with 400", async () => {
+    const res = await request(app)
+      .post("/api/wallet/transfer")
+      .send({ fromUserId: "u1", toUserId: "u2", amount: 0 });
+    expect(res.status).toBe(400);
   });
 });
 

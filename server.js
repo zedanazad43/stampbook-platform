@@ -13,8 +13,6 @@ const bcrypt      = require("bcryptjs");
 const jwt         = require("jsonwebtoken");
 const rateLimit   = require("express-rate-limit");
 
-const rateLimit = require("express-rate-limit");
-
 const walletModule     = require("./wallet");
 const marketModule     = require("./market");
 const blockchainModule = require("./blockchain");
@@ -126,7 +124,8 @@ function writeDB(db) {
 
 // ─── Input validation helpers ─────────────────────────────────────────────────
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Use a simple, non-backtracking email pattern to avoid ReDoS
+const EMAIL_RE = /^[^@\s]{1,64}@[^@\s]{1,253}$/;
 const MIN_PASSWORD_LEN = 8;
 
 function isValidEmail(email) {
@@ -301,9 +300,7 @@ app.get("/api/stats", (req, res) => {
       users:    db.users.length,
       nfts:     db.nfts.length,
       auctions: db.auctions.filter(a => a.status === "active").length,
-      marketItems: (db.users.length > 0)
-        ? marketModule.getAllMarketItems({ status: "available" }).length
-        : 0,
+      marketItems: marketModule.getAllMarketItems({ status: "available" }).length,
       stpPrice:      0.20,
       stpSupply:     supply.totalSupply,
       stpMinted:     supply.mintedSupply,
@@ -344,13 +341,17 @@ app.post("/api/nfts/mint", authMiddleware, (req, res) => {
   try {
     const { name, description, imageUrl, price } = req.body;
     if (!name) return res.status(400).json({ error: "NFT name is required" });
+    const parsedPrice = parseFloat(price);
+    if (price !== undefined && price !== null && price !== "" && (!Number.isFinite(parsedPrice) || parsedPrice < 0)) {
+      return res.status(400).json({ error: "NFT price must be a non-negative number" });
+    }
     const db = readDB();
     const nft = {
       id:          `NFT_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       name:        name.trim(),
       description: description || "",
       imageUrl:    imageUrl || "",
-      price:       parseFloat(price) || 0,
+      price:       Number.isFinite(parsedPrice) ? parsedPrice : 0,
       ownerId:     req.user.id,
       status:      "available",
       createdAt:   new Date().toISOString()
@@ -420,14 +421,18 @@ app.post("/api/auctions", authMiddleware, (req, res) => {
     if (!title || !startPrice || !endTime) {
       return res.status(400).json({ error: "Title, startPrice and endTime are required" });
     }
+    const parsedStart = parseFloat(startPrice);
+    if (!Number.isFinite(parsedStart) || parsedStart <= 0) {
+      return res.status(400).json({ error: "startPrice must be a positive number" });
+    }
     const db = readDB();
     const auction = {
       id:           `AUC_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       title:        title.trim(),
       description:  description || "",
       imageUrl:     imageUrl || "",
-      startPrice:   parseFloat(startPrice),
-      currentPrice: parseFloat(startPrice),
+      startPrice:   parsedStart,
+      currentPrice: parsedStart,
       highestBidder: null,
       bids:         [],
       sellerId:     req.user.id,
@@ -542,7 +547,11 @@ app.get("/api/wallet/:userId", (req, res) => {
 app.post("/api/wallet/transfer", (req, res) => {
   try {
     const { fromUserId, toUserId, amount, stampId } = req.body;
-    const tx = walletModule.transfer(fromUserId, toUserId, amount, stampId);
+    const parsedAmount = parseFloat(amount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      return res.status(400).json({ error: "Transfer amount must be a positive number" });
+    }
+    const tx = walletModule.transfer(fromUserId, toUserId, parsedAmount, stampId);
     return res.json(tx);
   } catch (e) {
     return res.status(400).json({ error: e.message });
@@ -569,7 +578,11 @@ app.post("/api/wallet/:userId/stamps", syncMiddleware, (req, res) => {
 app.post("/api/wallet/:userId/topup", syncMiddleware, (req, res) => {
   try {
     const { amount } = req.body;
-    const w = walletModule.updateBalance(req.params.userId, parseFloat(amount));
+    const parsedAmount = parseFloat(amount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      return res.status(400).json({ error: "Top-up amount must be a positive number" });
+    }
+    const w = walletModule.updateBalance(req.params.userId, parsedAmount);
     return res.json(w);
   } catch (e) {
     return res.status(400).json({ error: e.message });
@@ -632,6 +645,15 @@ app.put("/api/market/items/:itemId", authMiddleware, (req, res) => {
 
 app.post("/api/market/items/:itemId/buy", authMiddleware, (req, res) => {
   try {
+    // Pre-check: ensure buyer has sufficient STP balance
+    const itemCheck = marketModule.getRawMarketItem(req.params.itemId);
+    if (!itemCheck) return res.status(404).json({ error: "Item not found" });
+    const db    = readDB();
+    const buyer = db.users.find(u => u.id === req.user.id);
+    if (buyer && itemCheck.price > 0 && (buyer.stpBalance || 0) < itemCheck.price) {
+      return res.status(400).json({ error: `Insufficient STP balance (need ${itemCheck.price} STP, have ${buyer.stpBalance || 0} STP)` });
+    }
+
     // buyerId comes from the verified JWT
     const result = marketModule.purchaseMarketItem(
       req.params.itemId,
@@ -640,10 +662,8 @@ app.post("/api/market/items/:itemId/buy", authMiddleware, (req, res) => {
     );
 
     // Deduct STP balance from buyer in database
-    const db    = readDB();
-    const buyer = db.users.find(u => u.id === req.user.id);
     if (buyer && result.item && result.item.price) {
-      buyer.stpBalance = Math.max(0, (buyer.stpBalance || 0) - result.item.price);
+      buyer.stpBalance = (buyer.stpBalance || 0) - result.item.price;
       writeDB(db);
     }
 

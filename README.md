@@ -210,7 +210,7 @@ stampbook-platform/
 ## 🧪 الاختبارات
 
 ```
-Tests:       85 passed, 85 total
+Tests:       104 passed, 104 total
 Test Suites: 4 passed (wallet, market, blockchain, server)
 ```
 
