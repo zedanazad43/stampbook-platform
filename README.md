@@ -4,7 +4,9 @@
 
 [![Build & Test](https://github.com/zedanazad43/stampbook-platform/actions/workflows/all-agents.yml/badge.svg)](https://github.com/zedanazad43/stampbook-platform/actions/workflows/all-agents.yml)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green)](https://nodejs.org)
-[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-98%20passed-brightgreen)](#-الاختبارات)
+[![Version](https://img.shields.io/badge/version-3.1.0-orange)](CHANGELOG.md)
 
 ---
 
@@ -16,12 +18,13 @@
 
 | الميزة | الوصف |
 |--------|-------|
-| 🏪 **سوق الطوابع** | بيع وشراء الطوابع النادرة بعملة STP |
+| 🏪 **سوق الطوابع** | بيع وشراء الطوابع النادرة بعملة STP + بحث نصي |
 | 🔨 **المزادات الحية** | مزادات مع عد تنازلي فوري |
 | 🖼️ **NFTs** | سك الطوابع كـ NFTs على البلوكتشين |
 | 💰 **محفظة STP** | رصيد ومعاملات مدمجة في المنصة |
 | ⛓️ **Blockchain API** | تتبع عرض عملة STP ومعالجة السك |
 | 🔐 **مصادقة JWT** | تسجيل/دخول آمن مع مكافأة ترحيبية (100 STP) |
+| 🛡️ **الأمان** | Helmet headers، Rate Limiting، تحقق من المدخلات |
 
 ---
 
@@ -114,23 +117,25 @@ stampbook-platform/
 | `POST` | `/api/auth/login` | تسجيل دخول → JWT |
 | `GET`  | `/api/auth/me` | 🔒 بيانات المستخدم الحالي |
 | `PUT`  | `/api/auth/profile` | 🔒 تحديث الملف الشخصي |
+| `POST` | `/api/auth/change-password` | 🔒 تغيير كلمة المرور |
 
 ### NFTs والمزادات
 
 | الطريقة | المسار | الوصف |
 |--------|--------|-------|
-| `GET`  | `/api/nfts` | قائمة NFTs |
+| `GET`  | `/api/nfts` | قائمة NFTs (مُرقَّمة، يدعم `?page=&limit=&status=&ownerId=`) |
 | `POST` | `/api/nfts/mint` | 🔒 سك NFT جديد |
 | `POST` | `/api/nfts/:id/buy` | 🔒 شراء NFT |
-| `GET`  | `/api/auctions` | قائمة المزادات |
+| `GET`  | `/api/auctions` | قائمة المزادات (مُرقَّمة، يدعم `?page=&limit=&status=`) |
 | `POST` | `/api/auctions` | 🔒 إنشاء مزاد |
+| `DELETE` | `/api/auctions/:id` | 🔒 إلغاء مزاد (البائع، قبل أي مزايدة) |
 | `POST` | `/api/auctions/bid/:id` | 🔒 تقديم مزايدة |
 
 ### السوق
 
 | الطريقة | المسار | الوصف |
 |--------|--------|-------|
-| `GET`  | `/api/market/items` | قائمة المنتجات |
+| `GET`  | `/api/market/items` | قائمة المنتجات (مُرقَّمة، يدعم `?q=&status=&type=`) |
 | `POST` | `/api/market/items` | 🔒 إضافة منتج |
 | `GET`  | `/api/market/items/:id` | تفاصيل منتج |
 | `PUT`  | `/api/market/items/:id` | 🔒 تعديل منتج (البائع فقط) |
@@ -147,11 +152,23 @@ stampbook-platform/
 | `POST` | `/api/blockchain/mint` | 🛡️ سك STP (sync token) |
 | `GET`  | `/api/wallet/:userId` | بيانات المحفظة |
 | `POST` | `/api/wallet/transfer` | تحويل رصيد |
+| `GET`  | `/api/my/balance` | 🔒 رصيد المستخدم الحالي (STP + Points) |
 | `GET`  | `/api/stats` | إحصائيات المنصة |
 | `GET`  | `/health` | فحص صحة الخادم |
 
 > 🔒 = يتطلب `Authorization: Bearer <token>`  
 > 🛡️ = يتطلب `x-sync-token` (server-to-server فقط)
+
+### الترقيم (Pagination)
+
+نقاط نهاية القوائم (`/api/nfts`، `/api/auctions`، `/api/market/items`) تُرجع:
+
+```json
+{
+  "data": [ ... ],
+  "meta": { "page": 1, "limit": 20, "total": 150, "pages": 8 }
+}
+```
 
 ---
 
@@ -197,10 +214,16 @@ Tests:       85 passed, 85 total
 Test Suites: 4 passed (wallet, market, blockchain, server)
 ```
 
-- `tests/server.test.js` — اختبارات تكاملية لجميع مسارات API
+- `tests/server.test.js` — 40 اختباراً تكاملياً لجميع مسارات API
 - `tests/wallet.test.js` — وحدة المحفظة
 - `tests/market.test.js` — وحدة السوق
 - `tests/blockchain.test.js` — وحدة البلوكتشين
+
+---
+
+## 📝 سجل التغييرات
+
+راجع [CHANGELOG.md](CHANGELOG.md) لتاريخ كامل من الإصدارات والتغييرات.
 
 ---
 
@@ -212,4 +235,4 @@ Test Suites: 4 passed (wallet, market, blockchain, server)
 
 ## 📄 الترخيص
 
-MIT © Stampbook Platform
+MIT © Stampbook Platform — راجع [LICENSE](LICENSE).

@@ -2,13 +2,15 @@
 
 require("dotenv").config();
 
-const express    = require("express");
-const cors       = require("cors");
+const express     = require("express");
+const cors        = require("cors");
 const compression = require("compression");
-const path       = require("path");
-const fs         = require("fs");
-const bcrypt     = require("bcryptjs");
-const jwt        = require("jsonwebtoken");
+const helmet      = require("helmet");
+const morgan      = require("morgan");
+const path        = require("path");
+const fs          = require("fs");
+const bcrypt      = require("bcryptjs");
+const jwt         = require("jsonwebtoken");
 
 const rateLimit = require("express-rate-limit");
 
@@ -56,6 +58,16 @@ const apiLimiter = rateLimit({
 app.use("/api/auth", authLimiter);
 app.use("/api/", apiLimiter);
 
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: false // disabled so the SPA can load external fonts/icons
+}));
+
+// HTTP request logging (skip in test environment)
+if (process.env.NODE_ENV !== "test") {
+  app.use(morgan("combined"));
+}
+
 app.use(cors({
   origin: process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(",")
@@ -88,6 +100,31 @@ function writeDB(db) {
   } catch (e) {
     console.error("Error writing database:", e.message);
   }
+}
+
+// ─── Input validation helpers ─────────────────────────────────────────────────
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MIN_PASSWORD_LEN = 8;
+
+function isValidEmail(email) {
+  return typeof email === "string" && EMAIL_RE.test(email.trim());
+}
+
+function isStrongPassword(pw) {
+  return typeof pw === "string" && pw.length >= MIN_PASSWORD_LEN;
+}
+
+// ─── Pagination helper ────────────────────────────────────────────────────────
+
+function paginate(array, query) {
+  const page  = Math.max(1, parseInt(query.page  || 1,  10));
+  const limit = Math.min(100, Math.max(1, parseInt(query.limit || 20, 10)));
+  const start = (page - 1) * limit;
+  return {
+    data:  array.slice(start, start + limit),
+    meta:  { page, limit, total: array.length, pages: Math.ceil(array.length / limit) }
+  };
 }
 
 // ─── Auth middleware ──────────────────────────────────────────────────────────
@@ -125,6 +162,12 @@ app.post("/api/auth/register", async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ error: "Name, email and password are required" });
+    }
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ error: "Invalid email address" });
+    }
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({ error: `Password must be at least ${MIN_PASSWORD_LEN} characters` });
     }
     const db = readDB();
     if (db.users.find(u => u.email === email.trim().toLowerCase())) {
@@ -201,6 +244,31 @@ app.put("/api/auth/profile", authMiddleware, async (req, res) => {
   }
 });
 
+app.post("/api/auth/change-password", authMiddleware, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: "currentPassword and newPassword are required" });
+    }
+    if (!isStrongPassword(newPassword)) {
+      return res.status(400).json({ error: `New password must be at least ${MIN_PASSWORD_LEN} characters` });
+    }
+    const db  = readDB();
+    const idx = db.users.findIndex(u => u.id === req.user.id);
+    if (idx === -1) return res.status(404).json({ error: "User not found" });
+    const user = db.users[idx];
+    if (!(await bcrypt.compare(currentPassword, user.password))) {
+      return res.status(401).json({ error: "Current password is incorrect" });
+    }
+    db.users[idx].password   = await bcrypt.hash(newPassword, 10);
+    db.users[idx].updatedAt  = new Date().toISOString();
+    writeDB(db);
+    return res.json({ message: "Password updated successfully" });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
 // ─── Stats ────────────────────────────────────────────────────────────────────
 
 app.get("/api/stats", (req, res) => {
@@ -232,7 +300,8 @@ app.get("/api/nfts", (req, res) => {
     let nfts = db.nfts;
     if (status)  nfts = nfts.filter(n => n.status === status);
     if (ownerId) nfts = nfts.filter(n => n.ownerId === ownerId);
-    return res.json(nfts);
+    const result = paginate(nfts, req.query);
+    return res.json(result);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -313,10 +382,11 @@ app.get("/api/auctions", (req, res) => {
   try {
     const db = readDB();
     const { status } = req.query;
-    const auctions = status
+    let auctions = status
       ? db.auctions.filter(a => a.status === status)
       : db.auctions;
-    return res.json(auctions);
+    const result = paginate(auctions, req.query);
+    return res.json(result);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -351,6 +421,26 @@ app.post("/api/auctions", authMiddleware, (req, res) => {
   }
 });
 
+app.delete("/api/auctions/:id", authMiddleware, (req, res) => {
+  try {
+    const db  = readDB();
+    const idx = db.auctions.findIndex(a => a.id === req.params.id);
+    if (idx === -1) return res.status(404).json({ error: "Auction not found" });
+    const auction = db.auctions[idx];
+    if (auction.sellerId !== req.user.id) {
+      return res.status(403).json({ error: "Only the seller can cancel this auction" });
+    }
+    if (auction.bids && auction.bids.length > 0) {
+      return res.status(400).json({ error: "Cannot cancel an auction that already has bids" });
+    }
+    db.auctions.splice(idx, 1);
+    writeDB(db);
+    return res.json({ success: true, message: "Auction cancelled" });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
 app.post("/api/auctions/bid/:id", authMiddleware, (req, res) => {
   try {
     const { amount } = req.body;
@@ -362,6 +452,9 @@ app.post("/api/auctions/bid/:id", authMiddleware, (req, res) => {
     if (!auction) return res.status(404).json({ error: "Auction not found" });
     if (auction.status !== "active") {
       return res.status(400).json({ error: "Auction is not active" });
+    }
+    if (auction.sellerId === req.user.id) {
+      return res.status(400).json({ error: "Cannot bid on your own auction" });
     }
     if (parseFloat(amount) <= auction.currentPrice) {
       return res.status(400).json({
@@ -469,7 +562,14 @@ app.get("/api/market/items", (req, res) => {
     if (req.query.status)   filter.status   = req.query.status;
     if (req.query.type)     filter.type     = req.query.type;
     if (req.query.sellerId) filter.sellerId = req.query.sellerId;
-    return res.json(marketModule.getAllMarketItems(filter));
+    if (req.query.q) {
+      const q = req.query.q.trim().toLowerCase();
+      const items = marketModule.getAllMarketItems(filter)
+        .filter(i => i.name.toLowerCase().includes(q) || (i.description || "").toLowerCase().includes(q));
+      return res.json(paginate(items, req.query));
+    }
+    const result = paginate(marketModule.getAllMarketItems(filter), req.query);
+    return res.json(result);
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -582,6 +682,21 @@ app.get("/api/my/nfts", authMiddleware, (req, res) => {
   try {
     const db = readDB();
     return res.json(db.nfts.filter(n => n.ownerId === req.user.id));
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+app.get("/api/my/balance", authMiddleware, (req, res) => {
+  try {
+    const db   = readDB();
+    const user = db.users.find(u => u.id === req.user.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    return res.json({
+      userId:     user.id,
+      stpBalance: user.stpBalance || 0,
+      points:     user.points     || 0
+    });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
