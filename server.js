@@ -10,6 +10,8 @@ const fs         = require("fs");
 const bcrypt     = require("bcryptjs");
 const jwt        = require("jsonwebtoken");
 
+const rateLimit = require("express-rate-limit");
+
 const walletModule     = require("./wallet");
 const marketModule     = require("./market");
 const blockchainModule = require("./blockchain");
@@ -19,7 +21,40 @@ const PORT       = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || "stampbook-dev-secret-change-in-production";
 const SYNC_TOKEN = process.env.SYNC_TOKEN;
 
+// ─── Security warnings ────────────────────────────────────────────────────────
+
+if (process.env.NODE_ENV === "production" && !process.env.JWT_SECRET) {
+  console.warn("⚠️  WARNING: JWT_SECRET is not set. Using insecure default — set JWT_SECRET in production!");
+}
+if (process.env.NODE_ENV === "production" && !process.env.SYNC_TOKEN) {
+  console.warn("⚠️  WARNING: SYNC_TOKEN is not set. Admin endpoints are unprotected!");
+}
+
 // ─── Middleware ───────────────────────────────────────────────────────────────
+
+// Rate limiters (skipped in test environment)
+const IS_TEST = process.env.NODE_ENV === "test";
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: IS_TEST ? 0 : 20,    // 0 = disabled in test, 20 in production
+  skip: () => IS_TEST,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." }
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,      // 1 minute
+  max: IS_TEST ? 0 : 120,   // 0 = disabled in test, 120 in production
+  skip: () => IS_TEST,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." }
+});
+
+app.use("/api/auth", authLimiter);
+app.use("/api/", apiLimiter);
 
 app.use(cors({
   origin: process.env.ALLOWED_ORIGINS
@@ -630,7 +665,11 @@ app.get("*", (req, res) => {
 function startServer() {
   const server = app.listen(PORT, () => {
     console.log(`\n🚀 Stampbook running on http://localhost:${PORT}`);
-    console.log(`📊 Mode: ${process.env.NODE_ENV || "development"}\n`);
+    console.log(`📊 Mode: ${process.env.NODE_ENV || "development"}`);
+    if (!process.env.JWT_SECRET) {
+      console.log("⚠️  JWT_SECRET not set — using insecure default (development only)");
+    }
+    console.log();
   });
   return server;
 }
