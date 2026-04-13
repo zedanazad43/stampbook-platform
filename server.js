@@ -60,7 +60,16 @@ app.use("/api/", apiLimiter);
 
 // Security headers
 app.use(helmet({
-  contentSecurityPolicy: false // disabled so the SPA can load external fonts/icons
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+      "script-src": ["'self'"],
+      "style-src": ["'self'", "https:", "'unsafe-inline'"],
+      "font-src": ["'self'", "https:", "data:"],
+      "img-src": ["'self'", "data:", "https:"]
+    }
+  }
 }));
 
 // HTTP request logging (skip in test environment)
