@@ -644,10 +644,16 @@ async function loadAuctions() {
     const grid = document.getElementById("auctionsGrid");
     try {
         const r = await fetch("/api/auctions");
-        const auctions = await r.json();
+        const payload = await r.json();
+        const auctions = Array.isArray(payload) ? payload : (Array.isArray(payload.data) ? payload.data : []);
+        const meta = !Array.isArray(payload) && payload && typeof payload === "object" ? payload.meta : null;
+
         grid.innerHTML = auctions.length
             ? auctions.map(a => auctionCard(a)).join("")
             : `<div class="empty-state"><i class="fas fa-gavel"></i><p>لا توجد مزادات نشطة</p></div>`;
+
+        // Keep `meta` available for future pagination UI enhancements without changing current behavior.
+        void meta;
         startCountdowns();
     } catch {
         grid.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ في التحميل</p></div>`;
