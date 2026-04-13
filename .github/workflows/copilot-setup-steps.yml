@@ -13,13 +13,18 @@ jobs:
     permissions:
       contents: write   # <-- Changed from 'read' to 'write' for build
     steps:
-      fetch-depth: 0- name: Ensure main ref is available (for git diff/show)
-  run: |
-    git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
-    git show-ref --verify --quiet refs/remotes/origin/main
-    # اختياري: إنشاء ref محلي باسم main إذا كان شيء يتوقع refs/heads/main
-    git branch -f main refs/remotes/origin/main
-       
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure main ref is available (for git diff/show)
+        run: |
+          git fetch --no-tags --prune origin +refs/heads/main:refs/remotes/origin/main
+          git show-ref --verify --quiet refs/remotes/origin/main
+          # اختياري: إنشاء ref محلي باسم main إذا كان شيء يتوقع refs/heads/main
+          git branch -f main refs/remotes/origin/main
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
