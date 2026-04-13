@@ -128,6 +128,93 @@
       }
     }
   ],
-  "auctions": [],
-  "transactions": []
+  "auctions": [
+    {
+      "id": "AUC_001",
+      "title": "طابع الجناح الذهبي - أولمبيا ميونخ 2026",
+      "description": "جناح حصري بتصميم ذهبي مستوحى من أولمبياد ميونخ 1972، رسومات يدوية فريدة",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Stampede_mark.jpg/500px-Stampede_mark.jpg",
+      "startPrice": 500,
+      "currentPrice": 750,
+      "highestBidder": null,
+      "bids": [],
+      "sellerId": "system",
+      "status": "active",
+      "endTime": "2026-04-20T11:48:52.515Z",
+      "createdAt": "2026-04-13T11:48:52.515Z"
+    },
+    {
+      "id": "AUC_002",
+      "title": "مجموعة طوابع نادرة - عصر الاكتشافات",
+      "description": "مجموعة من 10 طوابع نادرة من القرن الثامن عشر تصور رحلات الاستكشاف",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Penny_Black.jpg/500px-Penny_Black.jpg",
+      "startPrice": 1200,
+      "currentPrice": 1200,
+      "highestBidder": null,
+      "bids": [],
+      "sellerId": "system",
+      "status": "active",
+      "endTime": "2026-04-27T11:48:52.515Z",
+      "createdAt": "2026-04-13T11:48:52.515Z"
+    },
+    {
+      "id": "AUC_003",
+      "title": "طابع Penny Black الأصلي 1840",
+      "description": "نسخة نادرة من أول طابع لاصق في العالم، حالة ممتازة",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Penny_Black.jpg/500px-Penny_Black.jpg",
+      "startPrice": 15000,
+      "currentPrice": 18500,
+      "highestBidder": null,
+      "bids": [
+        {
+          "userId": "collector1",
+          "amount": 18500,
+          "timestamp": "2026-04-13T11:48:52.515Z"
+        }
+      ],
+      "sellerId": "system",
+      "status": "active",
+      "endTime": "2026-04-16T11:48:52.515Z",
+      "createdAt": "2026-04-13T11:48:52.515Z"
+    }
+  ],
+  "transactions": [],
+  "news": [
+    {
+      "id": "NEWS_001",
+      "title": "إطلاق منصة Stampbook الرقمية رسمياً",
+      "content": "يسرنا الإعلان عن إطلاق منصة Stampbook الرقمية لتجميع وتداول الطوابع النادرة كـ NFTs. انضم إلينا واكتشف عالماً من الطوابع التاريخية النادرة.",
+      "category": "إعلانات",
+      "date": "2026-04-13",
+      "imageUrl": "",
+      "createdAt": "2026-04-13T11:48:52.515Z"
+    },
+    {
+      "id": "NEWS_002",
+      "title": "مزاد الوبيل الذهبي - أولمبيا ميونخ أغسطس 2026",
+      "content": "احجز جناحك الآن في المزاد الكبير المصاحب للاحتفالات بالذكرى الـ 54 لأولمبياد ميونخ 1972. خصم 30% للحجز المبكر + NFT حصري.",
+      "category": "مزادات",
+      "date": "2026-04-13",
+      "imageUrl": "",
+      "createdAt": "2026-04-13T11:48:52.515Z"
+    },
+    {
+      "id": "NEWS_003",
+      "title": "عملة STP - رمز النجاح الرقمي",
+      "content": "تعرف على عملة STP (StampCoin) المبنية على شبكة BNB Smart Chain. سعر الإطلاق 0.20 USDT مع إجمالي عرض 421 مليون وحدة.",
+      "category": "تقنية",
+      "date": "2026-04-13",
+      "imageUrl": "",
+      "createdAt": "2026-04-13T11:48:52.515Z"
+    },
+    {
+      "id": "NEWS_004",
+      "title": "طابع Inverted Jenny - أغلى خطأ طباعة في التاريخ",
+      "content": "يُعدّ طابع Inverted Jenny الأمريكي الصادر عام 1918 من أندر طوابع العالم. شاهد نسخته الرقمية حصرياً على منصة Stampbook.",
+      "category": "مقتنيات",
+      "date": "2026-04-11",
+      "imageUrl": "",
+      "createdAt": "2026-04-13T11:48:52.515Z"
+    }
+  ]
 }

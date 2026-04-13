@@ -163,6 +163,45 @@
     </div>
 </div>
 
+<!-- صفحة السوق -->
+<div id="marketplacePage" class="page">
+    <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; flex-wrap:wrap; gap:15px">
+            <h2>🛒 سوق الطوابع والمقتنيات</h2>
+            <div style="display:flex; gap:10px; flex-wrap:wrap">
+                <select id="marketFilterType" onchange="loadMarketItems()" style="background:rgba(255,255,255,0.1); border:none; padding:8px 15px; border-radius:20px; color:white; cursor:pointer">
+                    <option value="">جميع الأنواع</option>
+                    <option value="stamp">طوابع</option>
+                    <option value="coin">عملات</option>
+                    <option value="nft">NFT</option>
+                </select>
+                <button class="btn-primary" onclick="showListItemModal()">➕ عرض قطعة للبيع</button>
+            </div>
+        </div>
+        <div class="grid" id="marketGrid"><p style="text-align:center; opacity:0.7">جاري التحميل...</p></div>
+    </div>
+</div>
+
+<!-- نافذة عرض قطعة للبيع -->
+<div id="listItemModal" class="modal">
+    <div class="modal-content">
+        <span style="float:left; font-size:24px; cursor:pointer" onclick="closeListItemModal()">&times;</span>
+        <h2>➕ عرض قطعة للبيع</h2>
+        <div class="form-group"><input type="text" id="listItemName" placeholder="اسم القطعة"></div>
+        <div class="form-group"><textarea id="listItemDesc" placeholder="وصف القطعة" rows="3" style="width:100%; padding:12px; border-radius:10px; background:rgba(255,255,255,0.1); color:white; border:none"></textarea></div>
+        <div class="form-group">
+            <select id="listItemType" style="width:100%; padding:12px; border-radius:10px; background:rgba(255,255,255,0.1); color:white; border:none">
+                <option value="stamp">طابع</option>
+                <option value="coin">عملة</option>
+                <option value="nft">NFT</option>
+            </select>
+        </div>
+        <div class="form-group"><input type="number" id="listItemPrice" placeholder="السعر (STP)"></div>
+        <div class="form-group"><input type="text" id="listItemImage" placeholder="رابط الصورة (اختياري)"></div>
+        <button class="btn-primary" onclick="submitListItem()" style="width:100%">✅ عرض للبيع</button>
+    </div>
+</div>
+
 <!-- صفحة لوحة التحكم -->
 <div id="dashboardPage" class="page">
     <div class="container">
@@ -328,8 +367,21 @@
 
     function navigateTo(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-        document.getElementById(page + 'Page').classList.add('active-page');
+        const el = document.getElementById(page + 'Page');
+        if (el) {
+            el.classList.add('active-page');
+        }
+        document.querySelectorAll('.nav-links a').forEach(a => {
+            a.classList.toggle('active', a.dataset.page === page);
+        });
+        // Lazy-load page data
+        if (page === 'marketplace') loadMarketItems();
     }
+
+    // Wire up nav link clicks
+    document.querySelectorAll('.nav-links a[data-page]').forEach(link => {
+        link.addEventListener('click', () => navigateTo(link.dataset.page));
+    });
 
     function showModal(mode) {
         currentMode = mode;
@@ -370,6 +422,90 @@
 
     function logout() { localStorage.removeItem('token'); location.reload(); }
     function closeModal() { document.getElementById('authModal').style.display = 'none'; }
+
+    // ─── Marketplace ──────────────────────────────────────────────────────────
+
+    async function loadMarketItems() {
+        const type = document.getElementById('marketFilterType')?.value || '';
+        const url = '/api/market/items' + (type ? `?type=${type}` : '') + (type ? '&status=available' : '?status=available');
+        try {
+            const res = await fetch(url);
+            const items = await res.json();
+            const grid = document.getElementById('marketGrid');
+            if (!items.length) {
+                grid.innerHTML = '<p style="text-align:center; opacity:0.7; grid-column:1/-1">لا توجد قطع متاحة حالياً. كن أول من يعرض!</p>';
+                return;
+            }
+            grid.innerHTML = items.map(item => `
+                <div class="card">
+                    ${item.imageUrl ? `<img src="${item.imageUrl}" style="width:100%; height:180px; object-fit:cover; border-radius:15px; margin-bottom:12px" onerror="this.style.display='none'">` : ''}
+                    <div style="background:rgba(245,175,25,0.2); display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; margin-bottom:8px">${item.type || 'stamp'}</div>
+                    <h3>${item.name}</h3>
+                    <p style="opacity:0.8; font-size:14px; margin:8px 0">${item.description || ''}</p>
+                    <div style="color:#f5af19; font-size:28px; font-weight:bold; margin:10px 0">💰 ${item.price} STP</div>
+                    <button class="btn-primary" onclick="buyMarketItem('${item.id}')" style="width:100%">🛒 شراء الآن</button>
+                </div>
+            `).join('');
+        } catch (e) {
+            document.getElementById('marketGrid').innerHTML = '<p style="text-align:center; color:#ff6b35">خطأ في تحميل البيانات</p>';
+        }
+    }
+
+    async function buyMarketItem(itemId) {
+        if (!token) { alert('الرجاء تسجيل الدخول أولاً'); showModal('login'); return; }
+        if (!currentUser) await loadUser();
+        if (!confirm('هل تريد شراء هذه القطعة؟')) return;
+        try {
+            const res = await fetch(`/api/market/items/${itemId}/buy`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ buyerId: currentUser.id })
+            });
+            const data = await res.json();
+            if (res.ok) { alert('✅ تمت عملية الشراء بنجاح!'); loadMarketItems(); }
+            else alert('❌ ' + (data.error || 'فشلت عملية الشراء'));
+        } catch (e) {
+            alert('❌ خطأ في الاتصال');
+        }
+    }
+
+    function showListItemModal() {
+        if (!token) { alert('الرجاء تسجيل الدخول أولاً'); showModal('login'); return; }
+        document.getElementById('listItemModal').style.display = 'flex';
+    }
+
+    function closeListItemModal() {
+        document.getElementById('listItemModal').style.display = 'none';
+    }
+
+    async function submitListItem() {
+        if (!token) { alert('الرجاء تسجيل الدخول أولاً'); return; }
+        if (!currentUser) await loadUser();
+        const name = document.getElementById('listItemName').value.trim();
+        const description = document.getElementById('listItemDesc').value.trim();
+        const type = document.getElementById('listItemType').value;
+        const price = parseFloat(document.getElementById('listItemPrice').value);
+        const imageUrl = document.getElementById('listItemImage').value.trim();
+        if (!name) { alert('يرجى إدخال اسم القطعة'); return; }
+        if (!price || price <= 0) { alert('يرجى إدخال سعر صحيح'); return; }
+        try {
+            const res = await fetch('/api/market/items', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ sellerId: currentUser.id, name, description, type, price, imageUrl })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert('✅ تم عرض القطعة للبيع بنجاح!');
+                closeListItemModal();
+                loadMarketItems();
+            } else {
+                alert('❌ ' + (data.error || 'فشل العرض'));
+            }
+        } catch (e) {
+            alert('❌ خطأ في الاتصال');
+        }
+    }
 
     loadData();
 </script>

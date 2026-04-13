@@ -1,8 +1,4 @@
-// Entry point for Stampcoin Platform
-// Starts the main server
-try {
-  require("./server").startServer();
-} catch (err) {
-  console.error("Failed to start server:", err.message);
-  process.exit(1);
-}
+"use strict";
+// Entry point for Stampbook Platform — delegates to server.js
+const { startServer } = require("./server");
+startServer();
