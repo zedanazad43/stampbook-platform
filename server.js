@@ -11,6 +11,7 @@ const path        = require("path");
 const fs          = require("fs");
 const bcrypt      = require("bcryptjs");
 const jwt         = require("jsonwebtoken");
+const rateLimit   = require("express-rate-limit");
 
 const rateLimit = require("express-rate-limit");
 
@@ -789,7 +790,14 @@ app.get("/api/health", (_req, res) => {
 
 // ─── SPA fallback ─────────────────────────────────────────────────────────────
 
-app.get("*", (req, res) => {
+const spaFallbackLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,                 // max 100 requests per IP per window
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+app.get("*", spaFallbackLimiter, (req, res) => {
   if (req.path.startsWith("/api/")) {
     return res.status(404).json({ error: "API endpoint not found" });
   }
