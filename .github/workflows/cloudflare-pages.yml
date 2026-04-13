@@ -1,0 +1,74 @@
+# ============================================================
+# Cloudflare Pages — Auto-deploy on push to main
+# Domain: ecostamp.net
+#
+# Required GitHub Secrets:
+#   CF_API_TOKEN  — Cloudflare API token (Edit Cloudflare Pages permission)
+#   CF_ACCOUNT_ID — Your Cloudflare account ID
+#
+# After first deploy, bind your custom domain in Cloudflare dashboard:
+#   Pages → stampbook-platform → Custom domains → ecostamp.net
+# ============================================================
+
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: cf-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Pages (ecostamp.net)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Check Cloudflare credentials
+        id: check-cf
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CF_API_TOKEN" ] && [ -n "$CF_ACCOUNT_ID" ]; then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "deploy=false" >> $GITHUB_OUTPUT
+            echo "⚠️  CF_API_TOKEN or CF_ACCOUNT_ID not set — skipping Cloudflare deploy."
+            echo "Add these secrets in: GitHub repo → Settings → Secrets → Actions"
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.check-cf.outputs.deploy == 'true'
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken:   ${{ secrets.CF_API_TOKEN }}
+          accountId:  ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: stampbook-platform
+          directory:  public
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          wranglerVersion: "3"

@@ -2,20 +2,20 @@
 
 require("dotenv").config();
 
-const express = require("express");
-const cors = require("cors");
+const express    = require("express");
+const cors       = require("cors");
 const compression = require("compression");
-const path = require("path");
-const fs = require("fs");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const path       = require("path");
+const fs         = require("fs");
+const bcrypt     = require("bcryptjs");
+const jwt        = require("jsonwebtoken");
 
-const walletModule = require("./wallet");
-const marketModule = require("./market");
+const walletModule     = require("./wallet");
+const marketModule     = require("./market");
 const blockchainModule = require("./blockchain");
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const app        = express();
+const PORT       = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || "stampbook-dev-secret-change-in-production";
 const SYNC_TOKEN = process.env.SYNC_TOKEN;
 
@@ -32,7 +32,7 @@ app.use(compression());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// ─── Database helpers (auth / nfts / auctions / news) ────────────────────────
+// ─── Database helpers ─────────────────────────────────────────────────────────
 
 const DB_PATH = path.join(__dirname, "database.json");
 
@@ -70,7 +70,7 @@ function authMiddleware(req, res, next) {
   }
 }
 
-// ─── Sync-token middleware (admin / server-to-server endpoints) ───────────────
+// ─── Sync-token middleware (admin / server-to-server) ─────────────────────────
 
 function syncMiddleware(req, res, next) {
   if (!SYNC_TOKEN) return next();
@@ -92,7 +92,7 @@ app.post("/api/auth/register", async (req, res) => {
       return res.status(400).json({ error: "Name, email and password are required" });
     }
     const db = readDB();
-    if (db.users.find(u => u.email === email)) {
+    if (db.users.find(u => u.email === email.trim().toLowerCase())) {
       return res.status(409).json({ error: "Email already registered" });
     }
     const hashed = await bcrypt.hash(password, 10);
@@ -101,8 +101,8 @@ app.post("/api/auth/register", async (req, res) => {
       name: name.trim(),
       email: email.trim().toLowerCase(),
       password: hashed,
-      stpBalance: 0,
-      points: 0,
+      stpBalance: 100,   // welcome bonus
+      points: 50,
       createdAt: new Date().toISOString()
     };
     db.users.push(user);
@@ -146,15 +146,42 @@ app.get("/api/auth/me", authMiddleware, (req, res) => {
   }
 });
 
-// ─── Stats endpoint ───────────────────────────────────────────────────────────
+app.put("/api/auth/profile", authMiddleware, async (req, res) => {
+  try {
+    const db = readDB();
+    const idx = db.users.findIndex(u => u.id === req.user.id);
+    if (idx === -1) return res.status(404).json({ error: "User not found" });
+    const user = db.users[idx];
+    if (req.body.name)    user.name    = req.body.name.trim();
+    if (req.body.phone)   user.phone   = req.body.phone.trim();
+    if (req.body.bio)     user.bio     = req.body.bio.trim();
+    if (req.body.avatarUrl) user.avatarUrl = req.body.avatarUrl.trim();
+    user.updatedAt = new Date().toISOString();
+    db.users[idx] = user;
+    writeDB(db);
+    const { password: _, ...pub } = user;
+    return res.json(pub);
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+// ─── Stats ────────────────────────────────────────────────────────────────────
 
 app.get("/api/stats", (req, res) => {
   try {
     const db = readDB();
+    const supply = blockchainModule.getSupply();
     return res.json({
-      users: db.users.length,
-      nfts: db.nfts.length,
-      auctions: db.auctions.filter(a => a.status === "active").length
+      users:    db.users.length,
+      nfts:     db.nfts.length,
+      auctions: db.auctions.filter(a => a.status === "active").length,
+      marketItems: (db.users.length > 0)
+        ? marketModule.getAllMarketItems({ status: "available" }).length
+        : 0,
+      stpPrice:      0.20,
+      stpSupply:     supply.totalSupply,
+      stpMinted:     supply.mintedSupply,
     });
   } catch (e) {
     return res.status(500).json({ error: e.message });
@@ -168,7 +195,7 @@ app.get("/api/nfts", (req, res) => {
     const db = readDB();
     const { status, ownerId } = req.query;
     let nfts = db.nfts;
-    if (status) nfts = nfts.filter(n => n.status === status);
+    if (status)  nfts = nfts.filter(n => n.status === status);
     if (ownerId) nfts = nfts.filter(n => n.ownerId === ownerId);
     return res.json(nfts);
   } catch (e) {
@@ -178,7 +205,7 @@ app.get("/api/nfts", (req, res) => {
 
 app.get("/api/nfts/:id", (req, res) => {
   try {
-    const db = readDB();
+    const db  = readDB();
     const nft = db.nfts.find(n => n.id === req.params.id);
     if (!nft) return res.status(404).json({ error: "NFT not found" });
     return res.json(nft);
@@ -193,18 +220,53 @@ app.post("/api/nfts/mint", authMiddleware, (req, res) => {
     if (!name) return res.status(400).json({ error: "NFT name is required" });
     const db = readDB();
     const nft = {
-      id: `NFT_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      name: name.trim(),
+      id:          `NFT_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      name:        name.trim(),
       description: description || "",
-      imageUrl: imageUrl || "",
-      price: parseFloat(price) || 0,
-      ownerId: req.user.id,
-      status: "available",
-      createdAt: new Date().toISOString()
+      imageUrl:    imageUrl || "",
+      price:       parseFloat(price) || 0,
+      ownerId:     req.user.id,
+      status:      "available",
+      createdAt:   new Date().toISOString()
     };
     db.nfts.push(nft);
     writeDB(db);
     return res.status(201).json(nft);
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+app.post("/api/nfts/:id/buy", authMiddleware, (req, res) => {
+  try {
+    const db  = readDB();
+    const idx = db.nfts.findIndex(n => n.id === req.params.id);
+    if (idx === -1) return res.status(404).json({ error: "NFT not found" });
+    const nft = db.nfts[idx];
+    if (nft.status !== "available") {
+      return res.status(400).json({ error: "NFT is not available for purchase" });
+    }
+    if (nft.ownerId === req.user.id) {
+      return res.status(400).json({ error: "Cannot purchase your own NFT" });
+    }
+    const buyer = db.users.find(u => u.id === req.user.id);
+    if (!buyer) return res.status(404).json({ error: "Buyer not found" });
+    if (buyer.stpBalance < nft.price) {
+      return res.status(400).json({ error: `Insufficient STP balance (need ${nft.price} STP)` });
+    }
+    // Deduct balance
+    buyer.stpBalance -= nft.price;
+    // Credit seller
+    const seller = db.users.find(u => u.id === nft.ownerId);
+    if (seller) seller.stpBalance = (seller.stpBalance || 0) + nft.price;
+    // Transfer ownership
+    nft.previousOwnerId = nft.ownerId;
+    nft.ownerId  = req.user.id;
+    nft.status   = "owned";
+    nft.soldAt   = new Date().toISOString();
+    db.nfts[idx] = nft;
+    writeDB(db);
+    return res.json({ success: true, nft });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -233,18 +295,18 @@ app.post("/api/auctions", authMiddleware, (req, res) => {
     }
     const db = readDB();
     const auction = {
-      id: `AUC_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      title: title.trim(),
-      description: description || "",
-      imageUrl: imageUrl || "",
-      startPrice: parseFloat(startPrice),
+      id:           `AUC_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      title:        title.trim(),
+      description:  description || "",
+      imageUrl:     imageUrl || "",
+      startPrice:   parseFloat(startPrice),
       currentPrice: parseFloat(startPrice),
       highestBidder: null,
-      bids: [],
-      sellerId: req.user.id,
-      status: "active",
+      bids:         [],
+      sellerId:     req.user.id,
+      status:       "active",
       endTime,
-      createdAt: new Date().toISOString()
+      createdAt:    new Date().toISOString()
     };
     db.auctions.push(auction);
     writeDB(db);
@@ -267,12 +329,18 @@ app.post("/api/auctions/bid/:id", authMiddleware, (req, res) => {
       return res.status(400).json({ error: "Auction is not active" });
     }
     if (parseFloat(amount) <= auction.currentPrice) {
-      return res.status(400).json({ error: "Bid must exceed current price of " + auction.currentPrice + " STP" });
+      return res.status(400).json({
+        error: `Bid must exceed current price of ${auction.currentPrice} STP`
+      });
     }
-    auction.currentPrice = parseFloat(amount);
-    auction.highestBidder = req.user.id;
+    auction.currentPrice   = parseFloat(amount);
+    auction.highestBidder  = req.user.id;
     if (!auction.bids) auction.bids = [];
-    auction.bids.push({ userId: req.user.id, amount: parseFloat(amount), timestamp: new Date().toISOString() });
+    auction.bids.push({
+      userId:    req.user.id,
+      amount:    parseFloat(amount),
+      timestamp: new Date().toISOString()
+    });
     writeDB(db);
     return res.json({ success: true, auction });
   } catch (e) {
@@ -280,7 +348,7 @@ app.post("/api/auctions/bid/:id", authMiddleware, (req, res) => {
   }
 });
 
-// ─── News endpoints ───────────────────────────────────────────────────────────
+// ─── News ─────────────────────────────────────────────────────────────────────
 
 app.get("/api/news", (req, res) => {
   try {
@@ -358,13 +426,13 @@ app.post("/api/wallet/:userId/topup", syncMiddleware, (req, res) => {
   }
 });
 
-// ─── Market endpoints ─────────────────────────────────────────────────────────
+// ─── Market endpoints — secured with authMiddleware ───────────────────────────
 
 app.get("/api/market/items", (req, res) => {
   try {
     const filter = {};
-    if (req.query.status) filter.status = req.query.status;
-    if (req.query.type) filter.type = req.query.type;
+    if (req.query.status)   filter.status   = req.query.status;
+    if (req.query.type)     filter.type     = req.query.type;
     if (req.query.sellerId) filter.sellerId = req.query.sellerId;
     return res.json(marketModule.getAllMarketItems(filter));
   } catch (e) {
@@ -372,10 +440,13 @@ app.get("/api/market/items", (req, res) => {
   }
 });
 
-app.post("/api/market/items", (req, res) => {
+app.post("/api/market/items", authMiddleware, (req, res) => {
   try {
-    const { sellerId, ...item } = req.body;
-    const created = marketModule.addMarketItem(sellerId, item);
+    // sellerId comes from the verified JWT, not from the request body
+    const { name, description, type, price, imageUrl, sellerContact } = req.body;
+    const created = marketModule.addMarketItem(req.user.id, {
+      name, description, type, price, imageUrl, sellerContact
+    });
     return res.status(201).json(created);
   } catch (e) {
     return res.status(400).json({ error: e.message });
@@ -390,32 +461,44 @@ app.get("/api/market/items/:itemId", (req, res) => {
   }
 });
 
-app.put("/api/market/items/:itemId", (req, res) => {
+app.put("/api/market/items/:itemId", authMiddleware, (req, res) => {
   try {
-    const { sellerId, ...updates } = req.body;
     const item = marketModule.getRawMarketItem(req.params.itemId);
-    if (item.sellerId !== sellerId) {
+    if (item.sellerId !== req.user.id) {
       return res.status(403).json({ error: "Only the seller can update this item" });
     }
-    return res.json(marketModule.updateMarketItem(req.params.itemId, updates));
+    return res.json(marketModule.updateMarketItem(req.params.itemId, req.body));
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }
 });
 
-app.post("/api/market/items/:itemId/buy", (req, res) => {
+app.post("/api/market/items/:itemId/buy", authMiddleware, (req, res) => {
   try {
-    const { buyerId, ...options } = req.body;
-    return res.json(marketModule.purchaseMarketItem(req.params.itemId, buyerId, options));
+    // buyerId comes from the verified JWT
+    const result = marketModule.purchaseMarketItem(
+      req.params.itemId,
+      req.user.id,
+      req.body   // optional: platformFee, sellerProceeds, buyerContact
+    );
+
+    // Deduct STP balance from buyer in database
+    const db    = readDB();
+    const buyer = db.users.find(u => u.id === req.user.id);
+    if (buyer && result.item && result.item.price) {
+      buyer.stpBalance = Math.max(0, (buyer.stpBalance || 0) - result.item.price);
+      writeDB(db);
+    }
+
+    return res.json(result);
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }
 });
 
-app.delete("/api/market/items/:itemId", (req, res) => {
+app.delete("/api/market/items/:itemId", authMiddleware, (req, res) => {
   try {
-    const { sellerId } = req.body;
-    return res.json(marketModule.removeMarketItem(req.params.itemId, sellerId));
+    return res.json(marketModule.removeMarketItem(req.params.itemId, req.user.id));
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }
@@ -424,7 +507,7 @@ app.delete("/api/market/items/:itemId", (req, res) => {
 app.get("/api/market/transactions", (req, res) => {
   try {
     const filter = {};
-    if (req.query.buyerId) filter.buyerId = req.query.buyerId;
+    if (req.query.buyerId)  filter.buyerId  = req.query.buyerId;
     if (req.query.sellerId) filter.sellerId = req.query.sellerId;
     return res.json(marketModule.getMarketTransactions(filter));
   } catch (e) {
@@ -432,12 +515,40 @@ app.get("/api/market/transactions", (req, res) => {
   }
 });
 
-app.get("/api/market/transactions/:txId/contact", (req, res) => {
+app.get("/api/market/transactions/:txId/contact", authMiddleware, (req, res) => {
   try {
-    const { requesterId } = req.query;
-    return res.json(marketModule.getTransactionContactExchange(req.params.txId, requesterId));
+    return res.json(
+      marketModule.getTransactionContactExchange(req.params.txId, req.user.id)
+    );
   } catch (e) {
     return res.status(400).json({ error: e.message });
+  }
+});
+
+// ─── My purchases / listings ──────────────────────────────────────────────────
+
+app.get("/api/my/purchases", authMiddleware, (req, res) => {
+  try {
+    return res.json(marketModule.getMarketTransactions({ buyerId: req.user.id }));
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+app.get("/api/my/listings", authMiddleware, (req, res) => {
+  try {
+    return res.json(marketModule.getAllMarketItems({ sellerId: req.user.id }));
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+app.get("/api/my/nfts", authMiddleware, (req, res) => {
+  try {
+    const db = readDB();
+    return res.json(db.nfts.filter(n => n.ownerId === req.user.id));
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
   }
 });
 
@@ -489,7 +600,16 @@ app.get("/api/blockchain/mint/events", syncMiddleware, (req, res) => {
 
 app.get("/api/status", (req, res) => {
   const db = readDB();
-  return res.json({ status: "online", nfts: db.nfts.length, timestamp: new Date().toISOString() });
+  return res.json({
+    status:    "online",
+    nfts:      db.nfts.length,
+    users:     db.users.length,
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get("/health", (_req, res) => {
+  return res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
 app.get("/api/health", (_req, res) => {
@@ -509,7 +629,7 @@ app.get("*", (req, res) => {
 
 function startServer() {
   const server = app.listen(PORT, () => {
-    console.log(`\n🚀 Stampbook Server running on http://localhost:${PORT}`);
+    console.log(`\n🚀 Stampbook running on http://localhost:${PORT}`);
     console.log(`📊 Mode: ${process.env.NODE_ENV || "development"}\n`);
   });
   return server;

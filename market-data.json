@@ -1,26 +1,92 @@
 {
   "items": [
     {
-      "id": "item_1772408016525_1w7n5l4c9",
-      "sellerId": "test1",
-      "name": "Penny Black",
-      "description": "Classic",
-      "price": 500,
+      "id": "item_system_001",
+      "sellerId": "system",
+      "name": "طابع Penny Black 1840 - نسخة نادرة",
+      "description": "أول طابع بريدي لاصق في العالم، أصدرته بريطانيا عام 1840. هذه النسخة في حالة ممتازة مع كامل هوامشها.",
+      "price": 15000,
       "type": "stamp",
-      "imageUrl": "",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Penny_Black.jpg/500px-Penny_Black.jpg",
       "status": "available",
-      "listedAt": "2026-03-01T23:33:36.525Z"
+      "listedAt": "2026-04-13T12:04:50.937Z"
     },
     {
-      "id": "item_1772408082118_x4vvvp7i8",
-      "sellerId": "demo1",
-      "name": "Blue Mauritius",
-      "description": "Ultra rare 1847 stamp",
-      "price": 200,
+      "id": "item_system_002",
+      "sellerId": "system",
+      "name": "طابع Inverted Jenny 1918 الأمريكي",
+      "description": "من أندر وأغلى الطوابع في العالم. طُبع بالخطأ مع صورة الطائرة مقلوبة. سعر السوق يتجاوز مليون دولار.",
+      "price": 50000,
+      "type": "stamp",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/US_Airmail_inverted_Jenny_24c_1918_issue.jpg/500px-US_Airmail_inverted_Jenny_24c_1918_issue.jpg",
+      "status": "available",
+      "listedAt": "2026-04-13T12:04:50.937Z"
+    },
+    {
+      "id": "item_system_003",
+      "sellerId": "system",
+      "name": "طابع البريد المصري 1866 - أول طابع مصري",
+      "description": "أول طابع بريدي مصري، صدر في القاهرة عام 1866. نسخة أصيلة بحالة جيدة.",
+      "price": 8500,
+      "type": "stamp",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Egypt_1866_5pa_blue.jpg/500px-Egypt_1866_5pa_blue.jpg",
+      "status": "available",
+      "listedAt": "2026-04-13T12:04:50.937Z"
+    },
+    {
+      "id": "item_system_004",
+      "sellerId": "system",
+      "name": "مجموعة طوابع المملكة العربية السعودية الملكية",
+      "description": "مجموعة نادرة تضم 24 طابعاً من الحقبة الملكية 1950-1970. جميعها في حالة ممتازة مع شهادة توثيق.",
+      "price": 3200,
       "type": "stamp",
       "imageUrl": "",
       "status": "available",
-      "listedAt": "2026-03-01T23:34:42.118Z"
+      "listedAt": "2026-04-13T12:04:50.937Z"
+    },
+    {
+      "id": "item_system_005",
+      "sellerId": "system",
+      "name": "NFT طابع الكعبة المشرفة الذهبي",
+      "description": "نسخة رقمية حصرية فريدة من نوعها. تصميم ذهبي بالخط العربي مستوحى من عمارة الكعبة المشرفة.",
+      "price": 2500,
+      "type": "nft",
+      "imageUrl": "",
+      "status": "available",
+      "listedAt": "2026-04-13T12:04:50.937Z"
+    },
+    {
+      "id": "item_system_006",
+      "sellerId": "system",
+      "name": "عملة ذهبية نادرة - الليرة العثمانية 1909",
+      "description": "ليرة ذهبية عثمانية من عهد السلطان عبدالحميد الثاني. وزن 7.2 جرام ذهب خالص.",
+      "price": 4800,
+      "type": "coin",
+      "imageUrl": "",
+      "status": "available",
+      "listedAt": "2026-04-13T12:04:50.937Z"
+    },
+    {
+      "id": "item_system_007",
+      "sellerId": "system",
+      "name": "طابع أولمبياد ميونخ 1972 - طقم كامل",
+      "description": "الطقم الكامل لطوابع الألعاب الأولمبية ميونخ 1972. 20 طابعاً ملوناً في حالة مثالية.",
+      "price": 1800,
+      "type": "stamp",
+      "imageUrl": "",
+      "status": "available",
+      "listedAt": "2026-04-13T12:04:50.937Z"
+    },
+    {
+      "id": "item_system_008",
+      "sellerId": "system",
+      "name": "جناح الوبيل الذهبي VIP - أولمبيا ميونخ 2026",
+      "description": "جناح حصري في معرض الوبيل الذهبي لأولمبياد ميونخ 1972 (الذكرى الـ54 أغسطس 2026). يشمل شهادة مشاركة + NFT حصري.",
+      "price": 9999,
+      "type": "nft",
+      "imageUrl": "",
+      "status": "available",
+      "listedAt": "2026-04-13T12:04:50.937Z"
     }
   ],
   "transactions": []

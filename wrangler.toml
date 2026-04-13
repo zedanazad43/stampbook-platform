@@ -1,0 +1,34 @@
+# ============================================================
+# Cloudflare Pages + Workers config for Stampbook Platform
+# Domain: ecostamp.net
+# ============================================================
+
+name = "stampbook-platform"
+compatibility_date = "2024-01-01"
+
+[build]
+command = "npm run build"
+upload.dir = "public"
+
+[site]
+bucket = "./public"
+
+[env.production]
+name = "stampbook-platform"
+
+# The backend API runs on Render/Fly and is proxied via the
+# Cloudflare Worker defined in functions/api/[[route]].js
+# Set the BACKEND_URL secret in Cloudflare dashboard:
+#   wrangler secret put BACKEND_URL
+#   → https://your-render-or-fly-host.com
+
+[[kv_namespaces]]
+# Optional: uncomment to use KV for caching
+# binding = "STP_CACHE"
+# id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[triggers]
+crons = []
+
+# Pages-specific: routes all /api/* requests to the Worker function
+# Static assets in public/ are served directly by Cloudflare CDN

@@ -1,15 +1,23 @@
-﻿services:
+services:
   - type: web
     name: stampbook-platform
     runtime: node
-    repo: https://github.com/zedanazad43/stp
-    buildCommand: npm install
+    repo: https://github.com/zedanazad43/stampbook-platform
+    buildCommand: npm ci
     startCommand: node server.js
     plan: free
     autoDeploy: true
-    healthCheckPath: /api/status
+    healthCheckPath: /health
     envVars:
       - key: PORT
         value: 3000
       - key: NODE_VERSION
-        value: 18.17.0
+        value: 18.20.0
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SYNC_TOKEN
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: https://ecostamp.net,https://www.ecostamp.net
