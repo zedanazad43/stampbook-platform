@@ -9,7 +9,8 @@
     "build": "echo 'Build complete'",
     "compile": "npx hardhat compile",
     "deploy": "wrangler deploy",
-    "preview": "wrangler dev"
+    "preview": "wrangler dev",
+    "test": "jest tests/"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -24,7 +25,9 @@
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@openzeppelin/contracts": "^5.0.0",
     "hardhat": "^2.22.0",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4",
     "wrangler": "^4.80.0"
   },
-  "type": "module"
+  "type": "commonjs"
 }
