@@ -7,6 +7,7 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const compression = require("compression");
+const rateLimit = require("express-rate-limit");
 
 const wallet = require("./wallet");
 const market = require("./market");
@@ -14,6 +15,10 @@ const blockchain = require("./blockchain");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const catchAllLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
 
 // ─── Middleware ────────────────────────────────────────────────────────────────
 
@@ -326,7 +331,7 @@ app.get("/api/blockchain/mint/events", requireAuth, (req, res) => {
 
 // ─── Catch-all: serve frontend ─────────────────────────────────────────────────
 
-app.get("*", (req, res) => {
+app.get("*", catchAllLimiter, (req, res) => {
   const indexFile = path.join(__dirname, "public", "index.html");
   if (fs.existsSync(indexFile)) {
     return res.sendFile(indexFile);
