@@ -1,0 +1,5 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="12" fill="#0a0e27"/>
+  <text x="32" y="24" text-anchor="middle" fill="#f5af19" font-size="12" font-weight="bold">STP</text>
+  <text x="32" y="42" text-anchor="middle" fill="#ff6b35" font-size="8">Token</text>
+</svg>

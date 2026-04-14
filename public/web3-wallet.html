@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Wallet - Stampbook</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27, #1a1f3a);
+            color: white;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 80px 20px 20px; }
+        h1 { text-align: center; margin-bottom: 10px; }
+        .subtitle { text-align: center; margin-bottom: 30px; opacity: 0.8; }
+        .chain-selector { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; justify-content: center; }
+        .chain-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .chain-btn:hover { background: #ff6b35; transform: translateY(-2px); border-color: #ff6b35; }
+        .wallet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        .wallet-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .wallet-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.12); }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        .status-connected { background: #4CAF50; color: white; }
+        .status-disconnected { background: #f44336; color: white; }
+        .status-pending { background: #ff9800; color: white; }
+        button { background: #ff6b35; padding: 10px 20px; border: none; border-radius: 30px; cursor: pointer; color: white; margin-top: 15px; width: 100%; font-weight: bold; }
+        button:hover { opacity: 0.9; transform: scale(1.02); }
+        .address { font-family: monospace; font-size: 12px; word-break: break-all; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; margin: 10px 0; }
+        .network-info { font-size: 12px; color: #aaa; margin-top: 5px; }
+        .connected-chain { display: inline-block; background: rgba(76,175,80,0.2); padding: 3px 10px; border-radius: 15px; font-size: 11px; margin-left: 10px; }
+        @media (max-width: 768px) { .chain-btn { padding: 8px 16px; font-size: 12px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 اتصال Web3 اللامركزي</h1>
+        <div class="subtitle">اختر شبكتك واتصل بمحفظتك اللامركزية</div>
+
+        <div class="chain-selector">
+            <button class="chain-btn" data-chain="ethereum">🌐 Ethereum Mainnet</button>
+            <button class="chain-btn" data-chain="sepolia">🧪 Sepolia Testnet</button>
+            <button class="chain-btn" data-chain="bsc">🟡 BNB Chain (BSC)</button>
+            <button class="chain-btn" data-chain="polygon">🟣 Polygon</button>
+            <button class="chain-btn" data-chain="arbitrum">🔷 Arbitrum</button>
+            <button class="chain-btn" data-chain="optimism">🔴 Optimism</button>
+            <button class="chain-btn" data-chain="avalanche">🏔️ Avalanche</button>
+            <button class="chain-btn" data-chain="base">🔵 Base</button>
+        </div>
+
+        <div id="connectionStatus" style="text-align:center; margin-bottom:20px"></div>
+        <div class="wallet-grid" id="walletsGrid"></div>
+    </div>
+
+    <script>
+        let currentNetwork = null;
+        let currentAddress = null;
+        let currentChainId = null;
+
+        // تكوين الشبكات بشكل صحيح
+        const networks = {
+            ethereum: {
+                chainId: '0x1',
+                chainName: 'Ethereum Mainnet',
+                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+                rpcUrls: ['https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+                blockExplorerUrls: ['https://etherscan.io']
+            },
+            sepolia: {
+                chainId: '0xaa36a7',
+                chainName: 'Sepolia Testnet',
+                nativeCurrency: { name: 'Sepolia Ether', symbol: 'SepoliaETH', decimals: 18 },
+                rpcUrls: ['https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161', 'https://rpc.sepolia.org'],
+                blockExplorerUrls: ['https://sepolia.etherscan.io']
+            },
+            bsc: {
+                chainId: '0x38',
+                chainName: 'BNB Smart Chain',
+                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                rpcUrls: ['https://bsc-dataseed.binance.org', 'https://bsc-dataseed1.defibit.io', 'https://bsc-dataseed1.ninicoin.io'],
+                blockExplorerUrls: ['https://bscscan.com']
+            },
+            polygon: {
+                chainId: '0x89',
+                chainName: 'Polygon Mainnet',
+                nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+                rpcUrls: ['https://polygon-rpc.com', 'https://rpc-mainnet.matic.network', 'https://rpc-mainnet.matic.quiknode.pro'],
+                blockExplorerUrls: ['https://polygonscan.com']
+            },
+            arbitrum: {
+                chainId: '0xa4b1',
+                chainName: 'Arbitrum One',
+                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+                rpcUrls: ['https://arb1.arbitrum.io/rpc', 'https://arbitrum-mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+                blockExplorerUrls: ['https://arbiscan.io']
+            },
+            optimism: {
+                chainId: '0xa',
+                chainName: 'Optimism',
+                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+                rpcUrls: ['https://mainnet.optimism.io', 'https://optimism-mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+                blockExplorerUrls: ['https://optimistic.etherscan.io']
+            },
+            avalanche: {
+                chainId: '0xa86a',
+                chainName: 'Avalanche C-Chain',
+                nativeCurrency: { name: 'Avalanche', symbol: 'AVAX', decimals: 18 },
+                rpcUrls: ['https://api.avax.network/ext/bc/C/rpc', 'https://avalanche-c-chain.publicnode.com'],
+                blockExplorerUrls: ['https://snowtrace.io']
+            },
+            base: {
+                chainId: '0x2105',
+                chainName: 'Base',
+                nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+                rpcUrls: ['https://mainnet.base.org', 'https://base.llamarpc.com'],
+                blockExplorerUrls: ['https://basescan.org']
+            }
+        };
+
+        async function switchNetwork(networkKey) {
+            const network = networks[networkKey];
+            if (!network) {
+                showStatus('error', 'شبكة غير معروفة');
+                return;
+            }
+
+            showStatus('pending', 'جاري التبديل إلى الشبكة...');
+
+            try {
+                // محاولة تبديل الشبكة
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: network.chainId }]
+                });
+                currentNetwork = networkKey;
+                await connectWallet();
+            } catch (switchError) {
+                // إذا كانت الشبكة غير موجودة، نضيفها
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [network]
+                        });
+                        currentNetwork = networkKey;
+                        await connectWallet();
+                    } catch (addError) {
+                        showStatus('error', 'فشل إضافة الشبكة: ' + addError.message);
+                    }
+                } else {
+                    showStatus('error', 'فشل التبديل إلى الشبكة: ' + switchError.message);
+                }
+            }
+        }
+
+        async function connectWallet() {
+            if (!window.ethereum) {
+                showStatus('error', '❌ الرجاء تثبيت MetaMask أولاً!');
+                return;
+            }
+
+            showStatus('pending', 'جاري الاتصال بالمحفظة...');
+
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                currentAddress = accounts[0];
+                
+                // الحصول على Chain ID الحالي
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                currentChainId = chainId;
+                
+                // تحديد الشبكة الحالية
+                for (const [key, network] of Object.entries(networks)) {
+                    if (network.chainId === chainId) {
+                        currentNetwork = key;
+                        break;
+                    }
+                }
+                
+                showStatus('success', '✅ متصل بنجاح!');
+                updateUI();
+            } catch (error) {
+                showStatus('error', '❌ فشل الاتصال: ' + error.message);
+            }
+        }
+
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('connectionStatus');
+            const colors = { success: '#4CAF50', error: '#f44336', pending: '#ff9800' };
+            statusDiv.innerHTML = `<div style="background:${colors[type]}; padding:10px 20px; border-radius:25px; display:inline-block">${message}</div>`;
+            setTimeout(() => {
+                if (document.getElementById('connectionStatus').innerHTML === statusDiv.innerHTML) {
+                    statusDiv.innerHTML = '';
+                }
+            }, 5000);
+        }
+
+        function updateUI() {
+            const grid = document.getElementById('walletsGrid');
+            
+            if (!currentAddress) {
+                grid.innerHTML = `
+                    <div class="wallet-card" style="text-align:center; grid-column:1/-1">
+                        <h3>🔌 غير متصل</h3>
+                        <p>اختر شبكة من الأعلى واتصل بمحفظتك</p>
+                        <div class="status-badge status-disconnected">غير متصل</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const networkName = currentNetwork ? networks[currentNetwork]?.chainName || 'Unknown' : 'Unknown';
+            const shortAddress = `${currentAddress.substring(0, 8)}...${currentAddress.substring(36)}`;
+            
+            grid.innerHTML = `
+                <div class="wallet-card">
+                    <h3>🔗 المحفظة المتصلة</h3>
+                    <div class="status-badge status-connected">✓ متصل</div>
+                    <div class="address">📍 ${shortAddress}</div>
+                    <div class="network-info">🌐 الشبكة: ${networkName}</div>
+                    <div class="network-info">🆔 Chain ID: ${currentChainId}</div>
+                    <button onclick="copyAddress()">📋 نسخ العنوان</button>
+                    <button onclick="disconnectWallet()" style="background:#f44336">🔌 قطع الاتصال</button>
+                </div>
+            `;
+        }
+
+        function copyAddress() {
+            if (currentAddress) {
+                navigator.clipboard.writeText(currentAddress);
+                showStatus('success', '📋 تم نسخ العنوان إلى الحافظة');
+            }
+        }
+
+        function disconnectWallet() {
+            currentAddress = null;
+            currentNetwork = null;
+            currentChainId = null;
+            updateUI();
+            showStatus('success', '🔌 تم قطع الاتصال بنجاح');
+        }
+
+        // إضافة مستمعي الأحداث لأزرار الشبكات
+        document.querySelectorAll('.chain-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchNetwork(btn.dataset.chain));
+        });
+
+        // الاستماع لتغيير الشبكة في MetaMask
+        if (window.ethereum) {
+            window.ethereum.on('chainChanged', (chainId) => {
+                currentChainId = chainId;
+                for (const [key, network] of Object.entries(networks)) {
+                    if (network.chainId === chainId) {
+                        currentNetwork = key;
+                        break;
+                    }
+                }
+                updateUI();
+                showStatus('success', '🔄 تم تغيير الشبكة بنجاح');
+            });
+
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    disconnectWallet();
+                } else {
+                    currentAddress = accounts[0];
+                    updateUI();
+                    showStatus('success', '🔄 تم تغيير الحساب بنجاح');
+                }
+            });
+        }
+
+        // التحقق من الاتصال الحالي عند تحميل الصفحة
+        if (window.ethereum) {
+            window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+                if (accounts.length > 0) {
+                    currentAddress = accounts[0];
+                    window.ethereum.request({ method: 'eth_chainId' }).then(chainId => {
+                        currentChainId = chainId;
+                        for (const [key, network] of Object.entries(networks)) {
+                            if (network.chainId === chainId) {
+                                currentNetwork = key;
+                                break;
+                            }
+                        }
+                        updateUI();
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>

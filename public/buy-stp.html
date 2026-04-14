@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شراء عملات STP | ECOStamp</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27, #1a1f3a);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 550px;
+            margin: 50px auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        h1 { color: #f5af19; margin-bottom: 10px; }
+        .address-box {
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            word-break: break-all;
+            margin: 15px 0;
+        }
+        input, button {
+            padding: 14px 20px;
+            margin: 12px 0;
+            border-radius: 50px;
+            border: none;
+            width: 90%;
+            font-size: 16px;
+        }
+        input {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-align: center;
+        }
+        button {
+            background: linear-gradient(135deg, #ff6b35, #f5af19);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.02); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .price { font-size: 28px; font-weight: bold; color: #f5af19; margin: 20px 0; }
+        .status { padding: 10px; border-radius: 12px; margin: 15px 0; }
+        .success { background: #2e7d32; color: white; }
+        .error { background: #c62828; color: white; }
+        .info { background: #1565c0; color: white; }
+        .loading { background: #ff8c00; color: white; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { opacity: 0.6; } 100% { opacity: 1; } }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.3);
+            font-size: 12px;
+            word-break: break-all;
+        }
+        a { color: #f5af19; }
+        footer { margin-top: 30px; font-size: 12px; opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 شراء عملات STP</h1>
+        <p>العملة الرسمية لمنصة ECOStamp</p>
+        
+        <div class="address-box">
+            📜 عقد STP:<br>
+            <span id="contractAddr">0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0</span>
+        </div>
+        
+        <div id="statusBox" class="status info">🔌 جاري الاتصال بالشبكة...</div>
+        
+        <div class="price" id="priceDisplay">⏳ جاري تحميل السعر...</div>
+        
+        <input type="number" id="ethAmount" placeholder="💎 المبلغ بـ ETH" step="0.01" min="0.001">
+        <p>✨ ستحصل على: <strong id="stpAmount">0</strong> STP</p>
+        
+        <button id="buyBtn" onclick="buyTokens()">🚀 شراء STP الآن</button>
+        
+        <div id="resultBox" class="result-box" style="display:none"></div>
+        
+        <footer>
+            🔗 الشبكة: Hardhat Local | Chain ID: 31337<br>
+            ⚡ تأكد من أن MetaMask متصل بشبكة Hardhat Local
+        </footer>
+    </div>
+
+    <script>
+        // عنوان العقد المنشور (من deployed-address.json)
+        const CONTRACT_ADDRESS = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+        
+        // ABI المبسط للعقد (الوظائف التي نحتاجها فقط)
+        const CONTRACT_ABI = [
+            "function buyTokens() external payable",
+            "function getCurrentPrice() view returns (uint256)",
+            "function isSaleActive() view returns (bool)"
+        ];
+        
+        let web3;
+        let contract;
+        let userAccount;
+        
+        // تهيئة Web3 والاتصال بالعقد
+        async function init() {
+            const statusDiv = document.getElementById('statusBox');
+            const priceDiv = document.getElementById('priceDisplay');
+            const buyBtn = document.getElementById('buyBtn');
+            
+            // التحقق من وجود MetaMask
+            if (!window.ethereum) {
+                statusDiv.innerHTML = "❌ MetaMask غير مثبت! الرجاء تثبيت MetaMask أولاً.";
+                statusDiv.className = "status error";
+                buyBtn.disabled = true;
+                return;
+            }
+            
+            try {
+                // طلب الاتصال بالمحفظة
+                statusDiv.innerHTML = "🔄 جاري الاتصال بـ MetaMask...";
+                statusDiv.className = "status loading";
+                
+                web3 = new Web3(window.ethereum);
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAccount = accounts[0];
+                
+                // التحقق من الشبكة
+                const chainId = await web3.eth.getChainId();
+                if (chainId !== 31337) {
+                    statusDiv.innerHTML = `⚠️ شبكة غير صحيحة! الرجاء التبديل إلى Hardhat Local (Chain ID: 31337). الشبكة الحالية: ${chainId}`;
+                    statusDiv.className = "status error";
+                    buyBtn.disabled = true;
+                    return;
+                }
+                
+                // تهيئة العقد
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+                
+                // التحقق من أن المبيعات نشطة
+                const isActive = await contract.methods.isSaleActive().call();
+                if (!isActive) {
+                    statusDiv.innerHTML = "⚠️ المبيعات العامة غير نشطة حالياً. يرجى الانتظار.";
+                    statusDiv.className = "status error";
+                    buyBtn.disabled = true;
+                    return;
+                }
+                
+                // الحصول على السعر الحالي
+                const priceWei = await contract.methods.getCurrentPrice().call();
+                const priceEth = web3.utils.fromWei(priceWei, 'ether');
+                priceDiv.innerHTML = `💰 السعر الحالي: ${priceEth} ETH لكل STP`;
+                
+                statusDiv.innerHTML = `✅ متصل! الحساب: ${userAccount.substring(0, 10)}... | المبيعات مفتوحة`;
+                statusDiv.className = "status success";
+                buyBtn.disabled = false;
+                
+            } catch (error) {
+                console.error(error);
+                statusDiv.innerHTML = `❌ خطأ في الاتصال: ${error.message}`;
+                statusDiv.className = "status error";
+                buyBtn.disabled = true;
+            }
+        }
+        
+        // حساب كمية STP عند إدخال ETH
+        document.getElementById('ethAmount').addEventListener('input', async () => {
+            const eth = parseFloat(document.getElementById('ethAmount').value) || 0;
+            if (eth <= 0) {
+                document.getElementById('stpAmount').innerText = "0";
+                return;
+            }
+            try {
+                const priceWei = await contract.methods.getCurrentPrice().call();
+                const priceEth = parseFloat(web3.utils.fromWei(priceWei, 'ether'));
+                const stp = eth / priceEth;
+                document.getElementById('stpAmount').innerText = stp.toFixed(6);
+            } catch (e) {
+                document.getElementById('stpAmount').innerText = "خطأ";
+            }
+        });
+        
+        // شراء العملات
+        async function buyTokens() {
+            const amount = document.getElementById('ethAmount').value;
+            const resultBox = document.getElementById('resultBox');
+            
+            if (!amount || parseFloat(amount) <= 0) {
+                resultBox.style.display = "block";
+                resultBox.innerHTML = "⚠️ الرجاء إدخال مبلغ صحيح (أكثر من 0 ETH)";
+                resultBox.className = "result-box error";
+                return;
+            }
+            
+            if (!contract) {
+                resultBox.style.display = "block";
+                resultBox.innerHTML = "❌ العقد غير مهيأ. حاول تحديث الصفحة.";
+                resultBox.className = "result-box error";
+                return;
+            }
+            
+            const buyBtn = document.getElementById('buyBtn');
+            buyBtn.disabled = true;
+            buyBtn.innerText = "⏳ جاري معالجة المعاملة...";
+            resultBox.style.display = "block";
+            resultBox.innerHTML = "🔄 جاري إرسال المعاملة...";
+            resultBox.className = "result-box loading";
+            
+            try {
+                const amountWei = web3.utils.toWei(amount, 'ether');
+                
+                const tx = await contract.methods.buyTokens().send({
+                    from: userAccount,
+                    value: amountWei,
+                    gas: 300000
+                });
+                
+                resultBox.innerHTML = `
+                    ✅ تم الشراء بنجاح!<br>
+                    📦 المعاملة: <a href="#" onclick="return false">${tx.transactionHash.substring(0, 20)}...</a><br>
+                    💰 المبلغ: ${amount} ETH → ${document.getElementById('stpAmount').innerText} STP
+                `;
+                resultBox.className = "result-box success";
+                
+                // تفريغ الحقل
+                document.getElementById('ethAmount').value = "";
+                document.getElementById('stpAmount').innerText = "0";
+                
+            } catch (error) {
+                console.error(error);
+                resultBox.innerHTML = `❌ فشل الشراء: ${error.message || "حدث خطأ غير متوقع"}`;
+                resultBox.className = "result-box error";
+            } finally {
+                buyBtn.disabled = false;
+                buyBtn.innerText = "🚀 شراء STP الآن";
+            }
+        }
+        
+        // بدء التهيئة عند تحميل الصفحة
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
